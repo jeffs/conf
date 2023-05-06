@@ -1,0 +1,173 @@
+# VARIABLES
+
+CASE_SENSITIVE=true
+COMPLETION_WAITING_DOTS=true
+DISABLE_AUTO_TITLE=true
+DISABLE_UNTRACKED_FILES_DIRTY=true
+
+# Note that zsh-syntax-highlighting must be the last plugin sourced.
+# https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md
+plugins=(zsh-syntax-highlighting)
+
+source $ZSH/oh-my-zsh.sh
+
+# Use precmd to format a nice separator for use in a colorized PROMPT.
+typeset -H prompt_bar
+PROMPT=$'\n%{$fg[cyan]%}(%h) $(hostname):$prompt_bar\n$%{$reset_color%} '
+precmd() {
+    local d=$(dirs -p | head -1)
+    local -i n=$(($COLUMNS - ${#d} - ${#$(hostname)} - 10))
+    prompt_bar="$d $(printf '─%.0s' $(=/usr/bin/seq $n))"
+}
+
+# OPTIONS
+
+setopt rmstarsilent	# Don't confirm rm *.
+
+unsetopt autocd
+unsetopt auto_pushd
+unsetopt correct_all
+unsetopt hist_verify
+unsetopt share_history
+
+zstyle ':completion:*' matcher-list ''
+
+# Complete filenames after =, as in --someflag=.  Copied from:
+# https://unix.stackexchange.com/a/599449/49952
+autoload +X -U _default
+functions[_default]="setopt local_options magic_equal_subst; $functions[_default]"
+
+# ALIASES
+
+unalias l la
+
+alias vim=nvim
+alias cal='ncal -b'
+alias h=history
+alias hd='hexdump -C'
+alias u='c ..'
+alias uu='c ../..'
+alias uuu='c ../../..'
+alias py='python -q'
+for i in `seq 9`; do alias t$i="t -L$i"; done
+for s in br ci clone co di flog glog pull push st stash; do alias $s="git $s"; done
+
+# TODO: If the argument to t is gitignored (as listed by git check-ignore),
+# don't pass --git-ignore.
+
+alias tree='exa --group-directories-first --tree'
+alias t='tree --git-ignore'
+
+# FUNCTIONS
+
+# Useful when copying lines of code from documentation that includes prompts,
+# or from comments.
+function $ { "$@" }
+function // { "$@" }
+
+c() { cd "$@" && ls; }
+cg() { c $(git rev-parse --show-toplevel); }
+cl() { mc ~/file/log/$(date +%Y/%m/%d); }
+cy() { mc ~/file/log/$(yesterday); }
+e() { ${EDITOR:-nvim} "$@"; }
+l() { ls -hl --color "$@" | $PAGER }
+la() { ls -Ahl --color "$@" | $PAGER }
+mc() { mkdir -p $1 && c $1; }
+
+# TODO: Support --reset and --rm flags.
+play() {
+    case $1; in
+        c) e src/main.c;;
+        cpp) e src/main.cpp ;;
+        go) e src/main.go ;;
+        html) e src/index.html ;;
+        py)
+            cd ~/var/play/py
+            # eval "$(pyenv init -)"
+            source bin/activate
+            e src/__main__.py
+            ;;
+        java) e src/main/java/Main.java ;;
+        scala) e src/main/scala/Main.scala ;;
+        js|node) node ;;
+        rs|rust|'')
+            cd ~/var/play/rs
+            e src/main.rs
+            ;;
+    esac
+}
+
+# Load nvm lazily, since merely sourcing its definition takes ~350ms.
+nvm() {
+    # Install NVM if necessary.
+    if [ ! -d ~/.nvm ]; then
+        ~/conf/bin/install-node.zsh || return 1
+    fi
+    unset -f nvm
+    export NVM_DIR=~/.nvm
+    source $NVM_DIR/nvm.sh
+    source $NVM_DIR/bash_completion
+    nvm "$@"
+    export PATH="$HOME/.nvm/versions/node/$(nvm current)/bin:$PATH"
+}
+
+# TODO: Specify --lts only if .nvmrc is not found in any ancestor directory.
+for command in node npm npx yarn; do
+    $command() {
+        unset -f node npm npx yarn
+        [[ -v NVM_DIR ]] || nvm use --lts
+        "$0" "$@"
+    }
+done
+unset command
+
+# Load pyenv lazily.
+# pyenv() {
+#     # Install NVM if necessary.
+#     if [ ! -d ~/.pyenv ]; then
+#         curl https://pyenv.run | bash
+#     fi
+#     unset -f pyenv
+#     #eval "$(pyenv init -)"
+#     pyenv "$@"
+# }
+# command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+# Load Scala support lazily, to avoid slowing shell startup.
+sbt() {
+    if ! whence -p sbt >&/dev/null; then
+        export SDKMAN_DIR=~/.sdkman
+        # Install sdkman, java, and sbt if necessary.
+        if [ ! -d "$SDKMAN_DIR" ]; then
+            ~/conf/bin/install-scala.zsh || return 1
+        fi
+        source "$SDKMAN_DIR"/bin/sdkman-init.sh
+    fi
+    unset -f sbt
+    sbt "$@"
+}
+
+exa() {
+    if ! /bin/which exa >&/dev/null; then
+        cargo install exa
+    fi
+    unset -f exa
+    exa "$@"
+}
+
+# Open a man page in Vim.
+Man() { vim +":Man $1 | only"; }
+
+# BINDINGS
+
+if [ -d ~/opt/fzf ]; then
+    source ~/opt/fzf/shell/completion.zsh 2>/dev/null
+    source ~/opt/fzf/shell/key-bindings.zsh
+fi
+
+# https://github.com/ohmyzsh/ohmyzsh/issues/5071
+bindkey '^[l' down-case-word
+
+# Stolen by FZF.  Steal it back.
+bindkey '^[c' capitalize-word

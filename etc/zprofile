@@ -1,0 +1,32 @@
+export BROWSER=none
+export DISABLE_MAGIC_FUNCTIONS=true # Stop oh-my-zsh from being too clever.
+export EDITOR=nvim
+export EXA_COLORS='*.md=;'
+export FZF_DEFAULT_COMMAND='fdfind --type=f'
+export LESS='-FR -j5'
+export LS_COLORS='di=01;36'
+export PAGER=less
+export PYENV_ROOT=~/.pyenv
+export PYTHONSTARTUP=~/conf/etc/pythonrc.py
+export READNULLCMD=$PAGER
+export RIPGREP_CONFIG_PATH=~/conf/etc/ripgreprc
+export ZSH=~/.oh-my-zsh
+
+path=(
+    ~/usr/bin
+    ~/.local/bin
+    ~/.cargo/bin
+    ~/.pyenv/bin
+    ~/go/bin
+    /usr/local/bin
+    /usr/bin
+    /bin
+    /usr/sbin
+    /sbin
+)
+
+# Homebrew
+eval "$(/usr/local/bin/brew shellenv)"
+
+# ~/conf/bin/main.zsh launches an SSH agent.
+# eval "$(ssh-agent -s)"
