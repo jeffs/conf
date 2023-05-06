@@ -1,6 +1,8 @@
 #!/usr/bin/env -S zsh -euo pipefail
 #
-# This script is meant to be the entrypoint launched by my terminal.
+# This script is meant to be the entrypoint launched by stand-alone terminals
+# like iTerm.  It is less suitable for use inside other terminal managers, such
+# as the one built into Visual Studio Code.
 
 if [[ ! -v SSH_AUTH_SOCK ]]; then
     if tmux showenv -g SSH_AUTH_SOCK >& /dev/null; then
