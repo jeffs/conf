@@ -149,7 +149,7 @@ sbt() {
 }
 
 exa() {
-    if ! /bin/which exa >&/dev/null; then
+    if ! /usr/bin/which exa; then
         cargo install exa
     fi
     unset -f exa
