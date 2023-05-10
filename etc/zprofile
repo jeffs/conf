@@ -20,7 +20,7 @@ export INFOPATH="/usr/local/share/info:${INFOPATH:-}"
 # Required by diesel.
 export PQ_LIB_DIR="$(brew --prefix libpq)/lib"
 
-if [ ${TERM_PROGRAM:-} = vscode ]; then
+if [ "${TERM_PROGRAM:-}" = vscode ]; then
     export EDITOR='code --wait'
 else
     export EDITOR=nvim
