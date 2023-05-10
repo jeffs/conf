@@ -10,6 +10,9 @@ export READNULLCMD=$PAGER
 export RIPGREP_CONFIG_PATH=~/conf/etc/ripgreprc
 export ZSH=~/.oh-my-zsh
 
+# Required by diesel.
+export PQ_LIB_DIR="$(brew --prefix libpq)/lib"
+
 if [ ${TERM_PROGRAM:-} = vscode ]; then
     export EDITOR='code --wait'
 else
@@ -27,6 +30,7 @@ path=(
     /bin
     /usr/sbin
     /sbin
+    /Applications/Postgres.app/Contents/Versions/15/bin/
 )
 
 # Homebrew
