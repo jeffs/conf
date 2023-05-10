@@ -7,7 +7,10 @@ DISABLE_UNTRACKED_FILES_DIRTY=true
 
 # Note that zsh-syntax-highlighting must be the last plugin sourced.
 # https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md
-plugins=(zsh-syntax-highlighting)
+plugins=(
+    poetry
+    zsh-syntax-highlighting
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -36,6 +39,10 @@ zstyle ':completion:*' matcher-list ''
 # https://unix.stackexchange.com/a/599449/49952
 autoload +X -U _default
 functions[_default]="setopt local_options magic_equal_subst; $functions[_default]"
+
+# https://python-poetry.org/docs/
+fpath+=~/.zfunc
+autoload -Uz compinit && compinit
 
 # ALIASES
 
@@ -75,6 +82,8 @@ la() { ls -Ahl --color "$@" | $PAGER }
 mc() { mkdir -p $1 && c $1; }
 
 # TODO: Support --reset and --rm flags.
+# TODO: Ensure that this works with poetry.
+#       https://python-poetry.org/docs/basic-usage/
 play() {
     case $1; in
         c) e src/main.c;;
@@ -83,9 +92,8 @@ play() {
         html) e src/index.html ;;
         py)
             cd ~/var/play/py
-            # eval "$(pyenv init -)"
-            source bin/activate
-            e src/__main__.py
+            source $(poetry env info --path)/bin/activate
+            e play/__main__.py
             ;;
         java) e src/main/java/Main.java ;;
         scala) e src/main/scala/Main.scala ;;
@@ -120,19 +128,6 @@ for command in node npm npx yarn; do
     }
 done
 unset command
-
-# Load pyenv lazily.
-# pyenv() {
-#     # Install NVM if necessary.
-#     if [ ! -d ~/.pyenv ]; then
-#         curl https://pyenv.run | bash
-#     fi
-#     unset -f pyenv
-#     #eval "$(pyenv init -)"
-#     pyenv "$@"
-# }
-# command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
 
 # Load Scala support lazily, to avoid slowing shell startup.
 sbt() {
