@@ -1,0 +1,3 @@
+#!/usr/bin/env -S zsh -euo pipefail
+
+fd -t f | PAGER='less | head -n $(tput lines)' entr -cdr git diff
