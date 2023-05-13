@@ -1,17 +1,13 @@
 #!/usr/bin/env -S zsh -euo pipefail
 #
-# This script sets up installs the configuration defined in this repository to
-# the local host.
+# This script configures the local hsot to my liking.
 
-cd
+~/conf/bin/install-brew.zsh
+~/conf/bin/install-dotfiles.zsh
+~/conf/bin/install-omz.zsh
+~/conf/bin/install-zsh-syntax-highlighting.zsh
+~/conf/bin/install-nvim.zsh
+~/conf/bin/install-rust.zsh
 
-mkdir -p .config
-
-# Remove existing targets (but only if they're symlinks).
-rm .config/nvim(@) .gitconfig(@) .tmux.conf(@) .zprofile(@) .zshrc(@)
-
-ln -s ~/conf/etc/nvim .config
-ln -s ~/conf/etc/gitconfig .gitconfig
-ln -s ~/conf/etc/tmux.conf .tmux.conf
-ln -s ~/conf/etc/zprofile .zprofile
-ln -s ~/conf/etc/zshrc .zshrc
+brew install tmux
+cargo install bat fd-find 

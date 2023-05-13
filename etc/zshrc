@@ -5,6 +5,17 @@ COMPLETION_WAITING_DOTS=true
 DISABLE_AUTO_TITLE=true
 DISABLE_UNTRACKED_FILES_DIRTY=true
 
+# Use precmd to format a nice separator for use in a colorized PROMPT.
+typeset -H prompt_bar
+PROMPT=$'\n%{$fg[cyan]%}(%h) $(hostname):$prompt_bar\n$%{$reset_color%} '
+precmd() {
+    local d=$(dirs -p | head -1)
+    local -i n=$(($COLUMNS - ${#d} - ${#$(hostname)} - 10))
+    prompt_bar="$d $(printf '─%.0s' $(=/usr/bin/seq $n))"
+}
+
+# PLUGINS
+
 # Note that zsh-syntax-highlighting must be the last plugin sourced.
 # https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md
 plugins=(
@@ -14,14 +25,7 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# Use precmd to format a nice separator for use in a colorized PROMPT.
-typeset -H prompt_bar
-PROMPT=$'\n%{$fg[cyan]%}(%h) $(hostname):$prompt_bar\n$%{$reset_color%} '
-precmd() {
-    local d=$(dirs -p | head -1)
-    local -i n=$(($COLUMNS - ${#d} - ${#$(hostname)} - 10))
-    prompt_bar="$d $(printf '─%.0s' $(=/usr/bin/seq $n))"
-}
+eval "$(pyenv init -)"
 
 # OPTIONS
 
