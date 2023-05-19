@@ -11,6 +11,7 @@
 
 # Python droppings
 *.pyc
+.venv
 __pycache__/
 
 # Java droppings

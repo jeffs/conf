@@ -10,13 +10,14 @@ path=(
     /bin
     /usr/sbin
     /sbin
+    '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
     /Applications/Postgres.app/Contents/Versions/15/bin/
 )
 
 export DISABLE_MAGIC_FUNCTIONS=true # Stop oh-my-zsh from being too clever.
 export EXA_COLORS='*.md=;'
 export FZF_DEFAULT_COMMAND='fdfind --type=f'
-export LESS='-FR -j5'
+export LESS='-FRX -j5'
 export LS_COLORS='di=01;36'
 export PAGER=less
 export PYTHONSTARTUP=~/conf/etc/pythonrc.py
@@ -40,3 +41,6 @@ else
     export EDITOR=nvim
 fi
 
+
+# Make pyright happy.
+export PYRIGHT_PYTHON_FORCE_VERSION=latest
