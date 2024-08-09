@@ -9,5 +9,5 @@
 ~/conf/bin/install-nvim.zsh
 ~/conf/bin/install-rust.zsh
 
-brew install entr tmux
-cargo install bat fd-find jq
+brew install entr tmux jq
+cargo install bat fd-find
