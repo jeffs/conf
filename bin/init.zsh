@@ -1,6 +1,6 @@
 #!/usr/bin/env -S zsh -euo pipefail
 #
-# This script configures the local hsot to my liking.
+# This script configures the local host to my liking.
 
 ~/conf/bin/install-brew.zsh
 ~/conf/bin/install-dotfiles.zsh
