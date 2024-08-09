@@ -1,4 +1,4 @@
-!/usr/bin/env -S zsh -euo pipefail
+#!/usr/bin/env -S zsh -euo pipefail
 #
 # Install a syntax highlighting plugin for Zsh.
 #
