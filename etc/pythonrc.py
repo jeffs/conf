@@ -1,7 +1,21 @@
-from pprint import pprint as pp
+import os
+from typing import Final
 
-jenny = [8, 6, 7, 5, 3, 0, 9]
 
-# def ls(*args):
-#     from os import listdir
-#     return [f for a in args for f in listdir(a)] if args else listdir('.')
+def init_platform() -> None:
+    """Lets Camelot find Ghostscript.
+
+    >>> from ctypes.util import find_library
+    >>> find_library("gs")
+    '/opt/homebrew/lib/libgs.dylib'
+    """
+
+    key = "DYLD_LIBRARY_PATH"
+    val = "/opt/homebrew/lib"
+    os.environ[key] = f"{old}:{val}" if (old := os.environ.get(key)) else val
+
+
+init_platform()
+del init_platform
+
+JENNY: Final[tuple[int, ...]] = (8, 6, 7, 5, 3, 0, 9)

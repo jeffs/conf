@@ -12,7 +12,8 @@ if expand('%') == '/tmp/fmt.py'
 endif
 
 
-setlocal textwidth=79
+setlocal textwidth=88
+setlocal number
 
 inoremap <buffer> <silent> <Esc> <Esc>:up<CR>
 nnoremap <buffer> <silent> <Esc> <Esc>:up<CR>
@@ -25,12 +26,14 @@ nnoremap <buffer> <silent> <Leader>f :call MyPythonFormat()<CR>
 "nnoremap <buffer> <silent> <Leader>r :up\|!python3 %<CR>
 "nnoremap <buffer> <silent> <Leader>r :up\|bel split \| te python3 -m %:h:t:r<CR>
 nnoremap <buffer> <silent> <Leader>r :up\|bel split \| te python3 %<CR>
+nnoremap <buffer> <silent> <Leader>t :up\|bel split \| te npx pyright %<CR>
 
 " Open a block.
 inoremap <silent> <buffer> <C-j> <Esc>A:<CR>
 
 function MyPythonRepl()
-    execute '!tmux split-pane python3'
+    " Activate virtual environment, if any.
+    execute '!tmux split-pane ~/pkg/py-kart/pyrep/main.py'
     execute '!tmux last-pane'
 endfunction
 
@@ -41,7 +44,7 @@ endif
 
 function MyPythonFormat()
         update
-	silent !python3 -m black --quiet --line-length=79 % >& /tmp/fmt.py
+	silent !python3 -m black --quiet % >& /tmp/fmt.py
 	if -1 == match(readfile('/tmp/fmt.py'), '\S')
 		edit
 	else
