@@ -4,6 +4,8 @@ path=(
     ~/.cargo/bin
     ~/go/bin
     /usr/local/go/bin
+    /opt/homebrew/opt/libpq/bin    
+    /opt/homebrew/opt/openjdk/bin
     /opt/homebrew/bin
     /usr/local/bin
     /usr/bin
@@ -14,6 +16,16 @@ path=(
     /Applications/Postgres.app/Contents/Versions/15/bin/
 )
 
+# TODO: Build env in Rust, and source the Rust program's output here, rather
+# than doing string maipulation, variable existence checks, etc. directly in
+# shell script.
+
+# Per suggestions from brew install libpq; see: bin/install-psql.zsh
+export LDFLAGS="${LDFLAGS:+$LDFLAGS }-L/opt/homebrew/opt/libpq/lib"
+export CPPFLAGS="${CPPFLAGS:+$CPPFLAGS }-I/opt/homebrew/opt/libpq/include"
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}/opt/homebrew/opt/libpq/lib/pkgconfig"
+
+# export CPPFLAGS="${CPPFLAGS:+$CPPFLAGS }-I/opt/homebrew/opt/openjdk/include"
 export DISABLE_MAGIC_FUNCTIONS=true # Stop oh-my-zsh from being too clever.
 export EXA_COLORS='*.md=;'
 export FZF_DEFAULT_COMMAND='fdfind --type=f'
