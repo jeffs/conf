@@ -4,6 +4,7 @@
 # Editor droppings
 .idea/
 .*.swp
+.swp
 *~
 \#*#
 .netrwhist
@@ -36,7 +37,4 @@ target/
 
 # Variable data, as described in the Filesystem Hierarchy Standard:
 # https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
-/var/
-
-# Visual Studio Code droppings
-.vscode/
+var/

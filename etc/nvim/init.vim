@@ -111,6 +111,14 @@ vnoremap <silent> <Leader>t :<C-u>execute "'<,'>!tabulate" v:count<CR>
 let g:is_bash = 1
 let g:user_emmet_mode='i'
 
+" ctermbg=NONE should do the trick, since all I want is for iTerm transparency
+" to work; but for some reason nvim uses guibg, even in the terminal.
+" autocmd Colorscheme * hi Normal ctermbg=NONE guibg=NONE
+hi Normal ctermbg=NONE guibg=NONE
+
+" Even with the above, area below the text is opaque.
+" colorscheme elflord
+
 function Autowrite()
     autocmd TextChanged,TextChangedI <buffer> silent write
 endfunction
