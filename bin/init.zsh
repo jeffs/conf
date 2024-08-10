@@ -9,5 +9,6 @@
 ~/conf/bin/install-nvim.zsh
 ~/conf/bin/install-rust.zsh
 
-brew install entr tmux jq
-cargo install bat fd-find
+# The 'expect' package includes unbuffer, which is used by bin/upgrade.zsh.
+brew install entr expect tmux jq pyenv
+cargo install bat fd-find ripgrep sd
