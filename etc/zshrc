@@ -155,3 +155,9 @@ function poetry-activate {
 # https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+for conf_module in ~/git/conf-*(N); do
+    if [ -r $conf_module/etc/zshrc ]; then
+        source $conf_module/etc/zshrc
+    fi
+done
