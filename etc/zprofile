@@ -17,7 +17,7 @@ path=(
 )
 
 # TODO: Build env in Rust, and source the Rust program's output here, rather
-# than doing string maipulation, variable existence checks, etc. directly in
+# than doing string manipulation, variable existence checks, etc. directly in
 # shell script.
 
 # Per suggestions from brew install libpq; see: bin/install-psql.zsh
@@ -27,6 +27,7 @@ export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}/opt/homebrew/opt/l
 
 # export CPPFLAGS="${CPPFLAGS:+$CPPFLAGS }-I/opt/homebrew/opt/openjdk/include"
 export DISABLE_MAGIC_FUNCTIONS=true # Stop oh-my-zsh from being too clever.
+export EDITOR='code --wait'
 export EXA_COLORS='*.md=;'
 export FZF_DEFAULT_COMMAND='fdfind --type=f'
 export LESS='-FRX -j5'
