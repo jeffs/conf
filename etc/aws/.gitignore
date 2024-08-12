@@ -1,0 +1,5 @@
+# The AWS CLI itself apparently creates this, with a "cache" subdirectory.
+cli/
+
+# Don't publish AWS secret keys to GitHub.
+credentials
