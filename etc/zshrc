@@ -79,8 +79,7 @@ function // { "$@" }
 
 c() { cd "$@" && ls; }
 cg() { c $(git rev-parse --show-toplevel); }
-cl() { mc ~/file/log/$(date +%Y/%m/%d); }
-cy() { mc ~/file/log/$(yesterday); }
+cy() { cl --yesterday; }
 l() { ls -hl --color "$@" | $PAGER }
 la() { ls -Ahl --color "$@" | $PAGER }
 mc() { mkdir -p $1 && c $1; }
