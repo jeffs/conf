@@ -136,3 +136,22 @@ bindkey '^[l' down-case-word
 
 # Stolen by FZF.  Steal it back.
 bindkey '^[c' capitalize-word
+
+function poetry-activate {
+    readonly env_path="$(poetry env info --path)"
+    if [[ -z "$VIRTUAL_ENV" ]]; then
+        # No venv was already active.
+        source "$env_path/bin/activate"
+    elif [[ "$VIRTUAL_ENV" != "$env_path" ]]; then
+        # A different venv was already active.
+        deactivate
+        source "$env_path/bin/activate"
+    else
+        # This very venv was already active.
+    fi
+}
+
+# Terraform
+# https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/terraform terraform
