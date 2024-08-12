@@ -5,8 +5,10 @@
 
 if [[ $# -eq 0 ]]; then
     readonly dir=~/log/$(date +%Y/%m/%d)
+    readonly title=today
 elif [[ $1 = "--yesterday" ]]; then
     readonly dir=~/log/$(PYTHONPATH=~/git/py-kart python -m yesterday)
+    readonly title=yesterday
 else
     echo "$1: bad option" >&2
     exit 2
@@ -14,7 +16,18 @@ fi
 
 mkdir -p $dir
 cd $dir
-[ -d .git ] || git init
+
+if [ ! -d .git ]; then
+    git init
+
+    mkdir .vscode
+    echo \
+        '{"window.title": "'$title'${separator}${activeEditorShort}${separator}${profileName}"}' \
+        >.vscode/settings.json
+    git add .vscode
+
+    git commit -m 'Initial commit'
+fi
 
 # This flag is a terrible hack.  See also:
 # https://stackoverflow.com/questions/76987792/when-starting-vs-code-from-the-cli-can-i-make-the-workspace-trusted-without-dis
