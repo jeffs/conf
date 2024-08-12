@@ -4,7 +4,7 @@ path=(
     ~/.cargo/bin
     ~/go/bin
     /usr/local/go/bin
-    /opt/homebrew/opt/libpq/bin    
+    /opt/homebrew/opt/libpq/bin
     /opt/homebrew/opt/openjdk/bin
     /opt/homebrew/bin
     /usr/local/bin
@@ -44,15 +44,15 @@ export HOMEBREW_REPOSITORY='/usr/local/Homebrew'
 export MANPATH="/usr/local/share/man${MANPATH+:$MANPATH}"
 export INFOPATH="/usr/local/share/info:${INFOPATH:-}"
 
+# See 'man brew'.
+export HOMEBREW_NO_ENV_HINTS=1       # Make brew upgrade a little quieter.
+export HOMEBREW_NO_INSTALL_CLEANUP=1 # Don't run brew cleanup automatically.
+
 # Required by diesel.
 export PQ_LIB_DIR="$(brew --prefix libpq)/lib"
 
-if [ "${TERM_PROGRAM:-}" = vscode ]; then
-    export EDITOR='code --wait'
-else
-    export EDITOR=nvim
-fi
-
-
-# Make pyright happy.
-export PYRIGHT_PYTHON_FORCE_VERSION=latest
+# Pyright yells that you should set PYRIGHT_PYTHON_FORCE_VERSION=latest, even if
+# you've set that variable to a specific version.  But, latest is often buggy.
+# The only rationale Pyright seems to respect is consistency with Pylance.
+export PYRIGHT_PYTHON_FORCE_VERSION=1.1.371
+export PYRIGHT_PYTHON_PYLANCE_VERSION=v2024.7.1
