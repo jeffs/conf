@@ -7,7 +7,7 @@ if [[ $# -eq 0 ]]; then
     readonly dir=~/log/$(date +%Y/%m/%d)
     readonly title=today
 elif [[ $1 = "--yesterday" ]]; then
-    readonly dir=~/log/$(PYTHONPATH=~/git/py-kart python -m yesterday)
+    readonly dir=~/log/$(python -m yesterday)
     readonly title=yesterday
 else
     echo "$1: bad option" >&2
