@@ -11,7 +11,5 @@ Other stuff you should do after running the install scripts:
   - Avoid Homebrew etc. where possible
 * Automatically install font(s), and configure apps (VSCode):
   - https://www.jetbrains.com/lp/mono/
-* Support cascading profiles: home, work, etc.
-  (Geode has profiles, but they don't cascade.)
 
 [1]: https://forum.figma.com/t/keyboard-shortcut-are-overriden-by-notion-running-on-background/59521/7
