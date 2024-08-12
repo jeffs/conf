@@ -57,3 +57,9 @@ export PQ_LIB_DIR="$(brew --prefix libpq)/lib"
 # The only rationale Pyright seems to respect is consistency with Pylance.
 export PYRIGHT_PYTHON_FORCE_VERSION=1.1.371
 export PYRIGHT_PYTHON_PYLANCE_VERSION=v2024.7.1
+
+for conf_module in ~/git/conf-*(N); do
+    if [ -r $conf_module/etc/zprofile ]; then
+        source $conf_module/etc/zprofile
+    fi
+done
