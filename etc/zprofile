@@ -33,6 +33,7 @@ export FZF_DEFAULT_COMMAND='fdfind --type=f'
 export LESS='-FRX -j5'
 export LS_COLORS='di=01;36'
 export PAGER=less
+export PYTHONPATH="${PYTHONPATH:+$PYTHONPATH:}$HOME/git/py-kart"
 export PYTHONSTARTUP=~/conf/etc/pythonrc.py
 export READNULLCMD=$PAGER
 export RIPGREP_CONFIG_PATH=~/conf/etc/ripgreprc
