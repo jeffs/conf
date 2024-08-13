@@ -11,8 +11,6 @@
 	spliff = difftool -y
 	root = rev-parse --show-toplevel
 	exec = "!exec "
-	si    = "!function f { git log --first-parent --oneline ${1:-main}..; }; f"
-	since = "!function f { git log --first-parent --oneline ${1:-main}..; }; f"
 	f-the-police = commit --no-verify
 [color]
 	ui = true

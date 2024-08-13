@@ -64,11 +64,12 @@ alias uu='c ../..'
 alias uuu='c ../../..'
 alias py='python -q'
 alias r='R --no-save --quiet'
+alias si=since
 alias tf=terraform
 for i in `seq 9`; do alias t$i="t -L$i"; done
 
 alias g=git
-for s in bl br ci clone co di flog glog push push-f show si since st stash; do alias $s="git $s"; done
+for s in bl br ci clone co di flog glog push push-f show st stash; do alias $s="git $s"; done
 alias pull='git pull --prune'
 alias gp=git-prune
 
