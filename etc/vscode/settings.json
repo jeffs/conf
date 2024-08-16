@@ -1,0 +1,6 @@
+// TODO: Link this file in init.zsh.  It seems to live in:
+// ~/Library/Application Support/Code/User/settings.json
+
+{
+    "python.languageServer": "Pylance"
+}
