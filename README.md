@@ -1,3 +1,4 @@
+# Environment configuration for macOS
 
 Other stuff you should do after running the install scripts:
 

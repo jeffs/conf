@@ -2,6 +2,8 @@
 #
 # Open log project for today (or --yesterday) in VSCode, creating it if it
 # doesn't already exist.
+#
+# TODO: Accept dates as arguments.
 
 if [[ $# -eq 0 ]]; then
     readonly dir=~/log/$(date +%Y/%m/%d)
