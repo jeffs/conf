@@ -83,10 +83,15 @@ function b {
     fi
 }
 
+if [[ "$TERM_PROGRAM" == vscode ]]; then
+    # Prefix matches with file:lineno: so I click to open.
+    alias rg='rg --no-heading'
+fi
+
 # TODO: If the argument to t is gitignored (as listed by git check-ignore),
 # don't pass --git-ignore.
 
-alias tree='exa --group-directories-first --tree --ignore-glob="__pycache__|dist|node_modules|target"'
+alias tree='eza --group-directories-first --tree --ignore-glob="__pycache__|dist|node_modules|target"'
 alias t=tree
 
 # FUNCTIONS
@@ -114,12 +119,12 @@ play() {
 
 source ~/conf/etc/init-node.zsh
 
-exa() {
-    if ! /usr/bin/which exa; then
-        cargo install exa
+eza() {
+    if ! /usr/bin/which eza; then
+        cargo install eza
     fi
-    unset -f exa
-    exa "$@"
+    unset -f eza
+    eza "$@"
 }
 
 # Open a man page in Vim.
