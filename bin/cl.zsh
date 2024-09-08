@@ -19,7 +19,6 @@ cd $dir
 
 if [ ! -d .git ]; then
     git init
-    git commit -m 'Initial commit'
 fi
 
 # This flag is a terrible hack.  See also:
