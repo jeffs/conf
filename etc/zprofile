@@ -38,7 +38,6 @@ export ZSH=~/.oh-my-zsh
 
 export LESS='-FRX -j5'
 export PAGER=less
-export MANPAGER='bat -pl man'
 
 # Based on 'brew shellenv' output.
 export HOMEBREW_PREFIX='/usr/local'
