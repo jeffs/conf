@@ -1,4 +1,4 @@
-#![allow(dead_code)]
+// See also: [`evcxr/COMMON.md`](https://github.com/evcxr/evcxr/blob/main/COMMON.md)
 
 fn vec<T>(xs: impl IntoIterator<Item = T>) -> Vec<T> {
     xs.into_iter().collect()
