@@ -10,7 +10,8 @@ Other stuff you should do after running the install scripts:
 * Consolidate Linux, macOS, Docker, and Windows support
   - Rewrite as much as possible in Rust
   - Avoid Homebrew etc. where possible
-* Automatically install font(s), and configure apps (VSCode):
+* Automatically install font(s), and configure desktop apps (such as IDEs):
   - https://www.jetbrains.com/lp/mono/
+* Move scripts from `bin` to `src`, symlink them from `bin`, and add `bin` to `PATH`, rather than creating `~/usr/bin`.
 
 [1]: https://forum.figma.com/t/keyboard-shortcut-are-overriden-by-notion-running-on-background/59521/7
