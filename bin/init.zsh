@@ -12,3 +12,5 @@
 # The 'expect' package includes unbuffer, which is used by bin/upgrade.zsh.
 brew install entr expect tmux jq pyenv
 cargo install bat fd-find ripgrep sd
+
+cargo install --path ~/conf/prj/cl
