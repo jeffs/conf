@@ -17,18 +17,20 @@ use std::{
 use chrono::{Local, TimeDelta};
 
 enum Error {
-    Arg(String),
+    Args(Vec<String>),
     Dir(PathBuf, io::Error),
 }
 
 type Result<T> = std::result::Result<T, Error>;
 
 fn main_imp() -> Result<()> {
+    let args = env::args().skip(1).collect::<Vec<_>>();
+
     // Decide what date to create a log directory for, per argv.
-    let date = match env::args().nth(1) {
-        Some(arg) if arg == "-y" || arg == "--yesterday" => Local::now() - TimeDelta::days(1),
-        Some(arg) => return Err(Error::Arg(arg)),
-        None => Local::now(),
+    let date = match args.as_slice() {
+        [] => Local::now(),
+        [arg] if arg == "-y" || arg == "--yesterday" => Local::now() - TimeDelta::days(1),
+        _ => return Err(Error::Args(args)),
     }
     .date_naive();
 
@@ -71,8 +73,8 @@ fn main_imp() -> Result<()> {
 fn main() {
     match main_imp() {
         Ok(()) => (),
-        Err(Error::Arg(arg)) => {
-            eprintln!("Error: bad argument: '{arg}'");
+        Err(Error::Args(args)) => {
+            eprintln!("Error: bad arguments: {args:?}");
             eprintln!("Usage: cl [-y|--yesterday]");
             exit(2);
         }
