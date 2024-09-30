@@ -21,7 +21,7 @@ nnoremap <Tab> <C-^>
 
 " Toggle line numbering or wrapping.
 nnoremap <silent> <C-n> :setlocal number!<CR>
-nnoremap <silent> <C-_> :setlocal wrap!<CR>
+nnoremap <silent> <M-z> :setlocal wrap!<CR>
 
 " Edit the previous/next file.
 nnoremap <silent> <Left> :previous<CR>
