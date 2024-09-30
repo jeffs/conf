@@ -83,11 +83,11 @@ nnoremap <C-l> :syntax sync fromstart<CR>
 nnoremap Y y$
 
 " Abbreviations
-" 🤮 U+1F92E 		Face Vomiting
-" ☯️  U+262F, U+FE0F 	Yin Yang Emoji, Variant Form
-" 🖖 U+1F596 		Vulcan Salute
-" ⌘  U+2318  		Place of Interest Sign 
-" ⇧  U+21E7  		Level 2 Select Key
+" 🤮 U+1F92E            Face Vomiting
+" ☯️  U+262F, U+FE0F     Yin Yang Emoji, Variant Form
+" 🖖 U+1F596            Vulcan Salute
+" ⌘  U+2318             Place of Interest Sign 
+" ⇧  U+21E7             Level 2 Select Key
 abbrev 0vomit    🤮
 abbrev 0yin_yang ☯️
 abbrev 0vulcan   🖖
@@ -113,11 +113,17 @@ let g:user_emmet_mode='i'
 
 " ctermbg=NONE should do the trick, since all I want is for iTerm transparency
 " to work; but for some reason nvim uses guibg, even in the terminal.
-" autocmd Colorscheme * hi Normal ctermbg=NONE guibg=NONE
-hi Normal ctermbg=NONE guibg=NONE
-
-" Even with the above, area below the text is opaque.
-" colorscheme elflord
+"
+" The automd, for whatever reason, doesn't always execute when I expect it to.
+"
+"   autocmd Colorscheme * hi Normal ctermbg=NONE guibg=NONE
+"
+" I'm disabling this for now anyway, because I'm not currently using iTerm.
+"
+"   hi Normal ctermbg=NONE guibg=NONE
+"
+" Even with the above, the area below the text is opaque in elflord.
+colorscheme elflord
 
 function Autowrite()
     autocmd TextChanged,TextChangedI <buffer> silent write
