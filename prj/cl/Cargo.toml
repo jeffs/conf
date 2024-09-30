@@ -1,0 +1,8 @@
+[package]
+name = "cl"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+chrono = { version = "0.4.38", features = ["alloc"] }
+dirs = "5.0.1"
