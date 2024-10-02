@@ -3,9 +3,17 @@
 //! # TODO
 //!
 //! * Accept dates as arguments.
-//! * Support a CLI mode to print the target directory path rather than spawning VS Code.
+//! * Support an option to print the target directory path rather than spawning VS Code.
 //!   - Document a shell function to call this program and `cd`` to the target directory.
 //!   - This program cannot directly change the working directory of its parent shell.
+//! * Directly support installation of a macOS app bundle.
+//!   - Embed the app icon, rather than setting the icon via drag on drop.
+//!   - Automate the addition of the binary, which is currently done thus:
+//!     ```sh
+//!     cargo build --release
+//!     cp target/release/cl ../../app/cl.app/Contents/MacOS
+//!     ```
+//!   - Generate the bundle in `~/Applications`, and remove `../../app` from version control.
 
 use std::{
     env::{self, set_current_dir},
@@ -16,6 +24,7 @@ use std::{
 
 use chrono::{Local, TimeDelta};
 
+#[derive(Debug)]
 enum Error {
     Args(Vec<String>),
     Dir(PathBuf, io::Error),
@@ -54,17 +63,28 @@ fn main_imp() -> Result<()> {
         Err(err) => eprintln!("Warning: can't run git init: {err}"),
     }
 
-    // Launch VS Code in the target directory.  By default, Code does not "trust" new directories;
-    // so, as a hack, disable the entire "workspace trust" feature for this session.  See also:
+    // Launch VS Code in the target directory.
+    //
+    // We hard-code a path to the VS Code binary, because simply passing "code" does not seem to
+    // work when this program is the main binary of a MacOS bundle double-clicked in Finder. The
+    // issue may be that PATH is not set appropriately, yet `.status()` returns `Ok` despite the
+    // failure.  VS Code provides a CLI command at `/usr/local/bin/code`, but it's merely a shell
+    // script that doesn't appear to do anything we need here, and still causes an extra VS Code
+    // dock icon to briefly appear and bounce.
+    //
+    // By default, Code does not "trust" new directories; so, as a hack, disable the entire
+    // "workspace trust" feature for this session.  See also:
     // <https://stackoverflow.com/questions/76987792/when-starting-vs-code-from-the-cli-can-i-make-the-workspace-trusted-without-dis>
-    //     code --disable-workspace-trust .
-    match Command::new("code")
+    match Command::new("/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code")
         .args(["--disable-workspace-trust", "."])
         .status()
     {
-        Ok(status) if !status.success() => eprintln!("Warning: VS Code returned bad status"),
+        Ok(status) if !status.success() => {
+            eprintln!("Warning: Visual Studio Code returned bad status")
+        }
+
         Ok(_) => (),
-        Err(err) => eprintln!("Warning: can't spawn VS Code: {err}"),
+        Err(err) => eprintln!("Warning: can't spawn Visual Studio Code: {err}"),
     }
 
     Ok(())

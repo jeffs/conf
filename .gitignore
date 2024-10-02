@@ -1,0 +1,6 @@
+# MacOS puts a literal carriage return in the name of the Icon file.  Git
+# doesn't support any targeted way to ignore such paths without literally
+# embedding a carriage return in the excludes file.  This is fairly easy to
+# work with in Vim, but beware that Visual Studio Code will not display it
+# correctly, and will "fix" it by adding a line feed that breaks the exclusion.
+Icon[]
