@@ -14,6 +14,7 @@
 //!     cp target/release/cl ../../app/cl.app/Contents/MacOS
 //!     ```
 //!   - Generate the bundle in `~/Applications`, and remove `../../app` from version control.
+//!   - Consider using [cargo-bundle](https://github.com/burtonageo/cargo-bundle).
 
 use std::{
     env::{self, set_current_dir},
