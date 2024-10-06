@@ -2,12 +2,6 @@
 
 cd
 
-# Create cache and history directories for Neovim.
-for d in back swap undo view; do
-    mkdir -p var/nvim/$d
-done
-chmod -R 700 var/nvim
-
 # Move existing config files out of the way.
 for f in .config/nvim .gitconfig .tmux.conf .zprofile .zshrc; do
     if [ -e $f ]; then
