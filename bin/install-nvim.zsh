@@ -3,5 +3,8 @@
 /opt/homebrew/bin/brew install neovim
 
 mkdir -p ~/usr/bin
-ln -s /opt/homebrew/bin/nvim ~/usr/bin/vi
-ln -s /opt/homebrew/bin/nvim ~/usr/bin/vim
+ln -fs /opt/homebrew/bin/nvim ~/usr/bin/vi
+ln -fs /opt/homebrew/bin/nvim ~/usr/bin/vim
+
+# Initialize files per:
+# https://lazy.folke.io/installation
