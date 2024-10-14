@@ -2,7 +2,7 @@
 nvm() {
     # Install NVM if necessary.
     if [ ! -d ~/.nvm ]; then
-        ~/conf/bin/install-node.zsh || return 1
+        ~/conf/src/install-node.zsh || return 1
     fi
     unset -f nvm
     export NVM_DIR=~/.nvm

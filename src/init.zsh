@@ -2,12 +2,12 @@
 #
 # This script configures the local host to my liking.
 
-~/conf/bin/install-brew.zsh
-~/conf/bin/install-dotfiles.zsh
-~/conf/bin/install-omz.zsh
-~/conf/bin/install-zsh-syntax-highlighting.zsh
-~/conf/bin/install-nvim.zsh
-~/conf/bin/install-rust.zsh
+~/conf/src/install-brew.zsh
+~/conf/src/install-dotfiles.zsh
+~/conf/src/install-omz.zsh
+~/conf/src/install-zsh-syntax-highlighting.zsh
+~/conf/src/install-nvim.zsh
+~/conf/src/install-rust.zsh
 
 # The 'expect' package includes unbuffer, which is used by bin/upgrade.zsh.
 brew install entr expect tmux jq pyenv
