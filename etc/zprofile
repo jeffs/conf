@@ -1,5 +1,6 @@
 path=(
     ~/usr/bin
+    ~/conf/bin
     ~/.local/bin
     ~/.cargo/bin
     ~/go/bin
