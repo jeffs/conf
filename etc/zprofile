@@ -3,6 +3,7 @@ path=(
     ~/conf/bin
     ~/.local/bin
     ~/.cargo/bin
+    ~/opt/luarocks/bin
     ~/go/bin
     /usr/local/go/bin
     /opt/homebrew/opt/libpq/bin
