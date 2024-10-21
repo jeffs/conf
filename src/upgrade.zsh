@@ -4,10 +4,16 @@
 echo '* Homebrew'
 brew upgrade --quiet
 
-# Upgrade third-party packages installed using Cargo.  As a hack, consider a
-# package "third-party" if its name doesn't include my name; otherwise, cargo
-# would try to check crates.io for packages that have the same name as the ones
-# I installed from local source code.
+# Upgrade Rust and its tooling, then any third-party packages installed using
+# Cargo.  As a hack, consider a package "third-party" if its name doesn't
+# include my name; otherwise, cargo would try to check crates.io for packages
+# that have the same name as the ones I installed from local source code.
+#
+# The `rustup update` command is occasionally bemused by some kind of cache
+# corruption.  Should that occur, run `update-rust.zsh`.
+echo '* Rustup'
+rustup update
+
 echo '* Cargo'
 cargo install --quiet $(cargo install --list |rg '^\w' |awk '!/jeff/ { print $1 }')
 
