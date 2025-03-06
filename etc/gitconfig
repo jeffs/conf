@@ -1,5 +1,4 @@
 [alias]
-	bl     = branch --list '[^_]*'
 	br     = branch
 	ci     = commit
 	co     = checkout
@@ -11,7 +10,10 @@
 	spliff = difftool -y
 	root = rev-parse --show-toplevel
 	exec = "!exec "
-	f-the-police = commit --no-verify
+	ci-no-verify = commit --no-verify
+	up = "!exec gitup"
+	si = "!exec since"
+
 [color]
 	ui = true
 [core]
