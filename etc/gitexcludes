@@ -9,6 +9,7 @@
 \#*#
 .netrwhist
 /doc/tags
+.zed
 
 # Python droppings
 *.pyc

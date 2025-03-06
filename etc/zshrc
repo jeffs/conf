@@ -54,6 +54,7 @@ autoload -Uz compinit && compinit
 
 unalias l la
 
+alias clippy='cargo clippy -- -W clippy::pedantic'
 alias vim=nvim
 alias e=${EDITOR:-nvim}
 alias rust=evcxr  # Rust REPL
@@ -64,33 +65,22 @@ alias uu='c ../..'
 alias uuu='c ../../..'
 alias py='python -q'
 alias r='R --no-save --quiet'
-alias si=since
 alias tf=terraform
-for i in `seq 9`; do alias t$i="t -L$i"; done
+alias up=gitup
+
+# Show directory tree to a specified depth.
+for i in $(seq 9); do alias t$i="t -L$i"; done
 
 alias g=git
-for s in bl br ci clone co di flog glog push push-f show st stash; do alias $s="git $s"; done
+for s in br ci clone co di flog glog glog4 push push-f show st stash; do alias $s="git $s"; done
 alias pull='git pull --prune'
-alias gp=git-prune
-
-function re { cargo eval --expr "$*"; }
-
-function b {
-    if (( $# == 0 )); then
-        bl
-    else
-        br "$@"
-    fi
-}
-
 if [[ "$TERM_PROGRAM" == vscode ]]; then
-    # Prefix matches with file:lineno: so I click to open.
+    # Prefix matches with `file:lineno:` so I can click to open.
     alias rg='rg --no-heading'
 fi
 
 # TODO: If the argument to t is gitignored (as listed by git check-ignore),
-# don't pass --git-ignore.
-
+#  don't pass --git-ignore.
 alias tree='eza --group-directories-first --tree --ignore-glob="__pycache__|dist|node_modules|target"'
 alias t=tree
 
@@ -107,6 +97,7 @@ cy() { cl --yesterday; }
 l() { ls -hl --color "$@" | $PAGER }
 la() { ls -Ahl --color "$@" | $PAGER }
 mc() { mkdir -p $1 && c $1; }
+function re { cargo eval --expr "$*"; }
 
 # TODO: Support --reset and --rm flags.
 play() {
@@ -114,6 +105,22 @@ play() {
         rs|rust|'')
             code ~/var/play/rs
             ;;
+    esac
+}
+
+# TODO: Unify since and gitup into a single 'grit' tool.
+si() {
+    if test $# = 0 && git show-ref -q dev; then
+        since dev
+    else
+        since "$@"
+    fi
+}
+
+grit () {
+    case $1; in
+        up|update) gitup "${@[@]:2}" ;;
+        si|since) si "${@[@]:2}" ;;
     esac
 }
 

@@ -14,7 +14,6 @@ path=(
     /usr/sbin
     /sbin
     '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
-    /Applications/Postgres.app/Contents/Versions/15/bin/
 )
 
 # TODO: Build env in Rust, and source the Rust program's output here, rather
@@ -25,6 +24,11 @@ path=(
 export LDFLAGS="${LDFLAGS:+$LDFLAGS }-L/opt/homebrew/opt/libpq/lib"
 export CPPFLAGS="${CPPFLAGS:+$CPPFLAGS }-I/opt/homebrew/opt/libpq/include"
 export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}/opt/homebrew/opt/libpq/lib/pkgconfig"
+
+# Workaround for RocksDB package from crates.io.
+export DYLD_LIBRARY_PATH=/Library/Developer/CommandLineTools/usr/lib
+
+export GITUP_TRUNKS=dev,main,master
 
 # export CPPFLAGS="${CPPFLAGS:+$CPPFLAGS }-I/opt/homebrew/opt/openjdk/include"
 export DISABLE_MAGIC_FUNCTIONS=true # Stop oh-my-zsh from being too clever.
@@ -59,6 +63,11 @@ export PQ_LIB_DIR="$(brew --prefix libpq)/lib"
 # The only rationale Pyright seems to respect is consistency with Pylance.
 export PYRIGHT_PYTHON_FORCE_VERSION=1.1.371
 export PYRIGHT_PYTHON_PYLANCE_VERSION=v2024.7.1
+
+
+# Setting via ~/.aws/credentials, but this is supposedly an alternative.
+# TODO: Move to: ~/git/conf-*
+source ~/.aws/env
 
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zprofile ]; then
