@@ -1,3 +1,15 @@
+# TODO: Build env in Rust, and source the Rust program's output here, rather
+#  than doing string manipulation, variable existence checks, etc. directly in
+#  shell script.
+
+if [ -r ~/conf/var/VERBOSE ]; then
+    alias log="echo conf:"
+else
+    alias log=:
+fi
+
+log 'Loading primary'
+
 path=(
     ~/usr/bin
     ~/conf/bin
@@ -15,10 +27,6 @@ path=(
     /sbin
     '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
 )
-
-# TODO: Build env in Rust, and source the Rust program's output here, rather
-# than doing string manipulation, variable existence checks, etc. directly in
-# shell script.
 
 # Per suggestions from brew install libpq; see: bin/install-psql.zsh
 export LDFLAGS="${LDFLAGS:+$LDFLAGS }-L/opt/homebrew/opt/libpq/lib"
@@ -64,13 +72,9 @@ export PQ_LIB_DIR="$(brew --prefix libpq)/lib"
 export PYRIGHT_PYTHON_FORCE_VERSION=1.1.371
 export PYRIGHT_PYTHON_PYLANCE_VERSION=v2024.7.1
 
-
-# Setting via ~/.aws/credentials, but this is supposedly an alternative.
-# TODO: Move to: ~/git/conf-*
-source ~/.aws/env
-
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zprofile ]; then
+        log "Loading ${conf_module#*/conf-}"
         source $conf_module/etc/zprofile
     fi
 done
