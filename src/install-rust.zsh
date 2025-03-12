@@ -8,5 +8,6 @@ curl -fsSLo /tmp/rustup.sh https://sh.rustup.rs/
 sh /tmp/rustup.sh -q -y --no-modify-path
 rm /tmp/rustup.sh
 
-cargo install cargo-audit --features=fix
-cargo install cargo-watch 
+# Not currently using binstall because it may install untrusted binaries.
+cargo install -F fix cargo-audit
+cargo install cargo-watch sccache

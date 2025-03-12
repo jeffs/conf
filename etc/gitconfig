@@ -1,7 +1,7 @@
 [alias]
 	br     = branch
 	ci     = commit
-	co     = checkout
+	co     = checkout --recurse-submodules
 	di     = diff
 	st     = status
 	flog   = log --first-parent --oneline
