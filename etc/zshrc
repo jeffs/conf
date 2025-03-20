@@ -54,7 +54,7 @@ autoload -Uz compinit && compinit
 
 unalias l la
 
-alias clippy='cargo clippy -- -W clippy::pedantic'
+alias clippy='cargo clippy --tests && cargo clippy -- -W clippy::pedantic'
 alias vim=nvim
 alias e=${EDITOR:-nvim}
 alias rust=evcxr  # Rust REPL
@@ -64,7 +64,6 @@ alias u='c ..'
 alias uu='c ../..'
 alias uuu='c ../../..'
 alias py='python -q'
-alias r='R --no-save --quiet'
 alias tf=terraform
 alias up=gitup
 
@@ -103,7 +102,7 @@ function re { cargo eval --expr "$*"; }
 play() {
     case $1; in
         rs|rust|'')
-            code ~/var/play/rs
+            e ~/var/play/rs
             ;;
     esac
 }
