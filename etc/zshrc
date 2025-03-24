@@ -78,6 +78,8 @@ if [[ "$TERM_PROGRAM" == vscode ]]; then
     alias rg='rg --no-heading'
 fi
 
+alias yolo='ci -a --amend --no-edit --no-verify && push -f'
+
 # TODO: If the argument to t is gitignored (as listed by git check-ignore),
 #  don't pass --git-ignore.
 alias tree='eza --group-directories-first --tree --ignore-glob="__pycache__|dist|node_modules|target"'
