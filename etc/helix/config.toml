@@ -1,0 +1,6 @@
+[keys.insert]
+#"C-[" = "normal_mode"
+#";" = "command_mode"
+
+[keys.normal]
+Z = { Z = ":wq" }

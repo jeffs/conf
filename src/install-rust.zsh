@@ -11,3 +11,6 @@ rm /tmp/rustup.sh
 # Not currently using binstall because it may install untrusted binaries.
 cargo install -F fix cargo-audit
 cargo install cargo-watch sccache
+
+# Without the rust-analyzer component, Helix can't find rust-analyzer.
+rustup component add rust-analyzer
