@@ -1,2 +1,10 @@
+[[language]]
+name = "bash"
+rulers = [80]
+file-types = [{ glob = "zprofile" }, { glob = "zshrc" }]
+
+[[language]]
+name = "rust"
+rulers = [100]
+
 [language-server.rust-analyzer]
-config = { cargo = { allfFeatures = "true" } }
