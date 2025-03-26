@@ -3,4 +3,6 @@
 #";" = "command_mode"
 
 [keys.normal]
-Z = { Z = ":wq" }
+Z = ":write-quit"
+C-y = "scroll_up"
+C-e = "scroll_down"
