@@ -99,6 +99,7 @@ l() { ls -hl --color "$@" | $PAGER }
 la() { ls -Ahl --color "$@" | $PAGER }
 mc() { mkdir -p $1 && c $1; }
 function re { cargo eval --expr "$*"; }
+function j { c $(jump "$@"); }
 
 # TODO: Support --reset and --rm flags.
 play() {
