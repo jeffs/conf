@@ -1,8 +1,14 @@
+[editor]
+
+# Don't pop up info windows for `g` or `m` commands.  Doesn't help with `:`.
+# auto-info = false
+
 [keys.insert]
 #"C-[" = "normal_mode"
-#";" = "command_mode"
 
 [keys.normal]
 Z = ":write-quit"
 C-y = "scroll_up"
 C-e = "scroll_down"
+";" = "command_mode"
+":" = "collapse_selection"
