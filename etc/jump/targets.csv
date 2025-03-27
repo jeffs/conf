@@ -1,0 +1,5 @@
+~/log/%Y/%m/%d,day,cl,l
+~/log/%Y/%m,month
+
+# TODO: Once jump supports multiple target DB files, separate them by profile.
+~/git/matching-engine-v3,me
