@@ -67,8 +67,15 @@ alias py='python -q'
 alias tf=terraform
 alias up=gitup
 
+## Tree
+
+alias tree='eza --group-directories-first --tree --ignore-glob="__pycache__|dist|node_modules|target"'
+alias t=tree
+
 # Show directory tree to a specified depth.
 for i in $(seq 9); do alias t$i="t -L$i"; done
+
+## Git
 
 alias g=git
 for s in br ci clone co di flog glog glog4 push push-f show st stash; do alias $s="git $s"; done
@@ -80,35 +87,30 @@ fi
 
 alias yolo='ci -a --amend --no-edit --no-verify && push -f'
 
-# TODO: If the argument to t is gitignored (as listed by git check-ignore),
-#  don't pass --git-ignore.
-alias tree='eza --group-directories-first --tree --ignore-glob="__pycache__|dist|node_modules|target"'
-alias t=tree
-
 # FUNCTIONS
 
-# Useful when copying lines of code from documentation that includes prompts,
-# or from comments.
+# Strip comment leaders from copy/pasted sample code.
 function $ { "$@" }
 function // { "$@" }
 
 c() { cd "$@" && ls; }
 cg() { c $(git rev-parse --show-toplevel); }
 cy() { cl --yesterday; }
+mc() { mkdir -p $1 && c $1; }
+
 l() { ls -hl --color "$@" | $PAGER }
 la() { ls -Ahl --color "$@" | $PAGER }
-mc() { mkdir -p $1 && c $1; }
-function re { cargo eval --expr "$*"; }
-function j { eval $(jump "$@"); }
 
-# TODO: Support --reset and --rm flags.
-play() {
-    case $1; in
-        rs|rust|'')
-            e ~/var/play/rs
-            ;;
-    esac
-}
+function re { cargo eval --expr "$*"; }
+
+# This is the nuclear option: Forward args to a binary, and eval its output.
+# Ultimately, I expect most of my commands to be binaries, rather than shell
+# functions or aliases; however, "eval" wrappers should not be necessary except
+# to change the state of the shell itself.  Such changes include:
+#
+# * Changing the shell's working directory.
+# * Setting shell or environment variables.
+function j { eval $(jump "$@"); }
 
 # TODO: Unify since and gitup into a single 'grit' tool.
 si() {
@@ -139,19 +141,6 @@ eza() {
 # Open a man page in Vim.
 Man() { vim +":Man $1 | only"; }
 
-# BINDINGS
-
-if [ -d ~/opt/fzf ]; then
-    source ~/opt/fzf/shell/completion.zsh 2>/dev/null
-    source ~/opt/fzf/shell/key-bindings.zsh
-fi
-
-# https://github.com/ohmyzsh/ohmyzsh/issues/5071
-bindkey '^[l' down-case-word
-
-# Stolen by FZF.  Steal it back.
-bindkey '^[c' capitalize-word
-
 function poetry-activate {
     readonly env_path="$(poetry env info --path)"
     if [[ -z "$VIRTUAL_ENV" ]]; then
@@ -166,10 +155,29 @@ function poetry-activate {
     fi
 }
 
+
+# BINDINGS
+
+if [ -d ~/opt/fzf ]; then
+    source ~/opt/fzf/shell/completion.zsh 2>/dev/null
+    source ~/opt/fzf/shell/key-bindings.zsh
+fi
+
+# https://github.com/ohmyzsh/ohmyzsh/issues/5071
+bindkey '^[l' down-case-word
+
+# Stolen by FZF.  Steal it back.
+bindkey '^[c' capitalize-word
+
 # Terraform
 # https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+# PROFILES
+#
+# Extensions and overrides for specific projects.  Checking out different
+# profiles on different laptops allows customization for home, work, etc.
 
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zshrc ]; then
