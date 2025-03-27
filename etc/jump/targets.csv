@@ -1,5 +1,7 @@
 ~/log/%Y/%m/%d,day,cl,l
 ~/log/%Y/%m,month
 
-# TODO: Once jump supports multiple target DB files, separate them by profile.
+# TODO: Separate targets by file once jump supports multiple target DBs.
 ~/git/matching-engine-v3,me
+
+https://github.com/fireflyprotocol/protobuf-messages/pulls,pb
