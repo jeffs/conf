@@ -1,3 +1,5 @@
+theme = "ao"
+
 [editor]
 
 # Don't pop up info windows for `g` or `m` commands.  Doesn't help with `:`.
