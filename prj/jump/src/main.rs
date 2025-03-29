@@ -17,6 +17,7 @@
 use std::io::Write;
 use std::os::unix::ffi::OsStrExt;
 use std::path::{Component, Path, PathBuf};
+use std::process::ExitCode;
 use std::{env, fmt, io};
 
 use jump::{cmd, db};
@@ -30,8 +31,8 @@ enum TargetErrorKind {
 impl fmt::Display for TargetErrorKind {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Self::NotFound => write!(f, "target not found"),
-            Self::Empty => write!(f, "target path is empty"),
+            Self::NotFound => write!(f, "No such target"),
+            Self::Empty => write!(f, "Empty target"),
         }
     }
 }
@@ -66,6 +67,8 @@ impl Error {
         TargetError::new(arg, TargetErrorKind::Empty).into()
     }
 }
+
+impl std::error::Error for Error {}
 
 impl From<db::Error> for Error {
     fn from(value: db::Error) -> Self {
@@ -168,9 +171,10 @@ fn main_imp() -> Result<()> {
     Ok(())
 }
 
-fn main() {
-    if let Err(e) = main_imp() {
-        eprintln!("{e}");
-        std::process::exit(1);
-    }
+fn main() -> ExitCode {
+    if let Err(err) = main_imp() {
+        eprintln!("jump: {err}");
+        return ExitCode::FAILURE;
+    };
+    ExitCode::SUCCESS
 }
