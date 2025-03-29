@@ -41,7 +41,6 @@ export GITUP_TRUNKS=dev,main,master
 
 # export CPPFLAGS="${CPPFLAGS:+$CPPFLAGS }-I/opt/homebrew/opt/openjdk/include"
 export DISABLE_MAGIC_FUNCTIONS=true # Stop oh-my-zsh from being too clever.
-export EDITOR='cursor --wait'
 export FZF_DEFAULT_COMMAND='fdfind --type=f'
 export LS_COLORS='di=01;36'
 export PYTHONPATH="${PYTHONPATH:+$PYTHONPATH:}$HOME/git/py-kart"
@@ -52,6 +51,21 @@ export ZSH=~/.oh-my-zsh
 
 export LESS='-FRX -j5'
 export PAGER=less
+
+env > ~/var/tmp/before.env
+
+if [[ -v CURSOR_TRACE_ID ]]; then
+    export EDITOR='cursor --wait'
+elif [[ "$TERM_PROGRAM" == vscode ]]; then
+    export EDITOR='code --wait'
+elif [[ -v EDITOR ]]; then
+    ;
+else
+    export EDITOR='hx'
+fi
+
+env > ~/var/tmp/after.env
+
 
 # Based on 'brew shellenv' output.
 export HOMEBREW_PREFIX='/usr/local'
