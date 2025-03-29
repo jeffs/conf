@@ -42,7 +42,6 @@ pub enum ErrorKind {
     Io(io::Error),
     Syntax,
     Duplicate(String),
-    Arg(String),
 }
 
 impl fmt::Display for ErrorKind {
@@ -51,7 +50,6 @@ impl fmt::Display for ErrorKind {
             Self::Io(e) => e.fmt(f),
             Self::Syntax => write!(f, "syntax error"),
             Self::Duplicate(s) => write!(f, "duplicate entry for {s}"),
-            Self::Arg(s) => write!(f, "no such target: {s}"),
         }
     }
 }
@@ -81,11 +79,6 @@ impl Error {
     #[must_use]
     pub fn duplicate(location: Location, name: String) -> Self {
         Self::new(location, ErrorKind::Duplicate(name))
-    }
-
-    #[must_use]
-    pub fn arg(file: PathBuf, arg: String) -> Self {
-        Self::new(file, ErrorKind::Arg(arg))
     }
 }
 
