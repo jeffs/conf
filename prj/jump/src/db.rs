@@ -68,18 +68,22 @@ impl Error {
         Self { location, kind }
     }
 
+    #[must_use]
     pub fn io(file: PathBuf, cause: io::Error) -> Self {
         Self::new(file, ErrorKind::Io(cause))
     }
 
+    #[must_use]
     pub fn syntax(location: Location) -> Self {
         Self::new(location, ErrorKind::Syntax)
     }
 
+    #[must_use]
     pub fn duplicate(location: Location, name: String) -> Self {
         Self::new(location, ErrorKind::Duplicate(name))
     }
 
+    #[must_use]
     pub fn arg(file: PathBuf, arg: String) -> Self {
         Self::new(file, ErrorKind::Arg(arg))
     }
@@ -97,6 +101,9 @@ pub struct Database(
 );
 
 impl Database {
+    /// # Errors
+    ///
+    /// Returns an error if the file cannot be read, or if its syntax is invalid.
     pub fn read_file(path: impl AsRef<Path>) -> Result<Self, Error> {
         let path = path.as_ref();
         let file = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;
@@ -126,6 +133,7 @@ impl Database {
         Ok(Database(jumps))
     }
 
+    #[must_use]
     pub fn get(&self, name: &str) -> Option<&PathBuf> {
         self.0.get(name)
     }

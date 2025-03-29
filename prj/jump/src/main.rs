@@ -1,20 +1,7 @@
 use std::path::{Component, Path, PathBuf};
 use std::{env, fmt};
 
-use jump::db;
-
-/// The name of a command to be executed by the calling shell.
-///
-/// TODO: Read shell commands from config, rather than hard-coding them here.
-mod command {
-    /// Change directory.
-    pub const CD: &str = "mc";
-
-    /// Use the OS native file association.
-    ///
-    /// TODO: Compare macOS `open`, Windows `start`, and Linux `xdg-open`.
-    pub const OPEN: &str = "open";
-}
+use jump::{command, db};
 
 #[derive(Debug)]
 enum Error {
@@ -41,7 +28,7 @@ enum Expansion<'a, 'b> {
     String(String),
 }
 
-impl<'a, 'b> AsRef<Path> for Expansion<'a, 'b> {
+impl AsRef<Path> for Expansion<'_, '_> {
     fn as_ref(&self) -> &Path {
         match self {
             Self::Path(p) => p,
