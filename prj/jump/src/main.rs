@@ -1,6 +1,7 @@
-use std::collections::HashMap;
 use std::path::{Component, Path, PathBuf};
-use std::{env, fmt, fs, io};
+use std::{env, fmt};
+
+use jump::db;
 
 /// The name of a command to be executed by the calling shell.
 ///
@@ -15,147 +16,14 @@ mod command {
     pub const OPEN: &str = "open";
 }
 
-mod db {
-    use super::*;
-
-    #[derive(Debug)]
-    pub struct Location {
-        pub file: PathBuf,
-        pub line: Option<usize>,
-    }
-
-    impl fmt::Display for Location {
-        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            self.file.display().fmt(f)?;
-            if let Some(line) = self.line {
-                write!(f, ":{line}")?;
-            }
-            Ok(())
-        }
-    }
-
-    trait IntoLocation {
-        fn into_location(self) -> Location;
-    }
-
-    impl IntoLocation for Location {
-        fn into_location(self) -> Location {
-            self
-        }
-    }
-
-    impl IntoLocation for PathBuf {
-        fn into_location(self) -> Location {
-            Location {
-                file: self,
-                line: None,
-            }
-        }
-    }
-
-    #[derive(Debug)]
-    pub enum ErrorKind {
-        Io(io::Error),
-        Syntax,
-        Duplicate(String),
-        Arg(String),
-    }
-
-    impl fmt::Display for ErrorKind {
-        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            match self {
-                Self::Io(e) => e.fmt(f),
-                Self::Syntax => write!(f, "syntax error"),
-                Self::Duplicate(s) => write!(f, "duplicate entry for {s}"),
-                Self::Arg(s) => write!(f, "no such target: {s}"),
-            }
-        }
-    }
-
-    #[derive(Debug)]
-    pub struct Error {
-        location: Location,
-        kind: ErrorKind,
-    }
-
-    impl Error {
-        fn new(location: impl IntoLocation, kind: ErrorKind) -> Self {
-            let location = location.into_location();
-            Self { location, kind }
-        }
-
-        pub fn io(file: PathBuf, cause: io::Error) -> Self {
-            Self::new(file, ErrorKind::Io(cause))
-        }
-
-        pub fn syntax(location: Location) -> Self {
-            Self::new(location, ErrorKind::Syntax)
-        }
-
-        pub fn duplicate(location: Location, name: String) -> Self {
-            Self::new(location, ErrorKind::Duplicate(name))
-        }
-
-        pub fn arg(file: PathBuf, arg: String) -> Self {
-            Self::new(file, ErrorKind::Arg(arg))
-        }
-    }
-
-    impl fmt::Display for Error {
-        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "{}: {}", self.location, self.kind)
-        }
-    }
-
-    pub struct Database(
-        /// Maps jump target names to directory paths.
-        HashMap<String, PathBuf>,
-    );
-
-    impl Database {
-        pub fn read_file(path: impl AsRef<Path>) -> Result<Self, Error> {
-            let path = path.as_ref();
-            let file = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;
-
-            let mut jumps = HashMap::new();
-            for (index, line) in file.lines().enumerate() {
-                if line.is_empty() || line.starts_with('#') {
-                    continue;
-                }
-
-                let location = || Location {
-                    file: path.to_path_buf(),
-                    line: Some(index + 1),
-                };
-
-                let (dir, names) = line
-                    .split_once(',')
-                    .ok_or_else(|| Error::syntax(location()))?;
-
-                for name in names.split(',') {
-                    if jumps.insert(name.into(), dir.into()).is_some() {
-                        return Err(Error::duplicate(location(), name.into()));
-                    }
-                }
-            }
-
-            Ok(Database(jumps))
-        }
-
-        pub fn get(&self, name: &str) -> Option<&PathBuf> {
-            self.0.get(name)
-        }
-    }
-}
-
 #[derive(Debug)]
 enum Error {
     Db(db::Error),
 }
 
 impl From<db::Error> for Error {
-    fn from(e: db::Error) -> Self {
-        Self::Db(e)
+    fn from(value: db::Error) -> Self {
+        Self::Db(value)
     }
 }
 
