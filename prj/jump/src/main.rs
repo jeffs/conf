@@ -1,7 +1,7 @@
 use std::path::{Component, Path, PathBuf};
 use std::{env, fmt};
 
-use jump::{command, db};
+use jump::{cmd, db};
 
 #[derive(Debug)]
 enum Error {
@@ -103,9 +103,9 @@ fn main_imp() -> Result<(), db::Error> {
         }
 
         let command = if buf.starts_with("http://") || buf.starts_with("https://") {
-            command::OPEN
+            cmd::OPEN
         } else {
-            command::CD
+            cmd::CD
         };
         println!("{command} {}", buf.display());
     }
