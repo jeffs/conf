@@ -15,84 +15,146 @@ mod command {
     pub const OPEN: &str = "open";
 }
 
-#[derive(Debug)]
-struct DbErrorLocation {
-    file: PathBuf,
-    line: Option<usize>,
-}
+mod db {
+    use super::*;
 
-impl fmt::Display for DbErrorLocation {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.file.display().fmt(f)?;
-        if let Some(line) = self.line {
-            write!(f, ":{line}")?;
-        }
-        Ok(())
+    #[derive(Debug)]
+    pub struct Location {
+        pub file: PathBuf,
+        pub line: Option<usize>,
     }
-}
 
-#[derive(Debug)]
-enum DbErrorKind {
-    Io(io::Error),
-    Syntax,
-    Duplicate(String),
-    Arg(String),
-}
-
-impl fmt::Display for DbErrorKind {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::Io(e) => e.fmt(f),
-            Self::Syntax => write!(f, "syntax error"),
-            Self::Duplicate(s) => write!(f, "duplicate entry for {s}"),
-            Self::Arg(s) => write!(f, "no such target: {s}"),
+    impl fmt::Display for Location {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            self.file.display().fmt(f)?;
+            if let Some(line) = self.line {
+                write!(f, ":{line}")?;
+            }
+            Ok(())
         }
     }
-}
 
-#[derive(Debug)]
-struct DbError {
-    location: DbErrorLocation,
-    kind: DbErrorKind,
-}
-
-impl DbError {
-    fn new(location: DbErrorLocation, kind: DbErrorKind) -> Self {
-        Self { location, kind }
+    trait IntoLocation {
+        fn into_location(self) -> Location;
     }
 
-    fn io(file: PathBuf, cause: io::Error) -> Self {
-        let location = DbErrorLocation { file, line: None };
-        Self::new(location, DbErrorKind::Io(cause))
+    impl IntoLocation for Location {
+        fn into_location(self) -> Location {
+            self
+        }
     }
 
-    fn syntax(location: DbErrorLocation) -> Self {
-        Self::new(location, DbErrorKind::Syntax)
+    impl IntoLocation for PathBuf {
+        fn into_location(self) -> Location {
+            Location {
+                file: self,
+                line: None,
+            }
+        }
     }
 
-    fn duplicate(location: DbErrorLocation, name: String) -> Self {
-        Self::new(location, DbErrorKind::Duplicate(name))
+    #[derive(Debug)]
+    pub enum ErrorKind {
+        Io(io::Error),
+        Syntax,
+        Duplicate(String),
+        Arg(String),
     }
 
-    fn arg(file: PathBuf, arg: String) -> Self {
-        let location = DbErrorLocation { file, line: None };
-        Self::new(location, DbErrorKind::Arg(arg))
+    impl fmt::Display for ErrorKind {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            match self {
+                Self::Io(e) => e.fmt(f),
+                Self::Syntax => write!(f, "syntax error"),
+                Self::Duplicate(s) => write!(f, "duplicate entry for {s}"),
+                Self::Arg(s) => write!(f, "no such target: {s}"),
+            }
+        }
     }
-}
 
-impl fmt::Display for DbError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}: {}", self.location, self.kind)
+    #[derive(Debug)]
+    pub struct Error {
+        location: Location,
+        kind: ErrorKind,
+    }
+
+    impl Error {
+        fn new(location: impl IntoLocation, kind: ErrorKind) -> Self {
+            let location = location.into_location();
+            Self { location, kind }
+        }
+
+        pub fn io(file: PathBuf, cause: io::Error) -> Self {
+            Self::new(file, ErrorKind::Io(cause))
+        }
+
+        pub fn syntax(location: Location) -> Self {
+            Self::new(location, ErrorKind::Syntax)
+        }
+
+        pub fn duplicate(location: Location, name: String) -> Self {
+            Self::new(location, ErrorKind::Duplicate(name))
+        }
+
+        pub fn arg(file: PathBuf, arg: String) -> Self {
+            Self::new(file, ErrorKind::Arg(arg))
+        }
+    }
+
+    impl fmt::Display for Error {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "{}: {}", self.location, self.kind)
+        }
+    }
+
+    pub struct Database(
+        /// Maps jump target names to directory paths.
+        HashMap<String, PathBuf>,
+    );
+
+    impl Database {
+        pub fn read_file(path: impl AsRef<Path>) -> Result<Self, Error> {
+            let path = path.as_ref();
+            let file = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;
+
+            let mut jumps = HashMap::new();
+            for (index, line) in file.lines().enumerate() {
+                if line.is_empty() || line.starts_with('#') {
+                    continue;
+                }
+
+                let location = || Location {
+                    file: path.to_path_buf(),
+                    line: Some(index + 1),
+                };
+
+                let (dir, names) = line
+                    .split_once(',')
+                    .ok_or_else(|| Error::syntax(location()))?;
+
+                for name in names.split(',') {
+                    if jumps.insert(name.into(), dir.into()).is_some() {
+                        return Err(Error::duplicate(location(), name.into()));
+                    }
+                }
+            }
+
+            Ok(Database(jumps))
+        }
+
+        pub fn get(&self, name: &str) -> Option<&PathBuf> {
+            self.0.get(name)
+        }
     }
 }
 
 #[derive(Debug)]
 enum Error {
-    Db(DbError),
+    Db(db::Error),
 }
 
-impl From<DbError> for Error {
-    fn from(e: DbError) -> Self {
+impl From<db::Error> for Error {
+    fn from(e: db::Error) -> Self {
         Self::Db(e)
     }
 }
@@ -102,48 +164,6 @@ impl fmt::Display for Error {
         match self {
             Self::Db(e) => e.fmt(f),
         }
-    }
-}
-
-#[allow(dead_code)]
-pub struct Database(
-    /// Maps jump target names to directory paths.
-    HashMap<String, PathBuf>,
-);
-
-impl Database {
-    fn read_file(path: impl AsRef<Path>) -> Result<Self, DbError> {
-        let path = path.as_ref();
-        let file = fs::read_to_string(path).map_err(|e| DbError::io(path.into(), e))?;
-
-        let mut jumps = HashMap::new();
-
-        for (index, line) in file.lines().enumerate() {
-            if line.is_empty() || line.starts_with('#') {
-                continue;
-            }
-
-            let location = || DbErrorLocation {
-                file: path.to_path_buf(),
-                line: Some(index + 1),
-            };
-
-            let (dir, names) = line
-                .split_once(',')
-                .ok_or_else(|| DbError::syntax(location()))?;
-
-            for name in names.split(',') {
-                if jumps.insert(name.into(), dir.into()).is_some() {
-                    return Err(DbError::duplicate(location(), name.into()));
-                }
-            }
-        }
-
-        Ok(Database(jumps))
-    }
-
-    fn get(&self, name: &str) -> Option<&PathBuf> {
-        self.0.get(name)
     }
 }
 
@@ -195,14 +215,14 @@ fn expand_component<'a, 'b>(home: &'a Path, part: Component<'b>) -> Expansion<'a
 /// # TODO
 ///
 /// Support database file path specfication via environment variables.
-fn main_imp() -> Result<(), DbError> {
+fn main_imp() -> Result<(), db::Error> {
     let mut is_verbose = false;
 
     #[allow(deprecated)]
     let home = env::home_dir().expect("user should have a home directory");
 
     let db_path = home.join(".config/jump/targets.csv");
-    let db = Database::read_file(&db_path)?;
+    let db = db::Database::read_file(&db_path)?;
 
     for arg in env::args().skip(1) {
         if arg == "-v" {
@@ -211,7 +231,7 @@ fn main_imp() -> Result<(), DbError> {
         }
 
         let Some(path) = db.get(&arg) else {
-            return Err(DbError::arg(db_path, arg));
+            return Err(db::Error::arg(db_path, arg));
         };
 
         let buf = path
