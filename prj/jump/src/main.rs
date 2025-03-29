@@ -1,12 +1,8 @@
 //! # Notes
 //!
-//! Reads config from `~/.config/jump/targets.csv`, where `~` is returned by [`std::env::home_dir`].
-//! That function is deprecated because it behaved inconsistently on Windows before Rust 1.85, but
-//! it does what we want here.
-//!
-//! The `targets.csv` file supports blank lines, comment lines (beginning with `#`), and jagged
-//! lines.  The first column in each row is a directory path, and all subsequent columns are short
-//! names for that path.
+//! Reads config from `~/.config/jump/targets.csv`. The `targets.csv` file supports blank lines,
+//! comment lines (beginning with `#`), and jagged lines.  The first column in each row is a
+//! directory path, and all subsequent columns are short names for that path.
 //!
 //! # TODO
 //!
@@ -149,6 +145,8 @@ macro_rules! write_command_line {
 }
 
 fn main_imp() -> Result<()> {
+    // The [`std::env::home_dir`] function is deprecated because it behaved inconsistently on
+    // Windows before Rust 1.85, but it does what we want here.
     #[allow(deprecated)]
     let home = env::home_dir().expect("user should have a home directory");
     let db = db::Database::read_file(home.join(".config/jump/targets.csv"))?;
@@ -157,10 +155,8 @@ fn main_imp() -> Result<()> {
     for arg in env::args().skip(1) {
         let path = db.get(&arg).ok_or_else(|| Error::target_not_found(&arg))?;
         let path = expander.expand(path);
-
         let mut parts = path.components();
         let first = parts.next().ok_or(Error::target_empty(arg))?;
-
         if let Some("http:" | "https:") = first.as_os_str().to_str() {
             write_command_line!(OPEN, first, b"//", parts.collect::<PathBuf>());
         } else {
