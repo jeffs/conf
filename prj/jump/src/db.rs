@@ -48,8 +48,9 @@ impl fmt::Display for ErrorKind {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Self::Io(e) => e.fmt(f),
-            Self::Syntax => write!(f, "syntax error"),
-            Self::Duplicate(s) => write!(f, "duplicate entry for {s}"),
+            Self::Syntax => write!(f, "Syntax error"),
+            // TODO: XXX Overide instead of returning an error
+            Self::Duplicate(s) => write!(f, "Duplicate entry for {s}"),
         }
     }
 }
@@ -88,6 +89,8 @@ impl fmt::Display for Error {
     }
 }
 
+pub type Result<T> = std::result::Result<T, Error>;
+
 pub struct Database(
     /// Maps jump target names to directory paths.
     HashMap<String, PathBuf>,
@@ -97,7 +100,7 @@ impl Database {
     /// # Errors
     ///
     /// Returns an error if the file cannot be read, or if its syntax is invalid.
-    pub fn read_file(path: impl AsRef<Path>) -> Result<Self, Error> {
+    pub fn read_file(path: impl AsRef<Path>) -> Result<Self> {
         let path = path.as_ref();
         let file = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;
 
@@ -118,6 +121,7 @@ impl Database {
 
             for name in names.split(',') {
                 if jumps.insert(name.into(), dir.into()).is_some() {
+                    // TODO: XXX Overide instead of returning an error
                     return Err(Error::duplicate(location(), name.into()));
                 }
             }

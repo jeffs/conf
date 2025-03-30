@@ -1,9 +1,37 @@
-use std::convert::Infallible;
 use std::ffi::OsStr;
+use std::fmt;
+use std::io::Write;
 use std::path::{Component, Path, PathBuf};
 
-/// Expansion currently panics on error, but future versions will replace instead return [`Err`].
-pub type Error = Infallible;
+use crate::as_bytes::AsBytes;
+
+/// Maps semantic command names (such as `cd`) to their implementation in the calling shell.
+///
+/// TODO: Read shell commands from config, rather than hard-coding them here.
+mod cmd {
+    /// Change directory.
+    pub const CD: &str = "mc";
+
+    /// Use the OS native file association.
+    ///
+    /// TODO: Compare macOS `open`, Windows `start`, and Linux `xdg-open`.
+    pub const OPEN: &str = "open";
+}
+
+#[derive(Debug)]
+pub enum Error {
+    /// An expanded path was empty.
+    Empty,
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Self::Empty => write!(f, "Empty target"),
+        }
+    }
+}
+
 pub type Result<T> = std::result::Result<T, Error>;
 
 enum Expansion<'a, 'b> {
@@ -27,6 +55,19 @@ fn get_normal(part: Component) -> Option<&OsStr> {
         Component::Normal(s) => Some(s),
         _ => None,
     }
+}
+
+macro_rules! command {
+    ($command:ident, $($arg:expr),*) => {{
+        let mut buffer = Vec::new();
+        buffer.write_all(cmd::$command.as_bytes()).unwrap();
+        buffer.write_all(b" ").unwrap();
+        $(
+            buffer.write_all($arg.as_bytes()).unwrap();
+        )*
+        buffer.write_all(b"\n").unwrap();
+        Ok(buffer)
+    }};
 }
 
 pub struct Expand<'a> {
@@ -70,5 +111,18 @@ impl<'a> Expand<'a> {
     /// [1]: https://docs.rs/chrono/latest/src/chrono/format/formatting.rs.html#335
     pub fn path(&self, path: &Path) -> Result<PathBuf> {
         Ok(path.components().map(|c| self.component(c)).collect())
+    }
+
+    /// # Errors
+    ///
+    /// Returns [`Err`] if the path is empty.
+    pub fn command(&self, path: &Path) -> Result<Vec<u8>> {
+        let mut parts = path.components();
+        let first = parts.next().ok_or(Error::Empty)?;
+        if let Some("http:" | "https:") = first.as_os_str().to_str() {
+            command!(OPEN, first, b"//", parts.collect::<PathBuf>())
+        } else {
+            command!(CD, path)
+        }
     }
 }

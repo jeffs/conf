@@ -12,43 +12,21 @@
 
 #![allow(dead_code, unused_imports)]
 
-use jump::db;
-use std::env;
+use std::io::Write;
 use std::process::ExitCode;
+use std::{env, io};
 
-enum Error {
-    Arg(String),
-    Jump(jump::Error),
-}
-
-type Result<T> = std::result::Result<T, Error>;
-
-#[cfg(any())]
-fn main_imp() -> Result<()> {
-    // The [`std::env::home_dir`] function is deprecated because it behaved inconsistently on
-    // Windows before Rust 1.85, but it does what we want here.
-    #[allow(deprecated)]
-    let home = env::home_dir().expect("user should have a home directory");
-
-    let db = db::Database::read_file(home.join(".config/jump/targets.csv"))?;
-    let expand = jump::Expand::with_home(&home);
-
-    for arg in env::args().skip(1) {
-        let path = db.get(&arg).ok_or_else(|| Error::target_not_found(&arg))?;
-        let path = expand.path(path);
-        let mut parts = path.components();
-        let first = parts.next().ok_or(Error::target_empty(arg))?;
-        if let Some("http:" | "https:") = first.as_os_str().to_str() {
-            write_command_line!(OPEN, first, b"//", parts.collect::<PathBuf>());
-        } else {
-            write_command_line!(CD, path);
-        }
+fn main_imp() -> jump::Result<()> {
+    let app = jump::App::from_env()?;
+    let mut stdout = io::stdout();
+    for target in env::args().skip(1) {
+        stdout
+            .write_all(&app.jump(&target)?)
+            .expect("stdout should be writable");
     }
-
     Ok(())
 }
 
-#[cfg(any())]
 fn main() -> ExitCode {
     if let Err(err) = main_imp() {
         eprintln!("jump: {err}");
@@ -56,5 +34,3 @@ fn main() -> ExitCode {
     };
     ExitCode::SUCCESS
 }
-
-fn main() {}

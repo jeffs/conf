@@ -8,6 +8,8 @@ pub enum Error {
     Database(db::Error),
     /// An error occurred expanding a path.
     Expansion(expansion::Error),
+    /// No target was found for the argument.
+    Target(String),
 }
 
 impl std::error::Error for Error {}
@@ -29,6 +31,7 @@ impl fmt::Display for Error {
         match self {
             Self::Database(e) => e.fmt(f),
             Self::Expansion(e) => e.fmt(f),
+            Self::Target(arg) => write!(f, "{arg}: Target not found"),
         }
     }
 }
