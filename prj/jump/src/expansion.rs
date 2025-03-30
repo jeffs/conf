@@ -1,4 +1,10 @@
+use std::convert::Infallible;
+use std::ffi::OsStr;
 use std::path::{Component, Path, PathBuf};
+
+/// Expansion currently panics on error, but future versions will replace instead return [`Err`].
+pub type Error = Infallible;
+pub type Result<T> = std::result::Result<T, Error>;
 
 enum Expansion<'a, 'b> {
     Path(&'a Path),
@@ -16,37 +22,53 @@ impl AsRef<Path> for Expansion<'_, '_> {
     }
 }
 
-pub struct Expander<'a> {
+fn get_normal(part: Component) -> Option<&OsStr> {
+    match part {
+        Component::Normal(s) => Some(s),
+        _ => None,
+    }
+}
+
+pub struct Expand<'a> {
     home: &'a Path,
 }
 
-impl<'a> Expander<'a> {
+impl<'a> Expand<'a> {
     pub fn with_home(home: &'a Path) -> Self {
         Self { home }
     }
 
-    fn expand_component<'b>(&self, part: Component<'b>) -> Expansion<'a, 'b> {
-        let Component::Normal(s) = part else {
-            return Expansion::Component(part);
-        };
-
-        let Some(s) = s.to_str() else {
-            return Expansion::Component(part);
-        };
-
+    fn special<'b>(&self, s: &str) -> Option<Expansion<'a, 'b>> {
         if s.starts_with('%') {
             let today = chrono::Local::now().date_naive();
-            Expansion::String(today.format(s).to_string())
+            Some(Expansion::String(today.format(s).to_string()))
         } else if s == "~" {
-            Expansion::Path(self.home)
+            Some(Expansion::Path(self.home))
         } else {
-            Expansion::Component(part)
+            None
         }
     }
 
-    pub fn expand(&self, path: &Path) -> PathBuf {
-        path.components()
-            .map(|c| self.expand_component(c))
-            .collect()
+    fn component<'b>(&self, part: Component<'b>) -> Expansion<'a, 'b> {
+        get_normal(part)
+            .and_then(OsStr::to_str)
+            .and_then(|s| self.special(s))
+            .unwrap_or(Expansion::Component(part))
+    }
+
+    /// # Panics
+    ///
+    /// Panics if the component begins with `%`, but is not a valid `strftime` format string. The
+    /// panic is because the underlying [`chrono::NaiveDate::format`] works lazily, with the actual
+    /// formatting done by [`chrono::format::DelayedFormat::to_string`], which has no good to way to
+    /// report an error.
+    ///
+    /// # TODO
+    ///
+    /// Avoid the panic.  See the [`chrono` implementation][1].
+    ///
+    /// [1]: https://docs.rs/chrono/latest/src/chrono/format/formatting.rs.html#335
+    pub fn path(&self, path: &Path) -> Result<PathBuf> {
+        Ok(path.components().map(|c| self.component(c)).collect())
     }
 }
