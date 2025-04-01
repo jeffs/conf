@@ -3,12 +3,13 @@
 #  shell script.
 
 if [ -r ~/conf/var/VERBOSE ]; then
-    alias log="echo conf:"
+    alias log="echo -n conf:"
 else
     alias log=:
 fi
 
-log 'Loading primary'
+log 'Loading primary...'
+local start_time=$(~/conf/prj/log-profile/target/release/log-profile)
 
 path=(
     ~/usr/bin
@@ -52,8 +53,6 @@ export ZSH=~/.oh-my-zsh
 export LESS='-FRX -j5'
 export PAGER=less
 
-env > ~/var/tmp/before.env
-
 if [[ -v CURSOR_TRACE_ID ]]; then
     export EDITOR='cursor --wait'
 elif [[ "$TERM_PROGRAM" == vscode ]]; then
@@ -63,9 +62,6 @@ elif [[ -v EDITOR ]]; then
 else
     export EDITOR='hx'
 fi
-
-env > ~/var/tmp/after.env
-
 
 # Based on 'brew shellenv' output.
 export HOMEBREW_PREFIX='/usr/local'
@@ -87,9 +83,12 @@ export PQ_LIB_DIR="$(brew --prefix libpq)/lib"
 export PYRIGHT_PYTHON_FORCE_VERSION=1.1.371
 export PYRIGHT_PYTHON_PYLANCE_VERSION=v2024.7.1
 
+echo $(~/conf/prj/log-profile/target/release/log-profile $start_time)ms
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zprofile ]; then
-        log "Loading ${conf_module#*/conf-}"
+        log "Loading ${conf_module#*/conf-}..."
+        local start_time=$(~/conf/prj/log-profile/target/release/log-profile)
         source $conf_module/etc/zprofile
+        echo $(~/conf/prj/log-profile/target/release/log-profile $start_time)ms
     fi
 done
