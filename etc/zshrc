@@ -70,7 +70,7 @@ alias up=gitup
 ## Tree
 
 alias tree='eza --group-directories-first --tree --ignore-glob="__pycache__|dist|node_modules|target"'
-alias t=tree
+alias t='tree --git-ignore'
 
 # Show directory tree to a specified depth.
 for i in $(seq 9); do alias t$i="t -L$i"; done
