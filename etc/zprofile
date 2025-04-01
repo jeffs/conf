@@ -83,6 +83,8 @@ export PQ_LIB_DIR="$(brew --prefix libpq)/lib"
 export PYRIGHT_PYTHON_FORCE_VERSION=1.1.371
 export PYRIGHT_PYTHON_PYLANCE_VERSION=v2024.7.1
 
+export JUMP_PREFIXES=~/conf/etc/jump
+
 echo $(~/conf/prj/log-profile/target/release/log-profile $start_time)ms
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zprofile ]; then

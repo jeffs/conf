@@ -1,10 +1,3 @@
 ~/home/git/rust-kart,rk
 ~/log/%Y/%m/%d,day,cl,l
 ~/log/%Y/%m,month
-
-# TODO: Separate targets by file once jump supports multiple target DBs.
-~/file/bfp,bfp
-~/git/matching-engine-v3,me
-
-https://github.com/fireflyprotocol/protobuf-messages/pulls,pb
-https://github.com/fireflyprotocol/matching-engine-v3/pulls,pr
