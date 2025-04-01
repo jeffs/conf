@@ -13,6 +13,8 @@
 brew install entr expect tmux jq pyenv
 cargo install bat fd-find ripgrep sd
 
-for p in cl log-profile jump; do
+for p in cl jump; do
     cargo install --path ~/conf/prj/$p
 done
+
+(cd ~/conf/prj/log-profile && cargo build --release)

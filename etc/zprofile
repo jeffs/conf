@@ -9,7 +9,7 @@ else
 fi
 
 log 'Loading primary...'
-local start_time=$(~/conf/prj/log-profile/target/release/log-profile)
+local start_time=$(~/conf/prj/target/release/log-profile)
 
 path=(
     ~/usr/bin
@@ -85,12 +85,12 @@ export PYRIGHT_PYTHON_PYLANCE_VERSION=v2024.7.1
 
 export JUMP_PREFIXES=~/conf/etc/jump
 
-echo $(~/conf/prj/log-profile/target/release/log-profile $start_time)ms
+~/conf/prj/target/release/log-profile $start_time
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zprofile ]; then
         log "Loading ${conf_module#*/conf-}..."
-        local start_time=$(~/conf/prj/log-profile/target/release/log-profile)
+        local start_time=$(~/conf/prj/target/release/log-profile)
         source $conf_module/etc/zprofile
-        echo $(~/conf/prj/log-profile/target/release/log-profile $start_time)ms
+        ~/conf/prj/target/release/log-profile $start_time
     fi
 done
