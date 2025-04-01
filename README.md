@@ -13,5 +13,7 @@ Other stuff you should do after running the install scripts:
 * Automatically install font(s), and configure desktop apps (such as IDEs):
   - https://www.jetbrains.com/lp/mono/
 * Move scripts from `bin` to `src`, symlink them from `bin`, and add `bin` to `PATH`, rather than creating `~/usr/bin`.
+* Complete automatic installation of `prj/*` in `src/init.zsh`
+  - Copy `cl` to `app/cl.app/Contents/MacOS/cl`
 
 [1]: https://forum.figma.com/t/keyboard-shortcut-are-overriden-by-notion-running-on-background/59521/7
