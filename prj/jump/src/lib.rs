@@ -5,13 +5,33 @@ mod expansion;
 pub mod db;
 
 use std::env;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 pub use db::Database;
 pub use error::Error;
 pub use expansion::Expand;
 
 pub type Result<T> = std::result::Result<T, Error>;
+
+fn db_from_env(home: &Path) -> Result<Database> {
+    let mut prefixes = env::var("JUMP_PREFIXES")
+        .map(|s| s.split(':').map(str::to_owned).collect::<Vec<_>>())
+        .unwrap_or_default()
+        .into_iter()
+        .filter(|s| !s.is_empty())
+        .map(PathBuf::from)
+        .collect::<Vec<_>>();
+
+    if prefixes.is_empty() {
+        prefixes.push(home.join(".config/jump"));
+    }
+
+    let mut db = Database::new();
+    for prefix in prefixes {
+        db.read_file(prefix.join("targets.csv"))?;
+    }
+    Ok(db)
+}
 
 pub struct App {
     home: PathBuf,
@@ -31,7 +51,7 @@ impl App {
         // Windows before Rust 1.85, but it does what we want here.
         #[allow(deprecated)]
         let home = env::home_dir().expect("user should have a home directory");
-        let db = Database::read_file(home.join(".config/jump/targets.csv"))?;
+        let db = db_from_env(&home)?;
         Ok(App { home, db })
     }
 

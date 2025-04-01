@@ -97,14 +97,17 @@ pub struct Database(
 );
 
 impl Database {
+    pub fn new() -> Self {
+        Self(HashMap::new())
+    }
+
     /// # Errors
     ///
     /// Returns an error if the file cannot be read, or if its syntax is invalid.
-    pub fn read_file(path: impl AsRef<Path>) -> Result<Self> {
+    pub fn read_file(&mut self, path: impl AsRef<Path>) -> Result<()> {
         let path = path.as_ref();
         let file = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;
 
-        let mut jumps = HashMap::new();
         for (index, line) in file.lines().enumerate() {
             if line.is_empty() || line.starts_with('#') {
                 continue;
@@ -120,14 +123,12 @@ impl Database {
                 .ok_or_else(|| Error::syntax(location()))?;
 
             for name in names.split(',') {
-                if jumps.insert(name.into(), dir.into()).is_some() {
-                    // TODO: XXX Overide instead of returning an error
-                    return Err(Error::duplicate(location(), name.into()));
-                }
+                // Overwrite any existing entry.
+                self.0.insert(name.into(), dir.into());
             }
         }
 
-        Ok(Database(jumps))
+        Ok(())
     }
 
     #[must_use]
