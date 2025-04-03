@@ -118,10 +118,15 @@ impl<'a> Expand<'a> {
         Ok(path.components().map(|c| self.component(c)).collect())
     }
 
+    /// Returns a snippet of shell script suitable for opening the specified path.  The path should
+    /// _not_ already be expanded, as this function performs path expansion automatically.
+    ///
+    ///
     /// # Errors
     ///
     /// Returns [`Err`] if the path is empty.
     pub fn command(&self, path: &Path) -> Result<Vec<u8>> {
+        let path = self.path(path)?;
         let mut parts = path.components();
         let first = parts.next().ok_or(Error::Empty)?;
         if let Some("http:" | "https:") = first.as_os_str().to_str() {

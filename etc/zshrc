@@ -111,7 +111,7 @@ function re { cargo eval --expr "$*"; }
 #
 # * Changing the shell's working directory.
 # * Setting shell or environment variables.
-function j { eval $(jump "$@"); }
+function j { eval $(jump -c "$@"); }
 
 # TODO: Unify since and gitup into a single 'grit' tool.
 si() {

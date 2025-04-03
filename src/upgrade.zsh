@@ -18,7 +18,7 @@ echo '* Cargo'
 # Update cratest that were not installed from local filesystem paths.  The
 # output of `cargo install --list` includes paths in parentheses, so it's not
 # hard to grep them out.
-cargo install --quiet $(cargo install --list |awk '/^[^ ][^(]*$/ { print $1 }')
+cargo install $(cargo install --list |awk '/^[^ ][^(]*$/ { print $1 }')
 
 # Pass --List rahter than --all so I don't get prompted by sudo.
 echo '* Software Update Tool'

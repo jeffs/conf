@@ -55,18 +55,29 @@ impl App {
         Ok(App { home, db })
     }
 
+    fn target(&self, target: &str) -> Result<&PathBuf> {
+        self.db
+            .get(target)
+            .ok_or_else(|| Error::Target(target.to_owned()))
+    }
+
+    /// Expands the specified target.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`Err`] if the target cannot be mapped to a path.
+    pub fn path(&self, target: &str) -> Result<PathBuf> {
+        let expand = Expand::with_home(&self.home);
+        Ok(expand.path(self.target(target)?)?)
+    }
+
     /// Returns a shell comamnd for jumping to the specified target.
     ///
     /// # Errors
     ///
     /// Returns [`Err`] if the target cannot be mapped to a command.
-    pub fn jump(&self, target: &str) -> Result<Vec<u8>> {
+    pub fn command(&self, target: &str) -> Result<Vec<u8>> {
         let expand = Expand::with_home(&self.home);
-        let path = self
-            .db
-            .get(target)
-            .ok_or_else(|| Error::Target(target.to_owned()))?;
-        let path = expand.path(path)?;
-        Ok(expand.command(&path)?)
+        Ok(expand.command(self.target(target)?)?)
     }
 }
