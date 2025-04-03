@@ -11,16 +11,45 @@
 //! * [ ] Add DB path list to error messages about missing or empty targets.
 
 use std::io::Write;
+use std::os::unix::ffi::OsStrExt;
 use std::process::ExitCode;
-use std::{env, io};
+use std::{env, fmt, io};
 
-fn main_imp() -> jump::Result<()> {
+enum Error {
+    Flag(String),
+    Jump(jump::Error),
+}
+
+impl From<jump::Error> for Error {
+    fn from(value: jump::Error) -> Self {
+        Error::Jump(value)
+    }
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Error::Flag(s) => write!(f, "{s} is not a recognized flag"),
+            Error::Jump(err) => err.fmt(f),
+        }
+    }
+}
+
+fn write(mut w: impl Write, s: &[u8]) {
+    w.write_all(s).expect("output should be writable")
+}
+
+fn main_imp() -> Result<(), Error> {
     let app = jump::App::from_env()?;
-    let mut stdout = io::stdout();
+    let mut is_command = false;
+    let stdout = io::stdout();
     for target in env::args().skip(1) {
-        stdout
-            .write_all(&app.jump(&target)?)
-            .expect("stdout should be writable");
+        match target.as_str() {
+            "-c" | "--command" => is_command = true,
+            s if s.starts_with("-") => Err(Error::Flag(target))?,
+            s if is_command => write(&stdout, &app.command(s)?),
+            s => write(&stdout, &app.path(s)?.as_os_str().as_bytes()),
+        }
     }
     Ok(())
 }
