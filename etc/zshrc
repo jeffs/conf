@@ -99,8 +99,8 @@ cg() { c $(git rev-parse --show-toplevel); }
 cy() { cl --yesterday; }
 mc() { mkdir -p $1 && c $1; }
 
-l() { t --color=always "$@" | $PAGER }
-la() { t --color=always "$@" | $PAGER }
+l() { t --color=always --depth=1 "$@" | $PAGER }
+la() { t --color=always --depth=1 "$@" | $PAGER }
 
 function re { cargo eval --expr "$*"; }
 
