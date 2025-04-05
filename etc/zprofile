@@ -2,11 +2,7 @@
 #  than doing string manipulation, variable existence checks, etc. directly in
 #  shell script.
 
-if [ -r ~/conf/var/VERBOSE ]; then
-    alias log="echo -n conf:"
-else
-    alias log=:
-fi
+alias log="echo -n conf:"
 
 log 'Loading primary...'
 local start_time=$(~/conf/prj/target/release/log-profile)
