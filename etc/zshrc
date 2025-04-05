@@ -74,7 +74,6 @@ alias t='tree --git-ignore'
 
 # Show directory tree to a specified depth.
 for i in $(seq 9); do alias t$i="t -L$i"; done
-for i in $(seq 9); do alias l$i="l -L$i"; done
 
 ## Git
 
@@ -99,8 +98,8 @@ cg() { c $(git rev-parse --show-toplevel); }
 cy() { cl --yesterday; }
 mc() { mkdir -p $1 && c $1; }
 
-l() { t --color=always --depth=1 "$@" | $PAGER }
-la() { t --color=always --depth=1 "$@" | $PAGER }
+l() { ls -hl --color "$@" | $PAGER }
+la() { ls -Ahl --color "$@" | $PAGER }
 
 function re { cargo eval --expr "$*"; }
 
