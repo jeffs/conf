@@ -1,6 +1,7 @@
 theme = "catppuccin_mocha"
 
 [editor]
+soft-wrap.enable = true
 
 # Don't pop up info windows for `g` or `m` commands.  Doesn't help with `:`.
 # auto-info = false
