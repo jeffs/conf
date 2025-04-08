@@ -1,7 +1,17 @@
-theme = "dark_plus"
+# theme = "dark_plus"
+theme = "ao"
 
 [editor]
 soft-wrap.enable = true
+
+# <https://docs.helix-editor.com/editor.html?highlight=auto%20bracket#editorauto-pairs-section>
+[editor.auto-pairs]
+'(' = ')'
+'{' = '}'
+'[' = ']'
+# '"' = '"'
+# '`' = '`'
+'<' = '>'
 
 # Don't pop up info windows for `g` or `m` commands.  Doesn't help with `:`.
 # auto-info = false
@@ -15,3 +25,4 @@ C-y = "scroll_up"
 C-e = "scroll_down"
 ";" = "command_mode"
 ":" = "collapse_selection"
+g = { q = ":reflow" }
