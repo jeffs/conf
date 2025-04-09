@@ -57,7 +57,7 @@ unalias l la
 alias clippy='cargo clippy --tests && cargo clippy -- -W clippy::pedantic'
 alias vim=nvim
 alias e=${EDITOR:-nvim}
-alias rust=evcxr  # Rust REPL
+alias rust='evcxr -q' # Rust REPL
 alias h=history
 alias hd='hexdump -C'
 alias u='c ..'
@@ -66,6 +66,7 @@ alias uuu='c ../../..'
 alias py='python -q'
 alias tf=terraform
 alias up=gitup
+alias z=zellij
 
 ## Tree
 

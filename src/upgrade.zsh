@@ -1,4 +1,8 @@
 #!/usr/bin/env -S zsh -euo pipefail
+#
+# TODO
+#
+# Automate upgrades of forked packages, such as evcxr_repl.
 
 # Upgrade packages installing using Homebrew.
 echo '* Homebrew'
