@@ -2,7 +2,11 @@
 #
 # Install the EValuation ConteXt for Rust.
 
-cargo install evcxr_repl
+mkdir -p ~/pkg
+cd ~/pkg
+git clone git@github.com:jeffs/evcxr
+cd evcxr/evcxr_repl
+cargo install --path .
 
 # The config directory varies by platform.
 readonly config_dir=$(evcxr <<EOF | tail -1
