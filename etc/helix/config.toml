@@ -1,5 +1,5 @@
 # theme = "dark_plus"
-theme = "ao"
+theme = "amberwood"
 
 [editor]
 soft-wrap.enable = true
@@ -26,3 +26,4 @@ C-e = "scroll_down"
 ";" = "command_mode"
 ":" = "collapse_selection"
 g = { q = ":reflow" }
+tab = "goto_last_accessed_file"
