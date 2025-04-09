@@ -6,7 +6,4 @@ file-types = [{ glob = "zprofile" }, { glob = "zshrc" }]
 [[language]]
 name = "rust"
 rulers = [101]
-
-[language-server.rust-analyzer.environment]
-DYLD_LIBRARY_PATH = "/Library/Developer/CommandLineTools/usr/lib"
-RUSTFLAGS = "-L /Library/Developer/CommandLineTools/usr/lib"
+text-width = 100
