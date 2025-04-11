@@ -4,7 +4,7 @@
 
 alias log="echo -n conf:"
 
-log 'Loading primary...'
+log 'primary profile...'
 local start_time=$(~/conf/prj/target/release/log-profile)
 
 path=(
@@ -80,7 +80,7 @@ export JUMP_PREFIXES=~/conf/etc/jump
 ~/conf/prj/target/release/log-profile $start_time
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zprofile ]; then
-        log "Loading ${conf_module#*/conf-}..."
+        log "${conf_module#*/conf-} profile..."
         local start_time=$(~/conf/prj/target/release/log-profile)
         source $conf_module/etc/zprofile
         ~/conf/prj/target/release/log-profile $start_time

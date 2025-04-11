@@ -1,3 +1,8 @@
+alias log="echo -n conf:"
+
+log 'primary rc...     '
+local start_time=$(~/conf/prj/target/release/log-profile)
+
 # VARIABLES
 
 CASE_SENSITIVE=true
@@ -21,13 +26,15 @@ precmd() {
 # Note that zsh-syntax-highlighting must be the last plugin sourced.
 # https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md
 plugins=(
-    poetry
+    # Adds ~10ms to zsh startup time.
+    # poetry
     zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
 
-eval "$(pyenv init -)"
+# Adds ~70ms to shell init time.
+# eval "$(pyenv init -)"
 
 # OPTIONS
 
@@ -148,9 +155,6 @@ eza() {
     eza "$@"
 }
 
-# Open a man page in Vim.
-Man() { vim +":Man $1 | only"; }
-
 function poetry-activate {
     readonly env_path="$(poetry env info --path)"
     if [[ -z "$VIRTUAL_ENV" ]]; then
@@ -164,7 +168,6 @@ function poetry-activate {
         # This very venv was already active.
     fi
 }
-
 
 # BINDINGS
 
@@ -184,6 +187,8 @@ bindkey '^[c' capitalize-word
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
+~/conf/prj/target/release/log-profile $start_time
+
 # PROFILES
 #
 # Extensions and overrides for specific projects.  Checking out different
@@ -191,6 +196,9 @@ complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zshrc ]; then
+        log "${conf_module#*/conf-} rc...     "
+        local start_time=$(~/conf/prj/target/release/log-profile)
         source $conf_module/etc/zshrc
+        ~/conf/prj/target/release/log-profile $start_time
     fi
 done
