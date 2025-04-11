@@ -6,4 +6,4 @@ file-types = [{ glob = "zprofile" }, { glob = "zshrc" }]
 [[language]]
 name = "rust"
 rulers = [101]
-text-width = 100
+# text-width = 100
