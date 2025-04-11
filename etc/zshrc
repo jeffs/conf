@@ -56,7 +56,6 @@ unalias l la
 
 alias clippy='cargo clippy --tests && cargo clippy -- -W clippy::pedantic'
 alias vim=nvim
-alias e=${EDITOR:-nvim}
 alias rust='evcxr -q' # Rust REPL
 alias h=history
 alias hd='hexdump -C'
@@ -101,6 +100,16 @@ mc() { mkdir -p $1 && c $1; }
 
 l() { ls -hl --color "$@" | $PAGER }
 la() { ls -Ahl --color "$@" | $PAGER }
+
+e() {
+    if [[ -d .git ]]; then
+        # Remove `a/' and `/b` prefixes (used in git diff output) from args.
+        setopt local_options histsubstpattern
+        ${EDITOR:-vi} "${@:s,[ab]/,}"
+    else
+        ${EDITOR:-vi} "$@"
+    fi
+}
 
 function re { cargo eval --expr "$*"; }
 
