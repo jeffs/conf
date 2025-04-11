@@ -7,3 +7,7 @@ file-types = [{ glob = "zprofile" }, { glob = "zshrc" }]
 name = "rust"
 rulers = [101]
 # text-width = 100
+
+[language-server.rust-analyzer.config.rust-analyzer.check]
+command = "clippy"
+extraArgs = ["--", "-W", "clippy::pedantic"]
