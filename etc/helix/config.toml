@@ -18,7 +18,7 @@ newline = 'all'
 # auto-info = false
 
 [keys.insert]
-"C-j" = "normal_mode"
+"C-k" = "normal_mode"
 
 [keys.normal]
 Z = ":write-quit"
@@ -28,3 +28,5 @@ C-e = "scroll_down"
 ":" = "collapse_selection"
 g = { q = ":reflow" }
 tab = "goto_last_accessed_file"
+C-j = ":pipe-to tmux-send"
+pagedown = ":toggle-option lsp.display-inlay-hints"
