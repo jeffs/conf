@@ -68,6 +68,15 @@ config.keys = {
     action = wezterm.action.TogglePaneZoomState
   },
 
+  -- Swap
+  {
+    mods = 'LEADER',
+    key = 'w',
+    action = wezterm.action.PaneSelect {
+      mode = 'SwapWithActive'
+    }
+  },
+
   -- Navigate
   {
     mods = 'LEADER',
