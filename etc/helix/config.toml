@@ -1,6 +1,7 @@
 # theme = "dark_plus"
-theme = "amberwood"
+# theme = "amberwood"
 # theme = "base16_default"
+theme = "base16_transparent"
 
 [editor]
 soft-wrap.enable = true
