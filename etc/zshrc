@@ -33,8 +33,12 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# Adds ~70ms to shell init time.
-# eval "$(pyenv init -)"
+function python {
+    # Takes ~70ms.
+    eval "$(pyenv init -)"
+    unset -f python
+    python "$@"
+}
 
 # OPTIONS
 
@@ -52,10 +56,6 @@ zstyle ':completion:*' matcher-list ''
 # https://unix.stackexchange.com/a/599449/49952
 autoload +X -U _default
 functions[_default]="setopt local_options magic_equal_subst; $functions[_default]"
-
-# https://python-poetry.org/docs/
-fpath+=~/.zfunc
-autoload -Uz compinit && compinit
 
 # ALIASES
 
@@ -110,7 +110,7 @@ la() { ls -Ahl --color "$@" | $PAGER }
 
 e() {
     if [[ -d .git ]]; then
-        # Remove `a/' and `/b` prefixes (used in git diff output) from args.
+        # Remove `a/' and `b/` prefixes (used in git diff output) from args.
         setopt local_options histsubstpattern
         ${EDITOR:-vi} "${@:s,[ab]/,}"
     else

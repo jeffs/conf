@@ -1,7 +1,12 @@
 [[language]]
 name = "bash"
 rulers = [81]
-file-types = [{ glob = "zprofile" }, { glob = "zshrc" }]
+file-types = [
+  { glob = "zprofile" },
+  { glob = "zshrc" },
+  { glob = ".zprofile" },
+  { glob = ".zsh{env,login,rc}" },
+]
 
 [[language]]
 name = "rust"
