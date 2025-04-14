@@ -1,6 +1,15 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
+config.color_scheme =  'Wombat'
+-- config.color_scheme =  'Vs Code Dark+ (Gogh)'
+-- config.color_scheme =  'VWbug (terminal.sexy)'
+-- config.color_scheme =  'Wez'
+-- config.color_scheme =  'Wez (Gogh)'
+-- config.color_scheme =  '3024 (base16)'
+-- config.color_scheme =  'Wryan'
+-- config.color_scheme =  'Wombat (Gogh)'
+-- config.color_scheme =  'Wild Cherry (Gogh)'
 -- config.color_scheme = 'Bamboo Multiplex'
 -- config.color_scheme = 'One Dark Pro'
 -- config.color_scheme = 'Abernathy'
