@@ -22,12 +22,20 @@ config.initial_cols = 104
 config.initial_rows = 40
 config.hide_tab_bar_if_only_one_tab = true
 
--- TODO: https://wezterm.org/config/lua/window/set_config_overrides.html
 config.window_background_opacity = 0.8
--- config.text_background_opacity = 0.7
 
 config.send_composed_key_when_left_alt_is_pressed = true
 config.send_composed_key_when_right_alt_is_pressed = false
+
+wezterm.on('toggle-opacity', function(window, pane)
+  local overrides = window:get_config_overrides() or {}
+  if not overrides.window_background_opacity then
+    overrides.window_background_opacity = 1.0
+  else
+    overrides.window_background_opacity = nil
+  end
+  window:set_config_overrides(overrides)
+end)
 
 config.leader = { mods = 'CTRL', key = 'g', timeout_milliseconds = 1000 }
 config.keys = {
@@ -77,10 +85,17 @@ config.keys = {
     action = wezterm.action.ActivatePaneDirection("Next")
   },
   {
-    mods = 'LEADER|CTRL|SHIFT',
-    key = 'g',
+    mods = 'LEADER|CTRL',
+    key = 'G',
     action = wezterm.action.ActivatePaneDirection("Prev")
-  }
+  },
+
+  -- Alter appearance
+  {
+    mods = 'CMD',
+    key = 'u',
+    action = wezterm.action.EmitEvent 'toggle-opacity',
+  },
 }
 
 return config
