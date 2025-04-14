@@ -36,7 +36,7 @@ impl fmt::Display for Error {
 }
 
 fn write(mut w: impl Write, s: &[u8]) {
-    w.write_all(s).expect("output should be writable")
+    w.write_all(s).expect("output should be writable");
 }
 
 fn main_imp() -> Result<(), Error> {
@@ -46,9 +46,9 @@ fn main_imp() -> Result<(), Error> {
     for target in env::args().skip(1) {
         match target.as_str() {
             "-c" | "--command" => is_command = true,
-            s if s.starts_with("-") => Err(Error::Flag(target))?,
+            s if s.starts_with('-') => Err(Error::Flag(target))?,
             s if is_command => write(&stdout, &app.command(s)?),
-            s => write(&stdout, &app.path(s)?.as_os_str().as_bytes()),
+            s => write(&stdout, app.path(s)?.as_os_str().as_bytes()),
         }
     }
     Ok(())
@@ -58,6 +58,6 @@ fn main() -> ExitCode {
     if let Err(err) = main_imp() {
         eprintln!("jump: {err}");
         return ExitCode::FAILURE;
-    };
+    }
     ExitCode::SUCCESS
 }

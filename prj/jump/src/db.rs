@@ -96,8 +96,14 @@ pub struct Database(
     HashMap<String, PathBuf>,
 );
 
+impl Default for Database {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Database {
-    pub fn new() -> Self {
+    #[must_use] pub fn new() -> Self {
         Self(HashMap::new())
     }
 
