@@ -71,7 +71,7 @@ config.keys = {
   -- Swap
   {
     mods = 'LEADER',
-    key = 'w',
+    key = 'W',
     action = wezterm.action.PaneSelect {
       mode = 'SwapWithActive'
     }
@@ -108,6 +108,11 @@ config.keys = {
     key = 'G',
     action = wezterm.action.ActivatePaneDirection("Prev")
   },
+  {
+    mods = 'LEADER',
+    key = 'w',
+    action = wezterm.action.PaneSelect
+  },
 
   -- Alter appearance
   {
@@ -115,6 +120,16 @@ config.keys = {
     key = 'u',
     action = wezterm.action.EmitEvent 'toggle-opacity',
   },
+  {
+    mods = 'CTRL',
+    key = '-',
+    action = wezterm.action.DisableDefaultAssignment,
+  },
+  {
+    mods = 'CTRL',
+    key = '=',
+    action = wezterm.action.DisableDefaultAssignment,
+  }
 }
 
 return config
