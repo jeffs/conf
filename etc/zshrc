@@ -113,7 +113,7 @@ function e {
     if [[ -d .git ]]; then
         # Remove `a/' and `b/` prefixes (used in git diff output) from args.
         setopt local_options histsubstpattern
-        ${EDITOR:-vi} "${@:s,[ab]/,}"
+        ${EDITOR:-vi} "${@#[ab]/}"
     else
         ${EDITOR:-vi} "$@"
     fi

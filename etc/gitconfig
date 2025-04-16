@@ -22,6 +22,7 @@
 [diff]
 	# https://github.blog/2016-06-13-git-2-9-has-been-released/#beautiful-diffs
 	compactionHeuristic = true
+	extern = difft
 [grep]
 	extendRegexp = true
 [pull]
