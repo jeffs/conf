@@ -27,16 +27,21 @@ newline = 'all'
 "C-f" = "normal_mode"
 
 [keys.normal]
-Z = ":write-quit"
+Z = { Z = ":write-quit" }
 C-y = "scroll_up"
 C-e = "scroll_down"
-";" = "command_mode"
-":" = "collapse_selection"
+# ";" = "command_mode"
+# ":" = "collapse_selection"
 g = { q = ":reflow" }
 tab = "goto_last_accessed_file"
 C-j = ":pipe-to tmux-send"
-pagedown = ":toggle-option lsp.display-inlay-hints"
+
+[keys.normal.C-f]
+i = ":toggle-option lsp.display-inlay-hints"
+n = ":toggle soft-wrap.enable"
+q = ":quit"
+C-w = ":write"
 
 [keys.select]
-";" = "command_mode"
-":" = "collapse_selection"
+# ";" = "command_mode"
+# ":" = "collapse_selection"
