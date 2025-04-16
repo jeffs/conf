@@ -15,7 +15,7 @@ DISABLE_UNTRACKED_FILES_DIRTY=true
 # TODO: Replace with Rust, or teach VS Code shell-format extension about Zsh.
 typeset -H prompt_bar
 PROMPT=$'\n%{$fg[cyan]%}(%h) $(hostname):$prompt_bar\n$%{$reset_color%} '
-precmd() {
+function precmd {
     local d=$(dirs -p | head -1)
     local -i n=$(($COLUMNS - ${#d} - ${#$(hostname)} - 10))
     prompt_bar="$d $(printf '─%.0s' $(=/usr/bin/seq $n))"
@@ -100,15 +100,15 @@ alias yolo='ci -a --amend --no-edit --no-verify && push -f'
 function $ { "$@" }
 function // { "$@" }
 
-c() { cd "$@" && ls; }
-cg() { c $(git rev-parse --show-toplevel); }
-cy() { cl --yesterday; }
-mc() { mkdir -p $1 && c $1; }
+function c { cd "$@" && ls; }
+function cg { c $(git rev-parse --show-toplevel); }
+function cy { cl --yesterday; }
+function mc { mkdir -p $1 && c $1; }
 
-l() { ls -hl --color "$@" | $PAGER }
-la() { ls -Ahl --color "$@" | $PAGER }
+function l { ls -hl --color "$@" | $PAGER }
+function la { ls -Ahl --color "$@" | $PAGER }
 
-e() {
+function e {
     if [[ -d .git ]]; then
         # Remove `a/' and `b/` prefixes (used in git diff output) from args.
         setopt local_options histsubstpattern
@@ -130,7 +130,7 @@ function re { cargo eval --expr "$*"; }
 function j { eval $(jump -c "$@"); }
 
 # TODO: Unify since and gitup into a single 'grit' tool.
-si() {
+function si {
     if test $# = 0 && git show-ref -q dev; then
         since dev
     else
@@ -138,7 +138,7 @@ si() {
     fi
 }
 
-grit () {
+function grit {
     case $1; in
         up|update) gitup "${@[@]:2}" ;;
         si|since) si "${@[@]:2}" ;;
@@ -147,7 +147,7 @@ grit () {
 
 source ~/conf/etc/init-node.zsh
 
-eza() {
+function eza {
     if ! /usr/bin/which eza; then
         cargo install eza
     fi
