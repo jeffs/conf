@@ -159,7 +159,7 @@ function grit {
 source ~/conf/etc/init-node.zsh
 
 function eza {
-    if ! /usr/bin/which eza; then
+    if ! /usr/bin/which eza >/dev/null; then
         cargo install eza
     fi
     unset -f eza
