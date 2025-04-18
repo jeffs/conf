@@ -8,22 +8,20 @@
 echo '* Homebrew'
 brew upgrade --quiet
 
-# Upgrade Rust and its tooling, then any third-party packages installed using
-# Cargo.  As a hack, consider a package "third-party" if its name doesn't
-# include my name; otherwise, cargo would try to check crates.io for packages
-# that have the same name as the ones I installed from local source code.
-#
-# The `rustup update` command is occasionally bemused by some kind of cache
-# corruption.  Should that occur, run `update-rust.zsh`.
+# Upgrade Rust and its tooling. The `rustup update` command is occasionally
+# bemused by some kind of cache corruption.  Should that occur, run
+# `update-rust.zsh`.
 echo '* Rustup'
 rustup update
 
+# Update all crates that were not installed from local filesystem paths.  The
+# output of `cargo install --list` includes such paths in parentheses, so it's
+# not hard to grep them out.
 echo '* Cargo'
-# Update cratest that were not installed from local filesystem paths.  The
-# output of `cargo install --list` includes paths in parentheses, so it's not
-# hard to grep them out.
 cargo install $(cargo install --list |awk '/^[^ ][^(]*$/ { print $1 }')
 
-# Pass --List rahter than --all so I don't get prompted by sudo.
+# Passing --install --all rather than --list would cause sudo to prompt for
+# access, but this script is not meant to be interactive.
 echo '* Software Update Tool'
-unbuffer softwareupdate --list |rg -v '^(Software Update Tool|Finding available software|No new software available\.|)$'
+unbuffer softwareupdate --list \
+  | rg -v '^(Software Update Tool|Finding available software|No new software available\.|)$'
