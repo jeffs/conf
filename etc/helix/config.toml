@@ -42,6 +42,7 @@ i = ":toggle-option lsp.display-inlay-hints"
 n = ":toggle soft-wrap.enable"
 q = ":quit"
 w = ":write"
+C-f = "page_down"
 
 [keys.select]
 ";" = "command_mode"
