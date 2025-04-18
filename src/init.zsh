@@ -6,7 +6,7 @@
 ~/conf/src/install-dotfiles.zsh
 ~/conf/src/install-omz.zsh
 ~/conf/src/install-zsh-syntax-highlighting.zsh
-~/conf/src/install-nvim.zsh
+~/conf/src/install-helix.zsh
 ~/conf/src/install-rust.zsh
 
 # The 'expect' package includes unbuffer, which is used by bin/upgrade.zsh.
