@@ -1,9 +1,9 @@
-alias log="echo -n conf:"
+alias conf-log="echo -n conf:"
 
-log 'primary rc...     '
+conf-log 'primary rc...     '
 local start_time=$(~/conf/prj/target/release/log-profile)
 
-# VARIABLES
+## VARIABLES
 
 CASE_SENSITIVE=true
 COMPLETION_WAITING_DOTS=true
@@ -21,7 +21,7 @@ function precmd {
     prompt_bar="$d $(printf '─%.0s' $(=/usr/bin/seq $n))"
 }
 
-# PLUGINS
+## PLUGINS
 
 # Note that zsh-syntax-highlighting must be the last plugin sourced.
 # https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md
@@ -40,7 +40,7 @@ function python {
     python "$@"
 }
 
-# OPTIONS
+## OPTIONS
 
 setopt rmstarsilent	# Don't confirm rm *.
 
@@ -57,7 +57,7 @@ zstyle ':completion:*' matcher-list ''
 autoload +X -U _default
 functions[_default]="setopt local_options magic_equal_subst; $functions[_default]"
 
-# ALIASES
+## ALIASES
 
 unalias l la
 
@@ -75,7 +75,7 @@ alias up=gitup
 alias w='wezterm cli'
 alias z=zellij
 
-## Tree
+### Tree
 
 alias tree='eza --group-directories-first --tree --ignore-glob="__pycache__|dist|node_modules|target"'
 alias t='tree --git-ignore'
@@ -83,11 +83,21 @@ alias t='tree --git-ignore'
 # Show directory tree to a specified depth.
 for i in $(seq 9); do alias t$i="t -L$i"; done
 
-## Git
+### Git
 
 alias g=git
-for s in br ci clone co di flog glog glog4 push push-f show st stash; do alias $s="git $s"; done
+alias di='clear; git di'
+alias show='clear; git show'
 alias pull='git pull --prune'
+
+for s in br ci clone co flog glog glog4 push push-f st stash; do
+    alias $s="git $s"
+done
+
+for i in $(seq 10); do
+    alias glog$i="glog -$i"
+done
+
 if [[ "$TERM_PROGRAM" == vscode ]]; then
     # Prefix matches with `file:lineno:` so I can click to open.
     alias rg='rg --no-heading'
@@ -95,7 +105,7 @@ fi
 
 alias yolo='ci -a --amend --no-edit --no-verify && push -f'
 
-# FUNCTIONS
+## FUNCTIONS
 
 # Strip comment leaders from copy/pasted sample code.
 function $ { "$@" }
@@ -170,36 +180,30 @@ function poetry-activate {
     fi
 }
 
-# BINDINGS
-
-if [ -d ~/opt/fzf ]; then
-    source ~/opt/fzf/shell/completion.zsh 2>/dev/null
-    source ~/opt/fzf/shell/key-bindings.zsh
-fi
+## BINDINGS
 
 # https://github.com/ohmyzsh/ohmyzsh/issues/5071
 bindkey '^[l' down-case-word
 
-# Stolen by FZF.  Steal it back.
-bindkey '^[c' capitalize-word
-
-# Terraform
+### Terraform
 # https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 ~/conf/prj/target/release/log-profile $start_time
 
-# PROFILES
+## PROFILES
 #
 # Extensions and overrides for specific projects.  Checking out different
 # profiles on different laptops allows customization for home, work, etc.
 
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zshrc ]; then
-        log "${conf_module#*/conf-} rc...     "
+        conf-log "${conf_module#*/conf-} rc...     "
         local start_time=$(~/conf/prj/target/release/log-profile)
         source $conf_module/etc/zshrc
         ~/conf/prj/target/release/log-profile $start_time
     fi
 done
+
+unalias conf-log
