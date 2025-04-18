@@ -2,9 +2,9 @@
 #  than doing string manipulation, variable existence checks, etc. directly in
 #  shell script.
 
-alias log="echo -n conf:"
+alias conf-log="echo -n conf:"
 
-log 'primary profile...'
+conf-log 'primary profile...'
 local start_time=$(~/conf/prj/target/release/log-profile)
 
 path=(
@@ -80,9 +80,11 @@ export JUMP_PREFIXES=~/conf/etc/jump
 ~/conf/prj/target/release/log-profile $start_time
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zprofile ]; then
-        log "${conf_module#*/conf-} profile..."
+        conf-log "${conf_module#*/conf-} profile..."
         local start_time=$(~/conf/prj/target/release/log-profile)
         source $conf_module/etc/zprofile
         ~/conf/prj/target/release/log-profile $start_time
     fi
 done
+
+unalias conf-log

@@ -41,7 +41,7 @@ C-j = ":pipe-to tmux-send"
 i = ":toggle-option lsp.display-inlay-hints"
 n = ":toggle soft-wrap.enable"
 q = ":quit"
-C-w = ":write"
+w = ":write"
 
 [keys.select]
 ";" = "command_mode"
