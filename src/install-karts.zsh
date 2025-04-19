@@ -1,18 +1,22 @@
 #!/usr/bin/env -S zsh -euo pipefail
-
-readonly parent=~/git
+#
+# The name of this script refers to "karts," which are repositories of code
+# I've written, arranged by programming language: go-kart, py-kart, rust-kart.
+# In practice, only rust-kart is still in use, partly because I prefer the Rust
+# language, but also because Go and Python package management have proven
+# painful whereas Rust package management has been straightforward.
+#
+# This script also installs fewer commands than it once did, as I've moved
+# toward tools supporting subcommands, sometimes wrapped in shell aliases.
+ 
+readonly parent=~/pkg
 
 mkdir -p $parent
 cd $parent
 
-git clone git@github.com:jeffs/rust-kart $parent/rust-kart
-cargo install --path $parent/rust-kart/tmux-send
+if [[ ! -d $parent/rust-kart ]]; then
+  git clone git@github.com:jeffs/rust-kart $parent/rust-kart
+fi
 
-# TODO: Python package management is crap.  Replace these with Rust.
-git clone git@github.com:jeffs/py-kart $parent/py-kart
-for pkg in vimod yesterday; do
-    echo >~/usr/bin/$pkg '#!/usr/bin/env -S zsh -euo pipefail'
-    echo >>~/usr/bin/$pkg 'export PYTHONPATH="${PYTHONPATH:+$PYTHONPATH:}'$parent/py-kart'"'
-    echo >>~/usr/bin/$pkg 'python -m '$pkg' "$@"'
-    chmod +x ~/usr/bin/$pkg
-done
+cargo install --path $parent/rust-kart/tmux-send
+cargo install --path $parent/rust-kart/vimod
