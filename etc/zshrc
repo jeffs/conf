@@ -61,7 +61,6 @@ functions[_default]="setopt local_options magic_equal_subst; $functions[_default
 
 unalias l la
 
-alias clippy='cargo clippy --tests && cargo clippy -- -W clippy::pedantic'
 alias vim=nvim
 alias rust='evcxr -q' # Rust REPL
 alias h=history
@@ -127,6 +126,11 @@ function e {
     else
         ${EDITOR:-vi} "$@"
     fi
+}
+
+
+function clippy {
+    cargo clippy --tests "$@" && cargo clippy "$@" -- -W clippy::pedantic
 }
 
 function re { cargo eval --expr "$*"; }
