@@ -134,4 +134,20 @@ config.keys = {
   }
 }
 
+--[[
+config.background = {
+  {
+    source = { File = '/Users/jeff/big/img/bg/Dragonsnake_Bog.jpeg' },
+    -- hsb = { brightness = 0.1 },
+  },
+  {
+    -- source = { Color = 'rgba(28, 33, 39, 0.95)' },
+    source = { Color = 'rgba(0, 0, 0, 0.8)' },
+    height = '100%',
+    width = '100%',
+  },
+}
+]]--
+
+
 return config

@@ -6,6 +6,9 @@
 # Install the Debugger Adapter Protocol implementation for macOS.
 # xcrun -f lldb-dap
 
+# Install language servers for CSS, etc.
+# $ npm i -g vscode-langservers-extracted
+
 brew install helix
 
 # <https://docs.helix-editor.com/building-from-source.html>
