@@ -71,7 +71,7 @@ alias uuu='c ../../..'
 alias py='python -q'
 alias tf=terraform
 alias up=gitup
-alias w='wezterm cli'
+alias w=wezterm
 alias z=zellij
 
 ### Tree
