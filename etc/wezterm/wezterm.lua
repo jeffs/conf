@@ -1,7 +1,7 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
-config.color_scheme =  'Wombat'
+config.color_scheme = 'Wombat'
 -- config.color_scheme =  'Vs Code Dark+ (Gogh)'
 -- config.color_scheme =  'VWbug (terminal.sexy)'
 -- config.color_scheme =  'Wez'
@@ -51,6 +51,16 @@ end)
 
 config.leader = { mods = 'CTRL', key = 'g', timeout_milliseconds = 1000 }
 config.keys = {
+  {
+    mods = 'LEADER|CTRL',
+    key = 'g',
+    action = wezterm.action.SendKey {
+      mods = 'CTRL',
+      key = 'g',
+    }
+  },
+
+
   -- Split
   {
     mods = 'LEADER',
@@ -101,8 +111,8 @@ config.keys = {
     action = wezterm.action.ActivatePaneDirection('Right')
   },
   {
-    mods = 'LEADER|CTRL',
-    key = 'g',
+    mods = 'LEADER',
+    key = 'n',
     action = wezterm.action.ActivatePaneDirection("Next")
   },
   {
@@ -147,7 +157,7 @@ config.background = {
     width = '100%',
   },
 }
-]]--
+]] --
 
 
 return config
