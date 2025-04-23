@@ -49,7 +49,7 @@ wezterm.on('toggle-opacity', function(window, pane)
   window:set_config_overrides(overrides)
 end)
 
-config.leader = { mods = 'CTRL', key = 'g', timeout_milliseconds = 1000 }
+config.leader = { mods = 'CTRL', key = 'w', timeout_milliseconds = 1000 }
 config.keys = {
   {
     mods = 'LEADER|CTRL',
@@ -59,7 +59,6 @@ config.keys = {
       key = 'g',
     }
   },
-
 
   -- Split
   {
@@ -116,8 +115,8 @@ config.keys = {
     action = wezterm.action.ActivatePaneDirection("Next")
   },
   {
-    mods = 'LEADER|CTRL',
-    key = 'G',
+    mods = 'LEADER',
+    key = 'N',
     action = wezterm.action.ActivatePaneDirection("Prev")
   },
   {
@@ -126,7 +125,8 @@ config.keys = {
     action = wezterm.action.PaneSelect
   },
 
-  -- Alter appearance
+  -- Alter appearance. These don't use the Leader key, which I reserve for the
+  -- experimental mux.
   {
     mods = 'CMD',
     key = 'u',
@@ -158,6 +158,5 @@ config.background = {
   },
 }
 ]] --
-
 
 return config
