@@ -10,8 +10,7 @@ file-types = [
 
 [[language]]
 name = "rust"
-rulers = [101]
-# text-width = 100
+rulers = [80, 101]
 
 [[language]]
 name = "bash"
