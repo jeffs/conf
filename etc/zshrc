@@ -144,6 +144,14 @@ function re { cargo eval --expr "$*"; }
 # * Setting shell or environment variables.
 function j { eval $(jump -c "$@"); }
 
+function _jump {
+    local -ra targets=(rk day cl l month conf file)
+    _describe target targets
+}
+
+compdef _jump j
+compdef _jump jump
+
 # TODO: Unify since and gitup into a single 'grit' tool.
 function si {
     if test $# = 0 && git show-ref -q dev; then
