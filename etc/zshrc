@@ -86,8 +86,8 @@ for i in $(seq 9); do alias t$i="t -L$i"; done
 ### Git
 
 alias g=git
-alias di='clear; git di'
-alias show='clear; git show'
+alias di='git di'
+alias show='git show'
 alias pull='git pull --prune'
 
 for s in br ci clone co flog glog glog4 push push-f st stash; do
