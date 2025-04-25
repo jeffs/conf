@@ -65,6 +65,7 @@ alias vim=nvim
 alias rust='evcxr -q' # Rust REPL
 alias h=history
 alias hd='hexdump -C'
+alias ls='eza -F'
 alias u='c ..'
 alias uu='c ../..'
 alias uuu='c ../../..'
@@ -217,5 +218,7 @@ for conf_module in ~/git/conf-*(N); do
         ~/conf/prj/target/release/log-profile $start_time
     fi
 done
+
+date +'%n%A, %B %d %l:%M %p'
 
 unalias conf-log
