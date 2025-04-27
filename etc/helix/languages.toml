@@ -11,6 +11,7 @@ file-types = [
 [[language]]
 name = "rust"
 rulers = [80, 101]
+language-servers = ["scls", "rust-analyzer"]
 
 [[language]]
 name = "bash"
@@ -19,3 +20,6 @@ formatter = { command = "shfmt" }
 [language-server.rust-analyzer.config.rust-analyzer.check]
 command = "clippy"
 extraArgs = ["--", "-W", "clippy::pedantic"]
+
+[language-server.scls]
+command = "simple-completion-language-server"

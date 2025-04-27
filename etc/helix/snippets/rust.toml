@@ -1,0 +1,5 @@
+[[snippets]]
+prefix = "dp"
+scope = ["rust"]
+body = "use dioxus::prelude::*;\n"
+description = "Import the Dioxus prelude"
