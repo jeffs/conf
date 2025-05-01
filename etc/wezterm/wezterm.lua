@@ -49,7 +49,7 @@ wezterm.on('toggle-opacity', function(window, pane)
   window:set_config_overrides(overrides)
 end)
 
-config.leader = { mods = 'CTRL', key = 'w', timeout_milliseconds = 1000 }
+config.leader = { mods = 'CTRL', key = 'h', timeout_milliseconds = 1000 }
 config.keys = {
   {
     mods = 'LEADER|CTRL',

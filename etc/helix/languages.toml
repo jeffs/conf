@@ -1,21 +1,22 @@
 [[language]]
 name = "bash"
-rulers = [81]
 file-types = [
   { glob = "zprofile" },
   { glob = "zshrc" },
   { glob = ".zprofile" },
   { glob = ".zsh{env,login,rc}" },
 ]
+formatter = { command = "shfmt" }
+rulers = [81]
 
 [[language]]
 name = "rust"
-rulers = [80, 101]
+rulers = [81, 101]
 language-servers = ["scls", "rust-analyzer"]
 
 [[language]]
-name = "bash"
-formatter = { command = "shfmt" }
+name = "sql"
+formatter = { command = "pg_format" }
 
 [language-server.rust-analyzer.config.rust-analyzer.check]
 command = "clippy"

@@ -25,7 +25,7 @@ newline = 'all'
 # auto-info = false
 
 [keys.insert]
-"C-f" = ["normal_mode", ":write"]
+"C-e" = ["normal_mode", ":write"]
 
 [keys.normal]
 Z = ":write-quit"
