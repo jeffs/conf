@@ -14,3 +14,4 @@ cargo install cargo-watch sccache
 
 # Without the rust-analyzer component, Helix can't find rust-analyzer.
 rustup component add rust-analyzer
+rustup +nightly component add rust-analyzer
