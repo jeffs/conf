@@ -1,6 +1,8 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
+config.term = "wezterm"
+
 -- config.window_decorations = 'RESIZE';
 
 config.default_prog = { wezterm.home_dir .. '/.cargo/bin/nu' }
