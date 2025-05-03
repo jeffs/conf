@@ -60,13 +60,10 @@ end)
 
 config.leader = { mods = 'CTRL', key = 'h', timeout_milliseconds = 1000 }
 config.keys = {
-  {
-    mods = 'LEADER|CTRL', key = 'g',
-    action = wezterm.action.SendKey {
-      mods = 'CTRL',
-      key = 'g',
-    }
-  },
+  -- {
+  --   mods = 'LEADER|CTRL', key = 'g',
+  --   action = wezterm.action.SendKey { mods = 'CTRL', key = 'g' }
+  -- },
 
   -- Split
   {
@@ -91,6 +88,10 @@ config.keys = {
   },
 
   -- Navigate
+  {
+    mods = 'LEADER', key = 'Escape',
+    action = wezterm.action.ActivateCopyMode
+  },
   {
     mods = 'LEADER', key = 'h',
     action = wezterm.action.ActivatePaneDirection('Left')
