@@ -1,6 +1,14 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
+-- config.window_decorations = 'RESIZE';
+
+-- config.treat_east_asian_ambiguous_width_as_wide = true
+config.unicode_version = 16
+-- config.normalize_output_to_unicode_nfc = true
+config.allow_square_glyphs_to_overflow_width = "Always"
+-- config.allow_square_glyphs_to_overflow_width = "Never"
+
 config.color_scheme = 'Wombat'
 -- config.color_scheme =  'Vs Code Dark+ (Gogh)'
 -- config.color_scheme =  'VWbug (terminal.sexy)'
@@ -17,6 +25,7 @@ config.color_scheme = 'Wombat'
 -- config.color_scheme = 'zenwritten_dark'
 
 config.font = wezterm.font 'VictorMono Nerd Font'
+-- config.font = wezterm.font 'Noto Color Emoji'
 -- config.font = wezterm.font 'JetBrains Mono'
 -- config.font = wezterm.font 'Hasklig'
 -- config.font = wezterm.font 'Fira Code'
@@ -52,8 +61,7 @@ end)
 config.leader = { mods = 'CTRL', key = 'h', timeout_milliseconds = 1000 }
 config.keys = {
   {
-    mods = 'LEADER|CTRL',
-    key = 'g',
+    mods = 'LEADER|CTRL', key = 'g',
     action = wezterm.action.SendKey {
       mods = 'CTRL',
       key = 'g',
@@ -62,84 +70,68 @@ config.keys = {
 
   -- Split
   {
-    mods = 'LEADER',
-    key = 'S',
+    mods = 'LEADER', key = 'S',
     action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }
   },
   {
-    mods = 'LEADER',
-    key = 's',
+    mods = 'LEADER', key = 's',
     action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' }
   },
 
   -- Zoom
   {
-    mods = 'LEADER',
-    key = 'z',
+    mods = 'LEADER', key = 'z',
     action = wezterm.action.TogglePaneZoomState
   },
 
   -- Swap
   {
-    mods = 'LEADER',
-    key = 'W',
-    action = wezterm.action.PaneSelect {
-      mode = 'SwapWithActive'
-    }
+    mods = 'LEADER', key = 'W',
+    action = wezterm.action.PaneSelect { mode = 'SwapWithActive' }
   },
 
   -- Navigate
   {
-    mods = 'LEADER',
-    key = 'h',
+    mods = 'LEADER', key = 'h',
     action = wezterm.action.ActivatePaneDirection('Left')
   },
   {
-    mods = 'LEADER',
-    key = 'j',
+    mods = 'LEADER', key = 'j',
     action = wezterm.action.ActivatePaneDirection('Down')
   },
   {
-    mods = 'LEADER',
-    key = 'k',
+    mods = 'LEADER', key = 'k',
     action = wezterm.action.ActivatePaneDirection('Up')
   },
   {
-    mods = 'LEADER',
-    key = 'l',
+    mods = 'LEADER', key = 'l',
     action = wezterm.action.ActivatePaneDirection('Right')
   },
   {
-    mods = 'LEADER',
-    key = 'n',
+    mods = 'LEADER', key = 'n',
     action = wezterm.action.ActivatePaneDirection("Next")
   },
   {
-    mods = 'LEADER',
-    key = 'N',
+    mods = 'LEADER', key = 'N',
     action = wezterm.action.ActivatePaneDirection("Prev")
   },
   {
-    mods = 'LEADER',
-    key = 'w',
+    mods = 'LEADER', key = 'w',
     action = wezterm.action.PaneSelect
   },
 
   -- Alter appearance. These don't use the Leader key, which I reserve for the
   -- experimental mux.
   {
-    mods = 'CMD',
-    key = 'u',
+    mods = 'CMD', key = 'u',
     action = wezterm.action.EmitEvent 'toggle-opacity',
   },
   {
-    mods = 'CTRL',
-    key = '-',
+    mods = 'CTRL', key = '-',
     action = wezterm.action.DisableDefaultAssignment,
   },
   {
-    mods = 'CTRL',
-    key = '=',
+    mods = 'CTRL', key = '=',
     action = wezterm.action.DisableDefaultAssignment,
   }
 }

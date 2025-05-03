@@ -8,6 +8,7 @@
 	glog         = log --first-parent --oneline --graph
 	push-f       = push -f
 	spliff       = difftool -y
+	re           = remote
 	root         = rev-parse --show-toplevel
 	exec         = "!exec "
 	ci-no-verify = commit --no-verify
