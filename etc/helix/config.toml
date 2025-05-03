@@ -31,8 +31,8 @@ newline = 'all'
 Z = ":write-quit"
 C-y = "scroll_up"
 C-e = "scroll_down"
-";" = "command_mode"
-":" = "collapse_selection"
+# ";" = "command_mode"
+# ":" = "collapse_selection"
 g = { q = ":reflow" }
 tab = "goto_last_accessed_file"
 C-j = ":pipe-to tmux-send"
@@ -47,5 +47,5 @@ w = ":write"
 C-f = "page_down"
 
 [keys.select]
-";" = "command_mode"
-":" = "collapse_selection"
+# ";" = "command_mode"
+# ":" = "collapse_selection"

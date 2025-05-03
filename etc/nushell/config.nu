@@ -20,6 +20,7 @@
 # TODO: Set environment variables only for login shells. (Does Nushell have that concept?)
 load-env {
   "EDITOR": "hx",
+  "MANPAGER": "bat -pl man",
   "PATH": [
       ~/usr/bin
       ~/conf/bin
@@ -45,6 +46,12 @@ alias e = hx
 alias l = ls
 alias u = cd ..
 
+alias tree = eza -T
+alias t = eza -T --git-ignore
+
+alias w = wezterm
+alias z = zellij
+
 alias ci = git commit
 alias co = git checkout
 alias di = git di
@@ -52,3 +59,12 @@ alias st = git st
 
 alias pull = git pull
 alias push = git push
+
+alias x = explore
+alias xp = explore --peek
+
+def --env j [target] {
+  let path = (jump $target)
+  mkdir $path
+  cd $path
+}
