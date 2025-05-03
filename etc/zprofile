@@ -26,6 +26,8 @@ path=(
     '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
 )
 
+export XDG_CONFIG_HOME=~/.config
+
 # Per suggestions from brew install libpq; see: bin/install-psql.zsh
 export LDFLAGS="${LDFLAGS:+$LDFLAGS }-L/opt/homebrew/opt/libpq/lib"
 export CPPFLAGS="${CPPFLAGS:+$CPPFLAGS }-I/opt/homebrew/opt/libpq/include"
