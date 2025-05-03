@@ -116,8 +116,8 @@ function cg { c $(git rev-parse --show-toplevel); }
 function cy { cl --yesterday; }
 function mc { mkdir -p $1 && c $1; }
 
-function l { ls -hl --color "$@" | $PAGER }
-function la { ls -Ahl --color "$@" | $PAGER }
+function l { ls -hl --color=always "$@" | $PAGER }
+function la { ls -Ahl --color=always "$@" | $PAGER }
 
 function e {
     if [[ -d .git ]]; then
