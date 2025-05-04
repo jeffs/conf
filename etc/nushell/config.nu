@@ -20,8 +20,9 @@
 # TODO
 # * Fix MANPAGER properly; see:
 #   <https://github.com/sharkdp/bat/issues/652#issuecomment-528998521>
-
-# TODO: Set environment variables only for login shells. (Does Nushell have that concept?)
+# * Set environment variables only for login shells. (Does Nushell have that concept?)
+# * Set up profiles; see $nu.user-autoload-dirs:
+#   <https://www.nushell.sh/book/configuration.html#configuration-overview>
 
 load-env {
   "EDITOR": "hx",
@@ -48,13 +49,32 @@ load-env {
   "RIPGREP_CONFIG_PATH": ('~/conf/etc/ripgreprc' | path expand)
 }
 
-alias c = cd
-alias e = hx
-alias l = ls
-alias u = cd ..
+# alias c = cd
 
-alias tree = eza -T
-alias t = eza -T --git-ignore
+alias e = hx
+alias g = git
+alias l = ls
+
+# TODO: How do I forward the patterns with their original type, one_of<glob,
+#  string>? Right now, `l *` tries to call `ls '*'`, with the asterisk being a
+#  literal string rather than a glob.
+def l [...patterns] {
+  if ($patterns | is-empty) {
+  ls              | grid -cis '  '
+  } else {
+  ls ...$patterns | grid -cis '  '
+  }
+}
+
+def --env c [path: string = ~] {
+  cd $path
+  l
+}
+
+alias u = c ..
+
+alias tree = eza -T --group-directories-first
+alias t = tree --git-ignore
 
 alias w = wezterm
 alias z = zellij
@@ -67,12 +87,22 @@ alias st = git st
 
 alias pull = git pull
 alias push = git push
+def yolo [] {
+  git commit -a --amend --no-edit --no-verify
+  git push -f
+}
 
+alias d = describe
 alias x = explore
-alias xp = explore --peek
+
+alias xp = x --peek
+
+def --env mc [path] { mkdir $path; cd $path }
 
 def --env j [target] {
-  let path = (jump $target)
-  mkdir $path
-  cd $path
+  let path = match $target {
+    y | cy => { (date now) - 1day | format date '~/log/%Y/%m/%d' | path expand },
+    _ => { jump $target },
+  }
+  mc $path
 }

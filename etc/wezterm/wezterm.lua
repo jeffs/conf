@@ -40,6 +40,18 @@ config.font = wezterm.font 'VictorMono Nerd Font'
 -- config.font = wezterm.font 'Lekton Nerd Font Mono'
 -- config.font = wezterm.font 'IntoneMono Nerd Font Mono'
 
+-- <https://www.reddit.com/r/neovim/comments/1424lkj/comment/jn43vxe/>
+-- config.font_rules = {
+-- 	{
+-- 		intensity = "Bold", italic = false,
+-- 		font = wezterm.font("VictorMono Nerd Font", { weight = "Bold", stretch = "Normal", style = "Normal" }),
+-- 	},
+-- 	{
+-- 		intensity = "Bold", italic = true,
+-- 		font = wezterm.font("VictorMono Nerd Font", { weight = "Bold", stretch = "Normal", style = "Italic" }),
+-- 	},
+-- }
+
 config.font_size = 14
 config.initial_cols = 104
 config.initial_rows = 40

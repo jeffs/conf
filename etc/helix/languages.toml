@@ -10,6 +10,11 @@ formatter = { command = "shfmt" }
 rulers = [81]
 
 [[language]]
+name = "nu"
+# nufmt doesn't work at all yet, but I'd like to keep an eye on it.
+# formatter = { command = "nufmt" }
+
+[[language]]
 name = "rust"
 rulers = [81, 101]
 language-servers = ["scls", "rust-analyzer"]
