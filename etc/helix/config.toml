@@ -38,6 +38,8 @@ tab = "goto_last_accessed_file"
 C-j = ":pipe-to tmux-send"
 left = ":buffer-previous"
 right = ":buffer-next"
+'{' = 'goto_prev_paragraph'
+'}' = 'goto_next_paragraph'
 
 [keys.normal.C-f]
 i = ":toggle-option lsp.display-inlay-hints"
