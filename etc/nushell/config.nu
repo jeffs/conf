@@ -16,11 +16,17 @@
 #
 # You can remove these comments if you want or leave
 # them for future reference.
+#
+# TODO
+# * Fix MANPAGER properly; see:
+#   <https://github.com/sharkdp/bat/issues/652#issuecomment-528998521>
 
 # TODO: Set environment variables only for login shells. (Does Nushell have that concept?)
+
 load-env {
   "EDITOR": "hx",
-  "MANPAGER": "bat -pl man",
+  "LESS": "-FRX -j5",
+  "MANPAGER": "bat -pl man --pager='less -FrX -j5'",
   "PATH": [
       ~/usr/bin
       ~/conf/bin
@@ -38,7 +44,8 @@ load-env {
       /sbin
       /Library/Developer/CommandLineTools/usr/bin
       "/Applications/Visual Studio Code.app/Contents/Resources/app/bin",
-  ]
+  ],
+  "RIPGREP_CONFIG_PATH": ('~/conf/etc/ripgreprc' | path expand)
 }
 
 alias c = cd
@@ -52,8 +59,9 @@ alias t = eza -T --git-ignore
 alias w = wezterm
 alias z = zellij
 
-alias ci = git commit
-alias co = git checkout
+alias br = git br
+alias ci = git ci
+alias co = git co
 alias di = git di
 alias st = git st
 

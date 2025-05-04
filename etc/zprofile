@@ -41,8 +41,9 @@ export READNULLCMD=$PAGER
 export RIPGREP_CONFIG_PATH=~/conf/etc/ripgreprc
 export ZSH=~/.oh-my-zsh
 
-export LESS='-FRX -j5'
+export LESS='-FR -j5'
 export PAGER=less
+export MANPAGER='bat -pl man --pager="less -Fr -j5"'
 
 if [[ -v CURSOR_TRACE_ID ]]; then
     export EDITOR='cursor --wait'
