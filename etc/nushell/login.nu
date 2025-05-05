@@ -30,3 +30,16 @@ load-env {
   "RIPGREP_CONFIG_PATH": ('~/conf/etc/ripgreprc' | path expand),
   "JUMP_PREFIXES": ('~/conf/etc/jump' | path expand),
 }
+
+if $nu.is-interactive {
+  # TODO: Install iTerm2 and imgcat automatically; see:
+  #  <https://iterm2.com/documentation-images.html>
+  let image = "~/big/img/fun/dont-panic.jpg" | path expand
+  if ($image | path exists) {
+    match $env.TERM_PROGRAM {
+      'WezTerm' => {^wezterm imgcat $image},
+      'iTerm.app' if not (which 'imgcat' | is-empty) => {^imgcat $image},
+      _ => {}
+    }
+  }
+}
