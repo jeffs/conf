@@ -28,6 +28,7 @@
 
 $env.config.show_banner = false
 
+source 'command/fc-list.nu'
 source 'command/tree.nu'
 
 alias e = hx
