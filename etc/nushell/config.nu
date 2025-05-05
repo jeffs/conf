@@ -26,6 +26,8 @@
 #   - See <https://www.nushell.sh/book/hooks.html#basic-hooks>
 #   - Or, as a hack, launch a subshell, and print a message after it exits
 
+$env.config.show_banner = false
+
 source 'command/tree.nu'
 
 alias e = hx
@@ -114,4 +116,10 @@ def hx-health [lang?: string] {
   }
 }
 
-$env.config.show_banner = false
+def imgcat [...args: string] {
+  let args = $args | each {path expand}
+  match $env.TERM_PROGRAM {
+    'WezTerm' => {^wezterm imgcat ...$args},
+    _ => {^imgcat ...$args},
+  }
+}
