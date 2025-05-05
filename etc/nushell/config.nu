@@ -22,8 +22,9 @@
 # * Automatically load project-specific config, here and in `login.nu`; see:
 #   - [$nu.user-autoload-dirs](https://www.nushell.sh/book/configuration.html#configuration-overview)
 #   - [source](https://www.nushell.sh/commands/docs/source.html)
-
-# alias c = cd
+# * Add support for exit hooks
+#   - See <https://www.nushell.sh/book/hooks.html#basic-hooks>
+#   - Or, as a hack, launch a subshell, and print a message after it exits
 
 alias e = hx
 alias g = git
@@ -87,3 +88,5 @@ def --env j [target] {
 def hx-health [] {
   hx --health | lines | skip 8 | str join "\n" | str replace 'Language servers' 'Servers' | str replace 'Debug adapter' 'Adapter' | detect columns --guess
 }
+
+$env.config.show_banner = false
