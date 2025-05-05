@@ -106,3 +106,8 @@ def --env j [target] {
   }
   mc $path
 }
+
+# TODO: Parameterize language name to filter for.
+def hx-health [] {
+  hx --health | lines | skip 8 | str join "\n" | str replace 'Language servers' 'Servers' | str replace 'Debug adapter' 'Adapter' | detect columns --guess
+}
