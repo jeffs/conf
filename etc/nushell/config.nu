@@ -60,6 +60,8 @@ alias co = git co
 alias di = git di
 alias st = git st
 
+alias mat = bat -pl man
+
 alias glog = git glog
 alias pull = git pull
 alias push = git push
