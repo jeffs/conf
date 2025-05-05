@@ -16,40 +16,12 @@
 #
 # You can remove these comments if you want or leave
 # them for future reference.
-#
+
 # TODO
-# * Fix MANPAGER properly; see:
-#   <https://github.com/sharkdp/bat/issues/652#issuecomment-528998521>
-# * Set environment variables only for login shells. (Does Nushell have that concept?)
-# * Set up profiles; see:
+#
+# * Automatically load project-specific config, here and in `login.nu`; see:
 #   - [$nu.user-autoload-dirs](https://www.nushell.sh/book/configuration.html#configuration-overview)
 #   - [source](https://www.nushell.sh/commands/docs/source.html)
-
-load-env {
-  "EDITOR": "hx",
-  "LESS": "-FRX -j5",
-  "MANPAGER": "bat -pl man --pager='less -FrX -j5'",
-  "PATH": [
-      ~/usr/bin
-      ~/conf/bin
-      ~/.local/bin
-      ~/.cargo/bin
-      ~/go/bin
-      /usr/local/go/bin
-      /opt/homebrew/opt/libpq/bin
-      /opt/homebrew/opt/openjdk/bin
-      /opt/homebrew/bin
-      /usr/local/bin
-      /usr/bin
-      /bin
-      /usr/sbin
-      /sbin
-      /Library/Developer/CommandLineTools/usr/bin
-      "/Applications/Visual Studio Code.app/Contents/Resources/app/bin",
-  ],
-  "RIPGREP_CONFIG_PATH": ('~/conf/etc/ripgreprc' | path expand),
-  "JUMP_PREFIXES": ('~/conf/etc/jump' | path expand),
-}
 
 # alias c = cd
 
@@ -62,9 +34,9 @@ alias l = ls
 #  literal string rather than a glob.
 def l [...patterns] {
   if ($patterns | is-empty) {
-  ls              | grid -cis '  '
+    ls | grid -cis '  '
   } else {
-  ls ...$patterns | grid -cis '  '
+    ls ...$patterns | grid -cis '  '
   }
 }
 
@@ -74,6 +46,7 @@ def --env c [path: string = ~] {
 }
 
 alias u = c ..
+alias uu = c ...
 
 alias tree = eza -T --group-directories-first
 alias t = tree --git-ignore
@@ -97,6 +70,7 @@ def yolo [] {
 alias d = describe
 alias x = explore
 
+alias fg = job unfreeze
 alias xp = x --peek
 
 def --env mc [path] { mkdir $path; cd $path }
