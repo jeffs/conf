@@ -84,6 +84,16 @@ def --env j [target] {
   mc $path
 }
 
+def clippy [...args: string] {
+  if ($args| is-empty) {
+    cargo clippy --tests
+    cargo clippy -- -W clippy::pedantic
+  } else {
+    cargo clippy --tests ...$args
+    cargo clippy ...$args -- -W clippy::pedantic
+  }
+}
+
 # TODO: Accept an optional list of languages, rather than a scalar.
 def hx-health [lang?: string] {
   let table = (
