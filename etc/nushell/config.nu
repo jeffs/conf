@@ -21,8 +21,9 @@
 # * Fix MANPAGER properly; see:
 #   <https://github.com/sharkdp/bat/issues/652#issuecomment-528998521>
 # * Set environment variables only for login shells. (Does Nushell have that concept?)
-# * Set up profiles; see $nu.user-autoload-dirs:
-#   <https://www.nushell.sh/book/configuration.html#configuration-overview>
+# * Set up profiles; see:
+#   - [$nu.user-autoload-dirs](https://www.nushell.sh/book/configuration.html#configuration-overview)
+#   - [source](https://www.nushell.sh/commands/docs/source.html)
 
 load-env {
   "EDITOR": "hx",
@@ -46,7 +47,8 @@ load-env {
       /Library/Developer/CommandLineTools/usr/bin
       "/Applications/Visual Studio Code.app/Contents/Resources/app/bin",
   ],
-  "RIPGREP_CONFIG_PATH": ('~/conf/etc/ripgreprc' | path expand)
+  "RIPGREP_CONFIG_PATH": ('~/conf/etc/ripgreprc' | path expand),
+  "JUMP_PREFIXES": ('~/conf/etc/jump' | path expand),
 }
 
 # alias c = cd
