@@ -26,6 +26,8 @@
 #   - See <https://www.nushell.sh/book/hooks.html#basic-hooks>
 #   - Or, as a hack, launch a subshell, and print a message after it exits
 
+source 'command/tree.nu'
+
 alias e = hx
 alias g = git
 alias l = ls
@@ -49,9 +51,6 @@ def --env c [path: string = ~] {
 alias u = c ..
 alias uu = c ...
 
-alias tree = eza -T --group-directories-first
-alias t = tree --git-ignore
-
 alias w = wezterm
 alias z = zellij
 
@@ -61,6 +60,7 @@ alias co = git co
 alias di = git di
 alias st = git st
 
+alias glog = git glog
 alias pull = git pull
 alias push = git push
 def yolo [] {
@@ -74,7 +74,7 @@ alias x = explore
 alias fg = job unfreeze
 alias xp = x --peek
 
-def --env mc [path] { mkdir $path; cd $path }
+def --env mc [path] { mkdir $path; c $path }
 
 def --env j [target] {
   let path = match $target {
@@ -84,9 +84,22 @@ def --env j [target] {
   mc $path
 }
 
-# TODO: Parameterize language name to filter for.
-def hx-health [] {
-  hx --health | lines | skip 8 | str join "\n" | str replace 'Language servers' 'Servers' | str replace 'Debug adapter' 'Adapter' | detect columns --guess
+# TODO: Accept an optional list of languages, rather than a scalar.
+def hx-health [lang?: string] {
+  let table = (
+    hx --health |
+    lines |
+    skip 8 |
+    str join "\n" |
+    str replace --regex 'Language serv\S*' 'Servers' |
+    str replace 'Debug adapter' 'Adapter' |
+    detect columns --guess
+  )
+  if $lang == null {
+    $table
+  } else {
+    $table | where Language =~ $lang
+  }
 }
 
 $env.config.show_banner = false

@@ -1,0 +1,11 @@
+alias tree = eza -T --group-directories-first
+alias t = tree --git-ignore
+alias t1 = t -L1
+alias t2 = t -L2
+alias t3 = t -L3
+alias t4 = t -L4
+alias t5 = t -L5
+alias t6 = t -L6
+alias t7 = t -L7
+alias t8 = t -L8
+alias t9 = t -L9
