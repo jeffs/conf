@@ -38,7 +38,7 @@ alias l = ls
 # TODO: How do I forward the patterns with their original type, one_of<glob,
 #  string>? Right now, `l *` tries to call `ls '*'`, with the asterisk being a
 #  literal string rather than a glob.
-def l [...patterns] {
+def lg [...patterns] {
   if ($patterns | is-empty) {
     ls | grid -cis '  '
   } else {
