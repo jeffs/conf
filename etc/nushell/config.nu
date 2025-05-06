@@ -74,6 +74,7 @@ def yolo [] {
 }
 
 alias d = describe
+alias o = open
 alias x = explore
 
 alias fg = job unfreeze
