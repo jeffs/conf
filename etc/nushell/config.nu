@@ -62,6 +62,7 @@ alias ci = git ci
 alias co = git co
 alias di = git di
 alias st = git st
+alias si = since
 
 alias mat = bat -pl man
 
@@ -73,11 +74,16 @@ def yolo [] {
   git push -f
 }
 
+alias rust = evcxr -q
+alias r = rust
+
 alias d = describe
 alias o = open
-alias x = explore
 
 alias fg = job unfreeze
+alias jobs = job list
+
+alias x = explore
 alias xp = x --peek
 
 def --env mc [path] { mkdir $path; c $path }
@@ -89,6 +95,8 @@ def --env j [target] {
   }
   mc $path
 }
+
+alias cl = c (jump cl)
 
 def clippy [...args: string] {
   if ($args| is-empty) {
@@ -124,4 +132,19 @@ def imgcat [...args: string] {
     'WezTerm' => {^wezterm imgcat ...$args},
     _ => {^imgcat ...$args},
   }
+}
+
+# # Example
+#
+#   git diff --numstat dev... | numstat
+#
+# # TODO
+#
+# * Make this a `from` subcommand.
+# * How do I document custom commands in a way that integrates with F1?
+def from-numstat [] {
+  detect columns -n | where column0 =~ '\d' | rename '+' '-' name |
+  update '+' {into int} |
+  update '-' {into int} |
+  upsert delta {|r| ($r | get +) - ($r | get -)} | move delta --before name
 }
