@@ -1,15 +1,16 @@
 # This file runs for login shells only. Weirdly, it runs *after* config.nu.
 #
-# TODO
+# # TODO
 # 
-# * Work around ^H in bat/man output
-#   see <https://github.com/sharkdp/bat/issues/652#issuecomment-528998521>
+# * Correct groff config, rather than workin around ^H in MANPAGER; see:
+#   <https://github.com/sharkdp/bat/issues/652#issuecomment-528998521>
 
 load-env {
   EDITOR: hx
   LESS: '-FRX -j5'
   HOMEBREW_NO_ENV_HINTS: true
   JUMP_PREFIXES: ('~/conf/etc/jump' | path expand)
+  MANPAGER: 'bat -pl man --color=always | sd "_\x08|\x08\w" "" | less'
   PATH: ([
       ~/usr/bin
       ~/conf/bin
