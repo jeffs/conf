@@ -100,6 +100,10 @@ config.keys = {
 
   -- Swap
   {
+    mods = 'LEADER|CTRL', key = 'h',
+    action = wezterm.action.RotatePanes 'Clockwise'
+  },
+  {
     mods = 'LEADER', key = 'W',
     action = wezterm.action.PaneSelect { mode = 'SwapWithActive' }
   },

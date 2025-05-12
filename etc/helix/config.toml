@@ -1,17 +1,17 @@
-# theme = "dark_plus"
-theme = "amberwood"
-# theme = "ao"
-# theme = "base16_default"
+# theme = 'dark_plus'
+theme = 'amberwood'
+# theme = 'ao'
+# theme = 'base16_default'
 
 [editor]
 soft-wrap.enable = true
 
 # <https://docs.helix-editor.com/editor.html?highlight=auto%20bracket#editorauto-pairs-section>
-[editor.auto-pairs]
-'(' = ')'
-'{' = '}'
-'[' = ']'
-'<' = '>'
+# [editor.auto-pairs]
+# '(' = ')'
+# '{' = '}'
+# '[' = ']'
+# '<' = '>'
 
 [editor.cursor-shape]
 insert = 'bar'
@@ -25,29 +25,30 @@ newline = 'all'
 # auto-info = false
 
 [keys.insert]
-"C-e" = ["normal_mode", ":write"]
+'C-t' = ['normal_mode', ':write']
 
 [keys.normal]
-Z = ":write-quit"
-C-y = "scroll_up"
-C-e = "scroll_down"
-# ";" = "command_mode"
-# ":" = "collapse_selection"
-g = { q = ":reflow" }
-tab = "goto_last_accessed_file"
-C-j = ":pipe-to tmux-send"
-left = ":buffer-previous"
-right = ":buffer-next"
+# ':' = 'collapse_selection'
+# ';' = 'command_mode'
 '{' = 'goto_prev_paragraph'
 '}' = 'goto_next_paragraph'
+C-e = 'scroll_down'
+C-j = ':pipe-to tmux-send'
+C-t = ':write'
+C-y = 'scroll_up'
+Z = ':write-quit'
+g = { q = ':reflow' }
+left = ':buffer-previous'
+right = ':buffer-next'
+tab = 'goto_last_accessed_file'
 
 [keys.normal.C-f]
-i = ":toggle-option lsp.display-inlay-hints"
-n = ":toggle soft-wrap.enable"
-q = ":quit"
-w = ":write"
-C-f = "page_down"
+i = ':toggle-option lsp.display-inlay-hints'
+n = ':toggle soft-wrap.enable'
+q = ':quit'
+w = ':write'
+C-f = 'page_down'
 
 [keys.select]
-# ";" = "command_mode"
-# ":" = "collapse_selection"
+# ';' = 'command_mode'
+# ':' = 'collapse_selection'
