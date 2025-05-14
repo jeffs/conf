@@ -3,11 +3,16 @@
 # TODO
 #
 # * Automatically load project-specific config, here and in `login.nu`; see:
-#   - [$nu.user-autoload-dirs](https://www.nushell.sh/book/configuration.html#configuration-overview)
+#   - [`$nu.user-autoload-dirs`](https://www.nushell.sh/book/configuration.html#configuration-overview)
 #   - [source](https://www.nushell.sh/commands/docs/source.html)
 # * Add support for exit hooks
 #   - See <https://www.nushell.sh/book/hooks.html#basic-hooks>
 #   - Or, as a hack, launch a subshell, and print a message after it exits
+# * Get aliases to autocomplete correctly
+#   - This is a [known issue](https://www.nushell.sh/cookbook/external_completers.html#alias-completions)
+#   - I don't understand the suggested workaround. There's no `$spans` variable
+#     in `git-completions.nu`.
+# * Auto-complete `since` with Git refs
 
 $env.config.show_banner = false
 
@@ -42,11 +47,11 @@ alias uu = c ...
 alias w = wezterm
 alias z = zellij
 
-alias br = git br
-alias ci = git ci
-alias co = git co
-alias di = git di
-alias st = git st
+alias br = git branch
+alias ci = git commit
+alias co = git checkout
+alias di = git diff
+alias st = git status
 alias si = since
 
 alias mat = bat -pl man
