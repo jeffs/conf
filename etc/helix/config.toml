@@ -43,6 +43,7 @@ right = ':buffer-next'
 tab = 'goto_last_accessed_file'
 
 [keys.normal.C-f]
+c = ':buffer-close'
 i = ':toggle-option lsp.display-inlay-hints'
 n = ':toggle soft-wrap.enable'
 q = ':quit'
