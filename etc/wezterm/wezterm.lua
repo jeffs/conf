@@ -3,7 +3,7 @@ local config = wezterm.config_builder()
 
 config.term = "wezterm"
 
--- config.window_decorations = 'RESIZE';
+config.window_decorations = 'RESIZE';
 
 config.default_prog = { wezterm.home_dir .. '/.cargo/bin/nu', '--login' }
 config.set_environment_variables = { XDG_CONFIG_HOME = wezterm.home_dir .. '/.config' }
