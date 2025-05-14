@@ -21,6 +21,14 @@ use std/dirs
 source 'command/fc-list.nu'
 source 'command/tree.nu'
 
+# For reasons beyond my ken, completions sourced from autoload scripts don't
+# respect aliases So, I source them here, in which case they _kinda_ respect
+# aliases. This seems unrelated to the known issue mentioned in the TODO above.
+#
+# Nushell doesn't appear to have any way (other than autoload) to source files
+# only if they exist.
+use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
+
 alias e = hx
 alias g = git
 alias l = ls
