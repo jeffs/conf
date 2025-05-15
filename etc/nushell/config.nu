@@ -97,13 +97,7 @@ def --env j [target] {
 alias cl = c (jump cl)
 
 def clippy [...args: string] {
-  if ($args| is-empty) {
-    cargo clippy --tests
-    cargo clippy -- -W clippy::pedantic
-  } else {
-    cargo clippy --tests ...$args
-    cargo clippy ...$args -- -W clippy::pedantic
-  }
+    cargo clippy --tests --workspace ...$args -- -W clippy::pedantic
 }
 
 # TODO: Accept an optional list of languages, rather than a scalar.
