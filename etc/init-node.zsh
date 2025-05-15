@@ -1,8 +1,10 @@
+#!zsh
+
 # Load nvm lazily, since merely sourcing its definition takes ~350ms.
 nvm() {
     # Install NVM if necessary.
     if [ ! -d ~/.nvm ]; then
-        ~/conf/src/install-node.zsh || return 1
+        ~/conf/src/install-nvm.zsh || return 1
     fi
     unset -f nvm
     export NVM_DIR=~/.nvm

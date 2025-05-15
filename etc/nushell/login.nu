@@ -12,6 +12,7 @@ load-env {
   JUMP_PREFIXES: ('~/conf/etc/jump' | path expand)
   MANPAGER: 'bat -pl man --color=always | sd "_\x08|\x08\w" "" | less'
   PATH: ([
+      ~/.local/state/fnm_multishells/45162_1747348875574/bin
       ~/usr/bin
       ~/conf/bin
       ~/.local/bin
@@ -25,6 +26,16 @@ load-env {
       /Library/Developer/CommandLineTools/usr/bin
   ] | path expand)
   RIPGREP_CONFIG_PATH: ('~/conf/etc/ripgreprc' | path expand)
+
+  # FNM is a version manager for Node.js.
+  FNM_MULTISHELL_PATH: ("~/.local/state/fnm_multishells/45162_1747348875574" | path expand)
+  FNM_VERSION_FILE_STRATEGY: "local"
+  FNM_DIR: ("~/.local/share/fnm" | path expand)
+  FNM_LOGLEVEL: "info"
+  FNM_NODE_DIST_MIRROR: "https://nodejs.org/dist"
+  FNM_COREPACK_ENABLED: "false"
+  FNM_RESOLVE_ENGINES: "true"
+  FNM_ARCH: "arm64"
 }
 
 if $nu.is-interactive {
