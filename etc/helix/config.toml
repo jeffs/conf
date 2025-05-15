@@ -6,6 +6,14 @@ theme = 'amberwood'
 [editor]
 soft-wrap.enable = true
 
+# I use the mouse for Wezterm, and Helix gets in the way by default, like by
+# stealing Command+click (which I use to drag Wezterm windows). Wezterm
+# automatically translates scroll events to move the cursor up or down several
+# lines at a time when Helix is active, which is nice. Selective remapping of
+# mouse gestures in Helix is pending:
+# <https://github.com/helix-editor/helix/pull/9469>
+mouse = false
+
 # <https://docs.helix-editor.com/editor.html?highlight=auto%20bracket#editorauto-pairs-section>
 # [editor.auto-pairs]
 # '(' = ')'
