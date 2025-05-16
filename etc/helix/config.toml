@@ -44,7 +44,7 @@ C-e = 'scroll_down'
 C-j = ':pipe-to tmux-send'
 C-t = ':write'
 C-y = 'scroll_up'
-Z = { Z = ':write-quit' }
+Z = ':write-quit'
 g = { q = ':reflow' }
 left = ':buffer-previous'
 right = ':buffer-next'
