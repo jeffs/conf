@@ -47,9 +47,6 @@ impl App {
     ///
     /// Returns [`Err`] if the target database cannot be read.
     pub fn from_env() -> Result<App> {
-        // The [`std::env::home_dir`] function is deprecated because it behaved inconsistently on
-        // Windows before Rust 1.85, but it does what we want here.
-        #[allow(deprecated)]
         let home = env::home_dir().expect("user should have a home directory");
         let db = db_from_env(&home)?;
         Ok(App { home, db })
