@@ -12,11 +12,11 @@ load-env {
   JUMP_PREFIXES: ('~/conf/etc/jump' | path expand)
   MANPAGER: 'bat -pl man --color=always | sd "_\x08|\x08\w" "" | less'
   PATH: ([
-      ~/.local/state/fnm_multishells/45162_1747348875574/bin
       ~/usr/bin
       ~/conf/bin
       ~/.local/bin
       ~/.cargo/bin
+      ~/.local/state/fnm_multishells/45162_1747348875574/bin
       /opt/homebrew/bin
       /usr/local/bin
       /usr/bin
