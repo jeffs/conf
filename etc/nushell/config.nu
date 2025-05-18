@@ -49,6 +49,7 @@ def --env c [path: string = ~] {
   l
 }
 
+alias c- = c `-`
 alias u = c ..
 alias uu = c ...
 
