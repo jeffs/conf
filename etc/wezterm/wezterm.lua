@@ -8,49 +8,12 @@ config.window_decorations = 'RESIZE';
 config.default_prog = { wezterm.home_dir .. '/.cargo/bin/nu', '--login' }
 config.set_environment_variables = { XDG_CONFIG_HOME = wezterm.home_dir .. '/.config' }
 
--- config.treat_east_asian_ambiguous_width_as_wide = true
 config.unicode_version = 16
--- config.normalize_output_to_unicode_nfc = true
 config.allow_square_glyphs_to_overflow_width = "Always"
--- config.allow_square_glyphs_to_overflow_width = "Never"
 
 config.color_scheme = 'Wombat'
--- config.color_scheme =  'Vs Code Dark+ (Gogh)'
--- config.color_scheme =  'VWbug (terminal.sexy)'
--- config.color_scheme =  'Wez'
--- config.color_scheme =  'Wez (Gogh)'
--- config.color_scheme =  '3024 (base16)'
--- config.color_scheme =  'Wryan'
--- config.color_scheme =  'Wombat (Gogh)'
--- config.color_scheme =  'Wild Cherry (Gogh)'
--- config.color_scheme = 'Bamboo Multiplex'
--- config.color_scheme = 'One Dark Pro'
--- config.color_scheme = 'Abernathy'
--- config.color_scheme = 'Aco (Gogh)'
--- config.color_scheme = 'zenwritten_dark'
 
 config.font = wezterm.font 'VictorMono Nerd Font'
--- config.font = wezterm.font 'Noto Color Emoji'
--- config.font = wezterm.font 'JetBrains Mono'
--- config.font = wezterm.font 'Hasklig'
--- config.font = wezterm.font 'Fira Code'
--- config.font = wezterm.font 'Hack Nerd Font Mono'
--- config.font = wezterm.font 'FiraCode Nerd Font Mono'
--- config.font = wezterm.font 'Hasklug Nerd Font'
--- config.font = wezterm.font 'Lekton Nerd Font Mono'
--- config.font = wezterm.font 'IntoneMono Nerd Font Mono'
-
--- <https://www.reddit.com/r/neovim/comments/1424lkj/comment/jn43vxe/>
--- config.font_rules = {
--- 	{
--- 		intensity = "Bold", italic = false,
--- 		font = wezterm.font("VictorMono Nerd Font", { weight = "Bold", stretch = "Normal", style = "Normal" }),
--- 	},
--- 	{
--- 		intensity = "Bold", italic = true,
--- 		font = wezterm.font("VictorMono Nerd Font", { weight = "Bold", stretch = "Normal", style = "Italic" }),
--- 	},
--- }
 
 config.font_size = 14
 config.initial_cols = 160
@@ -77,11 +40,6 @@ end)
 
 config.leader = { mods = 'CTRL', key = 'h', timeout_milliseconds = 1000 }
 config.keys = {
-  -- {
-  --   mods = 'LEADER|CTRL', key = 'g',
-  --   action = wezterm.action.SendKey { mods = 'CTRL', key = 'g' }
-  -- },
-
   -- Split
   {
     mods = 'LEADER', key = 'S',
@@ -157,20 +115,5 @@ config.keys = {
     action = wezterm.action.DisableDefaultAssignment,
   }
 }
-
---[[
-config.background = {
-  {
-    source = { File = '/Users/jeff/big/img/bg/Dragonsnake_Bog.jpeg' },
-    -- hsb = { brightness = 0.1 },
-  },
-  {
-    -- source = { Color = 'rgba(28, 33, 39, 0.95)' },
-    source = { Color = 'rgba(0, 0, 0, 0.8)' },
-    height = '100%',
-    width = '100%',
-  },
-}
-]] --
 
 return config

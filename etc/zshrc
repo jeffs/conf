@@ -222,10 +222,3 @@ done
 date +'%n%A, %B %d %l:%M %p'
 
 unalias conf-log
-
-# fnm automatically appended this, which does not make me joyful.
-# FNM_PATH="/Users/jeff/Library/Application Support/fnm"
-# if [ -d "$FNM_PATH" ]; then
-#   export PATH="/Users/jeff/Library/Application Support/fnm:$PATH"
-#   eval "`fnm env`"
-# fi

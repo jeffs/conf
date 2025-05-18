@@ -1,7 +1,4 @@
-# theme = 'dark_plus'
 theme = 'amberwood'
-# theme = 'ao'
-# theme = 'base16_default'
 
 [editor]
 soft-wrap.enable = true
@@ -14,13 +11,6 @@ soft-wrap.enable = true
 # <https://github.com/helix-editor/helix/pull/9469>
 mouse = false
 
-# <https://docs.helix-editor.com/editor.html?highlight=auto%20bracket#editorauto-pairs-section>
-# [editor.auto-pairs]
-# '(' = ')'
-# '{' = '}'
-# '[' = ']'
-# '<' = '>'
-
 [editor.cursor-shape]
 insert = 'bar'
 normal = 'block'
@@ -29,15 +19,10 @@ select = 'underline'
 [editor.whitespace.render]
 newline = 'all'
 
-# Don't pop up info windows for `g` or `m` commands.  Doesn't help with `:`.
-# auto-info = false
-
 [keys.insert]
 'C-t' = ['normal_mode', ':write']
 
 [keys.normal]
-# ':' = 'collapse_selection'
-# ';' = 'command_mode'
 '{' = 'goto_prev_paragraph'
 '}' = 'goto_next_paragraph'
 C-e = 'scroll_down'
@@ -57,7 +42,3 @@ n = ':toggle soft-wrap.enable'
 q = ':quit'
 w = ':write'
 C-f = 'page_down'
-
-[keys.select]
-# ';' = 'command_mode'
-# ':' = 'collapse_selection'
