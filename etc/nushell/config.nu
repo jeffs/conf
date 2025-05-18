@@ -2,9 +2,6 @@
 #
 # TODO
 #
-# * Automatically load project-specific config, here and in `login.nu`; see:
-#   - [`$nu.user-autoload-dirs`](https://www.nushell.sh/book/configuration.html#configuration-overview)
-#   - [source](https://www.nushell.sh/commands/docs/source.html)
 # * Add support for exit hooks
 #   - See <https://www.nushell.sh/book/hooks.html#basic-hooks>
 #   - Or, as a hack, launch a subshell, and print a message after it exits
@@ -26,7 +23,8 @@ source 'command/tree.nu'
 # aliases. This seems unrelated to the known issue mentioned in the TODO above.
 #
 # Nushell doesn't appear to have any way (other than autoload) to source files
-# only if they exist.
+# only if they exist. Maybe `$NU_LIB_DIRS` can be used to search "real" paths,
+# falling back to empty dummy files committed to this repository.
 use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
 
 alias e = hx
