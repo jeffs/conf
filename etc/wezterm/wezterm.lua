@@ -113,6 +113,17 @@ config.keys = {
   {
     mods = 'CTRL', key = '=',
     action = wezterm.action.DisableDefaultAssignment,
+  },
+
+  -- Nushell accepts Alt+Enter to enter multiline commands, so I use Cmd+Enter
+  -- instead (matching the iTerm2 default).
+  {
+    mods = 'ALT', key = 'Enter',
+    action = wezterm.action.DisableDefaultAssignment,
+  },
+  {
+    mods = 'CMD', key = 'Enter',
+    action = wezterm.action.ToggleFullScreen,
   }
 }
 
