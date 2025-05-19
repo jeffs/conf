@@ -1,3 +1,12 @@
+-- TODO
+--
+-- * Configure click handling
+--   - See <https://github.com/wezterm/wezterm/discussions/529>
+--   - Nushell `ls` somehow outputs clickable links, which I configure through
+--     macOS to open using an Automator script (`on-file-click.app`), which
+--     in turn runs a shell script (`on-file-click.nu`), which calls `wezterm
+--     cli spawn` to open the file in my chosen editor.
+
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
