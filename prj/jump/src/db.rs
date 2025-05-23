@@ -92,7 +92,7 @@ impl fmt::Display for Error {
 pub type Result<T> = std::result::Result<T, Error>;
 
 pub struct Database(
-    /// Maps jump target names to directory paths.
+    /// Maps target names to directory paths.
     HashMap<String, PathBuf>,
 );
 
@@ -103,7 +103,8 @@ impl Default for Database {
 }
 
 impl Database {
-    #[must_use] pub fn new() -> Self {
+    #[must_use]
+    pub fn new() -> Self {
         Self(HashMap::new())
     }
 
