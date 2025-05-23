@@ -123,6 +123,10 @@ config.keys = {
     mods = 'CTRL', key = '=',
     action = wezterm.action.DisableDefaultAssignment,
   },
+  {
+    mods = 'CTRL', key = 'T',
+    action = wezterm.action.DisableDefaultAssignment,
+  },
 
   -- Nushell accepts Alt+Enter to enter multiline commands, so I use Cmd+Enter
   -- instead (matching the iTerm2 default).
