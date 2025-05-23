@@ -1,15 +1,15 @@
 #!/usr/bin/env -S zsh -euo pipefail
 
+brew install helix
+
 # Install the Rust Language Server.
-# rustup component add rust-analyzer
+rustup component add rust-analyzer
 
 # Install the Debugger Adapter Protocol implementation for macOS.
-# xcrun -f lldb-dap
+xcrun -f lldb-dap
 
 # Install language servers for CSS, etc.
-# $ npm i -g vscode-langservers-extracted
-
-brew install helix
+npm i -g vscode-langservers-extracted
 
 # <https://docs.helix-editor.com/building-from-source.html>
 # git clone git@github.com:helix-editor/helix ~/pkg/helix
