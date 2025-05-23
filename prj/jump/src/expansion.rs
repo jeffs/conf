@@ -14,7 +14,7 @@ mod cmd {
 
     /// Use the OS native file association.
     ///
-    /// TODO: Compare macOS `open`, Windows `start`, and Linux `xdg-open`.
+    /// TODO: Compare macOS `open`, Windows/Nushell `start`, and Linux `xdg-open`.
     pub const OPEN: &str = "open";
 }
 
