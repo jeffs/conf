@@ -15,6 +15,10 @@ rulers = [81, 101]
 language-servers = ["scls", "rust-analyzer"]
 
 [[language]]
+name = "move"
+language-servers = ["move-analyzer"]
+
+[[language]]
 name = "sql"
 formatter = { command = "pg_format" }
 
@@ -26,3 +30,6 @@ diagnostics = { disabled = ["macro-error"] }
 
 [language-server.scls]
 command = "simple-completion-language-server"
+
+[language-server.move-analyzer]
+command = "move-analyzer"
