@@ -31,25 +31,20 @@ alias e = hx
 alias g = git
 alias l = ls
 
-# TODO: How do I forward the patterns with their original type, one_of<glob,
-#  string>? Right now, `l *` tries to call `ls '*'`, with the asterisk being a
-#  literal string rather than a glob.
+# TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern
+#  like `*` is treated as a string instead of a glob.
 def lg [...patterns] {
   if ($patterns | is-empty) {
-    ls | grid -cis '  '
+    ls
   } else {
-    ls ...$patterns | grid -cis '  '
-  }
+    ls ...$patterns
+  } | grid -cis '  '
 }
 
 def --env c [path: string = ~] {
   cd $path
   l
 }
-
-alias c- = c `-`
-alias u = c ..
-alias uu = c ...
 
 alias w = wezterm
 alias z = zellij
