@@ -33,13 +33,6 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-function python {
-    # Takes ~70ms.
-    eval "$(pyenv init -)"
-    unset -f python
-    python "$@"
-}
-
 ## OPTIONS
 
 setopt rmstarsilent	# Don't confirm rm *.

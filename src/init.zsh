@@ -18,7 +18,7 @@
 ~/conf/src/install-rust.zsh
 
 # The 'expect' package includes unbuffer, which is used by bin/upgrade.zsh.
-brew install difftastic entr expect tmux jq pyenv
+brew install difftastic entr expect tmux jq
 cargo install fd-find ripgrep sd
 
 for p in cl jump; do
