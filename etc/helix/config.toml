@@ -1,4 +1,5 @@
-theme = 'amberwood'
+# theme = 'amberwood'
+theme = 'adwaita-dark'
 
 [editor]
 soft-wrap.enable = true
@@ -15,9 +16,6 @@ mouse = false
 insert = 'bar'
 normal = 'block'
 select = 'underline'
-
-[editor.whitespace.render]
-newline = 'all'
 
 [keys.insert]
 'C-e' = ['normal_mode', ':write']
