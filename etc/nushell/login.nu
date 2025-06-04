@@ -18,6 +18,7 @@ load-env {
       ~/.cargo/bin
       ~/.local/state/fnm_multishells/45162_1747348875574/bin
       ~/go/bin
+      /usr/local/go/bin
       /opt/homebrew/bin
       /usr/local/bin
       /usr/bin
