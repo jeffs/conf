@@ -20,6 +20,7 @@ select = 'underline'
 newline = 'all'
 
 [keys.insert]
+'C-e' = ['normal_mode', ':write']
 'C-t' = ['normal_mode', ':write']
 
 [keys.normal]
