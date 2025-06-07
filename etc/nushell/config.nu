@@ -58,6 +58,9 @@ alias si = since
 
 alias mat = bat -pl man
 
+alias f = fzf --walker-skip=.git,dist,node_modules,target,var --preview='bat -p --color=always {}'
+alias fe = f --bind 'enter:become(hx {})'
+
 alias glog = git glog
 alias pull = git pull
 alias push = git push

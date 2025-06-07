@@ -10,7 +10,7 @@ load-env {
   LESS: '-FRX -j5'
   HOMEBREW_NO_ENV_HINTS: true
   JUMP_PREFIXES: ('~/conf/etc/jump' | path expand)
-  MANPAGER: 'bat -pl man --color=always | sd "_\x08|\x08\w" "" | less'
+  # MANPAGER: 'bat -pl man --color=always | sd "_\x08|\x08\w" "" | less'
   PATH: ([
       ~/usr/bin
       ~/conf/bin

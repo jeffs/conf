@@ -11,6 +11,9 @@ xcrun -f lldb-dap
 # Install language servers for CSS, etc.
 npm i -g vscode-langservers-extracted
 
+# Install a TOML language server.
+cargo install taplo-cli
+
 # <https://docs.helix-editor.com/building-from-source.html>
 # git clone git@github.com:helix-editor/helix ~/pkg/helix
 # cd ~/pkg/helix
