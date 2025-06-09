@@ -1,5 +1,4 @@
-# theme = 'amberwood'
-theme = 'adwaita-dark'
+theme = 'ayu_dark'
 
 [editor]
 soft-wrap.enable = true
