@@ -30,10 +30,6 @@ a.out
 # SBT and Cargo droppings
 target/
 
-# Trunk droppings; see `build.dist`:
-# https://trunkrs.dev/configuration/#build-section
-dist/
-
 # Markdown output
 *.md.html
 
