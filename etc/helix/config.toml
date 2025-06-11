@@ -1,6 +1,7 @@
 theme = 'ayu_dark'
 
 [editor]
+auto-pairs = false
 soft-wrap.enable = true
 
 # I use the mouse for Wezterm, and Helix gets in the way by default, like by

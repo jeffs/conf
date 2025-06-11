@@ -27,6 +27,8 @@ source 'command/tree.nu'
 # falling back to empty dummy files committed to this repository.
 use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
 
+$env.config.history.sync_on_enter = false
+
 alias e = hx
 alias g = git
 alias l = ls
