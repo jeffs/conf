@@ -15,6 +15,10 @@ rulers = [81]
 name = "git-ignore"
 file-types = [{ glob = ".gitignore" }, { glob = "gitexcludes" }]
 
+# [[language]]
+# name = "html"
+# rulers = [81]
+
 [[language]]
 name = "move"
 language-servers = ["move-analyzer"]
@@ -37,8 +41,13 @@ command = "move-analyzer"
 
 [language-server.rust-analyzer.config.rust-analyzer]
 check = { command = "clippy", extraArgs = ["--", "-W", "clippy::pedantic"] }
-# Some log macro syntax confuses the heck out of Rust Analyzer.
-diagnostics = { disabled = ["macro-error"] }
+
+[language-server.rust-analyzer.config.rust-analyzer.diagnostics]
+disabled = [
+  "inactive-code",
+  # Some log macro syntax confuses the heck out of Rust Analyzer.
+  "macro-error"
+]
 
 [language-server.scls]
 command = "simple-completion-language-server"

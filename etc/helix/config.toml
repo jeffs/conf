@@ -1,7 +1,6 @@
 theme = 'ayu_dark'
 
 [editor]
-auto-pairs = false
 soft-wrap.enable = true
 
 # I use the mouse for Wezterm, and Helix gets in the way by default, like by
@@ -11,6 +10,8 @@ soft-wrap.enable = true
 # mouse gestures in Helix is pending:
 # <https://github.com/helix-editor/helix/pull/9469>
 mouse = false
+
+auto-pairs = false
 
 [editor.cursor-shape]
 insert = 'bar'
@@ -31,7 +32,10 @@ C-y = 'scroll_up'
 g = { q = ':reflow' }
 left = ':buffer-previous'
 right = ':buffer-next'
-tab = 'goto_last_accessed_file'
+# tab = 'goto_last_accessed_file'
+
+# ';' = 'command_mode'
+# ':' = 'collapse_selection'
 
 [keys.normal.C-f]
 c = ':buffer-close'
@@ -41,3 +45,8 @@ q = ':quit'
 w = ':write'
 z = ':write-quit'
 C-f = 'page_down'
+
+# [keys.select]
+# ';' = 'command_mode'
+# ':' = 'collapse_selection'
+
