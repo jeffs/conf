@@ -36,6 +36,25 @@ formatter = { command = "pg_format" }
 # name = "toml"
 # formatter = { command = "taplo", args = ["fmt", "-"] }
 
+[language-server.emmet-ls]
+args = ["--stdio"]
+command="emmet-ls"
+
+[[language]]
+name = "html"
+language-servers = ["vscode-html-language-server", "emmet-ls"]
+
+# I use emmet-ls rather than emmet-lsp, because the former supports :format.
+#
+# [language-server.emmet-lsp]
+# command = "emmet-language-server"
+# args = ["--stdio"]
+#
+# [[language]]
+# name = "html"
+# roots = [".git"]
+# language-servers = ["emmet-lsp"]
+
 [language-server.move-analyzer]
 command = "move-analyzer"
 

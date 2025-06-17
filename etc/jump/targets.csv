@@ -3,5 +3,6 @@
 ~/log/%Y/%m,month
 
 ~/conf,conf
+~/git/wasm,wasm
 ~/file,file
 ~/pkg,pkg
