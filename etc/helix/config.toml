@@ -11,7 +11,7 @@ soft-wrap.enable = true
 # <https://github.com/helix-editor/helix/pull/9469>
 mouse = false
 
-auto-pairs = false
+bufferline = "multiple"
 
 [editor.cursor-shape]
 insert = 'bar'
