@@ -34,8 +34,8 @@ left = ':buffer-previous'
 right = ':buffer-next'
 # tab = 'goto_last_accessed_file'
 
-# ';' = 'command_mode'
-# ':' = 'collapse_selection'
+';' = 'command_mode'
+':' = 'collapse_selection'
 
 [keys.normal.C-f]
 c = ':buffer-close'
@@ -47,6 +47,6 @@ z = ':write-quit'
 C-f = 'page_down'
 
 # [keys.select]
-# ';' = 'command_mode'
-# ':' = 'collapse_selection'
+';' = 'command_mode'
+':' = 'collapse_selection'
 
