@@ -27,7 +27,10 @@ source 'command/tree.nu'
 # falling back to empty dummy files committed to this repository.
 use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
 
-$env.config.history.sync_on_enter = false
+# I want the shell to append to the history file on Enter, but to read it only
+# on tartup. I haven't yet figured out how to accomplish that.
+#
+# $env.config.history.sync_on_enter = false
 
 alias e = hx
 alias g = git
