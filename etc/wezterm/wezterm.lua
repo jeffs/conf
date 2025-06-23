@@ -28,7 +28,7 @@ config.font_size = 14
 config.initial_cols = 160
 config.initial_rows = 36
 config.hide_tab_bar_if_only_one_tab = true
--- config.enable_tab_bar = false
+config.enable_tab_bar = false
 
 config.window_background_opacity = 0.9
 config.text_background_opacity = 0.5
