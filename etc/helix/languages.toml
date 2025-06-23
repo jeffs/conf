@@ -68,5 +68,9 @@ disabled = [
   "macro-error"
 ]
 
+[language-server.rust-analyzer.config.rust-analyzer.imports.granularity]
+# https://rust-analyzer.github.io/book/features.html
+group = "crate"
+
 [language-server.scls]
 command = "simple-completion-language-server"

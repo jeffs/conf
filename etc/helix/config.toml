@@ -11,7 +11,8 @@ soft-wrap.enable = true
 # <https://github.com/helix-editor/helix/pull/9469>
 mouse = false
 
-bufferline = "multiple"
+# Show the tab bar when multiple buffers are open.
+# bufferline = "multiple"
 
 [editor.cursor-shape]
 insert = 'bar'
@@ -32,7 +33,6 @@ C-y = 'scroll_up'
 g = { q = ':reflow' }
 left = ':buffer-previous'
 right = ':buffer-next'
-# tab = 'goto_last_accessed_file'
 
 ';' = 'command_mode'
 ':' = 'collapse_selection'
@@ -46,7 +46,7 @@ w = ':write'
 z = ':write-quit'
 C-f = 'page_down'
 
-# [keys.select]
+[keys.select]
 ';' = 'command_mode'
 ':' = 'collapse_selection'
 
