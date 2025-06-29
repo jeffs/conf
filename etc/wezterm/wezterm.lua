@@ -20,7 +20,12 @@ config.set_environment_variables = { XDG_CONFIG_HOME = wezterm.home_dir .. '/.co
 config.unicode_version = 16
 config.allow_square_glyphs_to_overflow_width = "Always"
 
+-- config.color_scheme = 'Belge (terminal.sexy)'
 config.color_scheme = 'Wombat'
+config.colors = {
+  background = '#101717',
+  -- background = '#0f1419'
+}
 
 config.font = wezterm.font 'VictorMono Nerd Font'
 
@@ -30,8 +35,8 @@ config.initial_rows = 36
 config.hide_tab_bar_if_only_one_tab = true
 config.enable_tab_bar = false
 
-config.window_background_opacity = 0.9
-config.text_background_opacity = 0.5
+config.window_background_opacity = 0
+config.text_background_opacity = 0.6
 
 config.send_composed_key_when_left_alt_is_pressed = false
 config.send_composed_key_when_right_alt_is_pressed = false
