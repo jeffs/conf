@@ -1,15 +1,18 @@
 theme = 'ayu_dark'
 
-[editor]
-soft-wrap.enable = true
-
 # I use the mouse for Wezterm, and Helix gets in the way by default, like by
 # stealing Command+click (which I use to drag Wezterm windows). Wezterm
 # automatically translates scroll events to move the cursor up or down several
 # lines at a time when Helix is active, which is nice. Selective remapping of
 # mouse gestures in Helix is pending:
 # <https://github.com/helix-editor/helix/pull/9469>
-mouse = false
+editor.mouse = false
+
+[editor.soft-wrap]
+enable = true
+# Indenting wrapped lines eases visual parsing of Markdown lists. I haven't
+# figured out how to set language-specific wrap indicators in Helix yet.
+wrap-indicator = '  ↪ '
 
 # Show the tab bar when multiple buffers are open.
 # bufferline = "multiple"

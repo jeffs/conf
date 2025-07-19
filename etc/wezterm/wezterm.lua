@@ -35,7 +35,7 @@ config.initial_rows = 36
 config.hide_tab_bar_if_only_one_tab = true
 config.enable_tab_bar = false
 
-config.window_background_opacity = 0
+config.window_background_opacity = 0.6
 config.text_background_opacity = 0.6
 
 config.send_composed_key_when_left_alt_is_pressed = false
