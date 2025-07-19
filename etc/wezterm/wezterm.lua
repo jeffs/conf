@@ -32,15 +32,12 @@ config.font = wezterm.font 'VictorMono Nerd Font'
 config.font_size = 14
 config.initial_cols = 160
 config.initial_rows = 36
-config.hide_tab_bar_if_only_one_tab = true
-config.enable_tab_bar = false
-
-config.window_background_opacity = 0.6
-config.text_background_opacity = 0.6
 
 config.send_composed_key_when_left_alt_is_pressed = false
 config.send_composed_key_when_right_alt_is_pressed = false
 
+config.window_background_opacity = 0.6
+config.text_background_opacity = 0.6
 wezterm.on('toggle-opacity', function(window, pane)
   local overrides = window:get_config_overrides() or {}
   if not overrides.window_background_opacity then
@@ -50,6 +47,15 @@ wezterm.on('toggle-opacity', function(window, pane)
     overrides.window_background_opacity = nil
     overrides.text_background_opacity = nil
   end
+  window:set_config_overrides(overrides)
+end)
+
+
+config.enable_tab_bar = false
+-- config.hide_tab_bar_if_only_one_tab = true
+wezterm.on('toggle-tab-bar', function(window, pane)
+  local overrides = window:get_config_overrides() or {}
+  overrides.enable_tab_bar =  not overrides.enable_tab_bar
   window:set_config_overrides(overrides)
 end)
 
@@ -121,6 +127,10 @@ config.keys = {
 
   -- Alter appearance. These don't use the Leader key, which I reserve for the
   -- experimental mux.
+  {
+    mods = 'CMD', key = 'i',
+    action = wezterm.action.EmitEvent 'toggle-tab-bar',
+  },
   {
     mods = 'CMD', key = 'u',
     action = wezterm.action.EmitEvent 'toggle-opacity',
