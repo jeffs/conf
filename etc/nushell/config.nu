@@ -33,12 +33,15 @@ use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
 # $env.config.history.sync_on_enter = false
 
 alias e = hx
-alias g = git
 alias l = ls
 
-# TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern
-#  like `*` is treated as a string instead of a glob.
+alias g = dirs goto
+alias n = dirs next
+alias p = dirs prev
+
 def lg [...patterns] {
+  # TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern
+  #  like `*` is treated as a string instead of a glob.
   if ($patterns | is-empty) {
     ls
   } else {
@@ -80,7 +83,6 @@ alias r = rust
 alias d = describe
 alias o = open
 
-alias fg = job unfreeze
 alias jobs = job list
 
 alias x = explore
@@ -100,6 +102,22 @@ alias cl = c (jump cl)
 
 def clippy [...args: string] {
     cargo clippy --tests --workspace ...$args -- -W clippy::pedantic
+}
+
+# Unfreeze a frozen job.
+def fg [id?: int] {
+  # TODO: Report the following `job unfreeze` issue: Plain `job unfreeze`
+  #  sometimes mistakenly thinks there's no job running, so you have to give it
+  #  the job ID explicitly.
+  if $id != null {
+    return (job unfreeze $id)
+  }
+  let ids = job list | where type == 'frozen' | get 'id'
+  if ($ids | is-empty) {
+    # TODO: `error make` seems to return early. Is that its intende behavior?
+    error make --unspanned { msg: 'No frozen jobs' }
+  }
+  job unfreeze ($ids | first)
 }
 
 # TODO: Accept an optional list of languages, rather than a scalar.
