@@ -2,7 +2,8 @@
 #
 # TODO
 #
-# Automate upgrades of forked packages, such as evcxr_repl.
+# * [] Automate upgrades of forked packages, such as evcxr_repl
+# * [] Automate upgrades of apps from installers: Docker, Firefox, Steam
 
 # Upgrade packages installing using Homebrew.
 echo '* Homebrew'
