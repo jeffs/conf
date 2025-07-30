@@ -42,6 +42,17 @@ right = ':buffer-next'
 
 [keys.normal.C-f]
 c = ':buffer-close'
+d = ['save_selection', ":append-output echo ')'", 'jump_backward', ":insert-output echo 'dbg!('", 'jump_forward', 'jump_backward']
+i = ':toggle-option lsp.display-inlay-hints'
+n = ':toggle soft-wrap.enable'
+q = ':quit'
+w = ':write'
+z = ':write-quit'
+C-f = 'page_down'
+
+[keys.select.C-f]
+c = ':buffer-close'
+d = ['save_selection', ":append-output echo ')'", 'jump_backward', ":insert-output echo 'dbg!('", 'jump_forward', 'jump_backward']
 i = ':toggle-option lsp.display-inlay-hints'
 n = ':toggle soft-wrap.enable'
 q = ':quit'
@@ -52,4 +63,5 @@ C-f = 'page_down'
 [keys.select]
 ';' = 'command_mode'
 ':' = 'collapse_selection'
-
+'{' = 'goto_prev_paragraph'
+'}' = 'goto_next_paragraph'
