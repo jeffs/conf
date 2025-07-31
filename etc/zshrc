@@ -63,6 +63,7 @@ alias u='c ..'
 alias uu='c ../..'
 alias uuu='c ../../..'
 alias py='python -q'
+alias si=since
 alias tf=terraform
 alias up=gitup
 alias w=wezterm
@@ -145,15 +146,6 @@ function _jump {
 
 compdef _jump j
 compdef _jump jump
-
-# TODO: Unify since and gitup into a single 'grit' tool.
-function si {
-    if test $# = 0 && git show-ref -q dev; then
-        since dev
-    else
-        since "$@"
-    fi
-}
 
 function grit {
     case $1; in
