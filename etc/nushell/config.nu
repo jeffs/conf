@@ -63,6 +63,7 @@ alias co = git checkout
 alias di = git diff
 alias st = git status
 
+alias lc = loccount
 alias si = grit si
 alias up = grit up
 
