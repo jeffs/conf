@@ -76,7 +76,7 @@ export PYRIGHT_PYTHON_FORCE_VERSION=1.1.371
 export PYRIGHT_PYTHON_PYLANCE_VERSION=v2024.7.1
 
 # Configure some of my own local tooling.
-export GITUP_TRUNKS=dev,main,master
+export GRIT_TRUNKS=dev,main,master
 export JUMP_PREFIXES=~/conf/etc/jump
 
 ~/conf/prj/target/release/log-profile $start_time

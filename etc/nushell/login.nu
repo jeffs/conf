@@ -9,7 +9,6 @@ load-env {
   EDITOR: hx
   LESS: '-FRX -j5'
   HOMEBREW_NO_ENV_HINTS: true
-  JUMP_PREFIXES: ('~/conf/etc/jump' | path expand)
   # MANPAGER: 'bat -pl man --color=always | sd "_\x08|\x08\w" "" | less'
   PATH: ([
       ~/usr/bin
@@ -28,6 +27,10 @@ load-env {
       /Library/Developer/CommandLineTools/usr/bin
   ] | path expand)
   RIPGREP_CONFIG_PATH: ('~/conf/etc/ripgreprc' | path expand)
+
+  # My own little home-grown tools.
+  GRIT_TRUNKS: 'dev,main,master'
+  JUMP_PREFIXES: ('~/conf/etc/jump' | path expand)
 
   # FNM is a version manager for Node.js.
   FNM_MULTISHELL_PATH: ("~/.local/state/fnm_multishells/45162_1747348875574" | path expand)
