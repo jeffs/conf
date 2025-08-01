@@ -63,11 +63,12 @@ alias u='c ..'
 alias uu='c ../..'
 alias uuu='c ../../..'
 alias py='python -q'
-alias si=since
 alias tf=terraform
-alias up=gitup
 alias w=wezterm
 alias z=zellij
+
+alias si='grit si'
+alias up='grit up'
 
 ### Tree
 
@@ -146,13 +147,6 @@ function _jump {
 
 compdef _jump j
 compdef _jump jump
-
-function grit {
-    case $1; in
-        up|update) gitup "${@[@]:2}" ;;
-        si|since) si "${@[@]:2}" ;;
-    esac
-}
 
 source ~/conf/etc/init-node.zsh
 
