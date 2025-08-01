@@ -9,7 +9,7 @@
 #   - This is a [known issue](https://www.nushell.sh/cookbook/external_completers.html#alias-completions)
 #   - I don't understand the suggested workaround. There's no `$spans` variable
 #     in `git-completions.nu`.
-# * Auto-complete `since` with Git refs
+# * Auto-complete `grit since` with Git refs
 
 $env.config.show_banner = false
 
@@ -62,7 +62,9 @@ alias ci = git commit
 alias co = git checkout
 alias di = git diff
 alias st = git status
-alias si = since
+
+alias si = grit si
+alias up = grit up
 
 alias mat = bat -pl man
 

@@ -12,8 +12,8 @@
 	root         = rev-parse --show-toplevel
 	exec         = "!exec "
 	ci-no-verify = commit --no-verify
-	up           = "!exec gitup"
-	si           = "!exec since"
+	up           = "!exec grit up"
+	si           = "!exec grit si"
 [color]
 	ui = true
 [core]
