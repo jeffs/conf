@@ -65,6 +65,7 @@ alias st = git status
 
 alias lc = loccount
 alias si = grit si
+alias sj = grit -v si
 alias up = grit up
 
 alias mat = bat -pl man
@@ -101,7 +102,7 @@ def --env j [target] {
   mc $path
 }
 
-alias cl = c (jump cl)
+alias cl = mc (jump cl)
 
 def clippy [...args: string] {
     cargo clippy --tests --workspace ...$args -- -W clippy::pedantic
