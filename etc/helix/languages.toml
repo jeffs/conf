@@ -65,6 +65,12 @@ check = { command = "clippy", extraArgs = ["--", "-W", "clippy::pedantic"] }
 disabled = [
   "inactive-code",
   # Some log macro syntax confuses the heck out of Rust Analyzer.
+  # I think it's the [stuctured logging][1]:
+  #
+  # > * `:?` will capture the value using Debug.
+  # > * `:%` will capture the value using Display.
+  #
+  # [1]: https://docs.rs/log/latest/log/kv/index.html#structured-logging-in-log
   "macro-error"
 ]
 
