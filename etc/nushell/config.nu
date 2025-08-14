@@ -82,12 +82,14 @@ def yolo [] {
 }
 
 alias rust = evcxr -q
-alias r = rust
 
 alias d = describe
 alias o = open
 
 alias jobs = job list
+
+# Don't accidentally run `R` case-insensitive filesystems like macOS.
+alias r = error make { msg: "Did you mean R?" }
 
 alias x = explore
 alias xp = x --peek
