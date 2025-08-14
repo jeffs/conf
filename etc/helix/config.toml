@@ -8,6 +8,11 @@ theme = 'ayu_dark'
 # <https://github.com/helix-editor/helix/pull/9469>
 editor.mouse = false
 
+# [Recommended settings](https://docs.helix-editor.com/editor.html):
+# Show warnings and errors on the cursorline inline.
+editor.end-of-line-diagnostics = "hint"
+editor.inline-diagnostics.cursor-line = "warning"
+
 [editor.soft-wrap]
 enable = true
 # Indenting wrapped lines eases visual parsing of Markdown lists. I haven't
