@@ -20,13 +20,7 @@ config.set_environment_variables = { XDG_CONFIG_HOME = wezterm.home_dir .. '/.co
 config.unicode_version = 16
 config.allow_square_glyphs_to_overflow_width = "Always"
 
--- config.color_scheme = 'Belge (terminal.sexy)'
-config.color_scheme = 'Wombat'
-config.colors = {
-  background = '#101717',
-  -- background = '#0f1419'
-}
-
+config.color_scheme = 'Belge (terminal.sexy)'
 config.font = wezterm.font 'VictorMono Nerd Font'
 
 config.font_size = 14
