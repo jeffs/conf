@@ -5,7 +5,7 @@
 	di           = diff
 	st           = status
 	flog         = log --first-parent --oneline
-	glog         = log --first-parent --oneline --graph -6
+	glog         = log --first-parent --oneline --graph
 	push-f       = push -f
 	spliff       = difftool -y
 	re           = remote
