@@ -20,6 +20,17 @@ file-types = [{ glob = ".gitignore" }, { glob = "gitexcludes" }]
 # rulers = [81]
 
 [[language]]
+name = "markdown"
+
+# Don't auto-insert closing ``` ` ```. It plays hell with Markdown code blocks.
+[language.auto-pairs]
+'(' = ')'
+'{' = '}'
+'[' = ']'
+'"' = '"'
+'<' = '>'
+
+[[language]]
 name = "move"
 language-servers = ["move-analyzer"]
 
