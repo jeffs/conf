@@ -14,8 +14,27 @@ config.term = "wezterm"
 
 config.window_decorations = 'RESIZE';
 
-config.default_prog = { wezterm.home_dir .. '/.cargo/bin/nu', '--login' }
-config.set_environment_variables = { XDG_CONFIG_HOME = wezterm.home_dir .. '/.config' }
+-- Returns the specified path if it identifies a readable file, and nil
+-- otherwise.
+local function if_readable(path)
+  local file = io.open(path, 'r')
+  if file == nil then
+    return nil
+  end
+  io.close(file)
+  return path
+end
+
+-- Use Nu from Cargo if available, else Nu from Homebrew, else default shell.
+config.default_prog = {
+  if_readable(wezterm.home_dir .. '/.cargo/bin/nu') or
+    if_readable('/opt/homebrew/bin/nu'),
+  '--login'
+}
+
+config.set_environment_variables = {
+  XDG_CONFIG_HOME = wezterm.home_dir .. '/.config'
+}
 
 config.unicode_version = 16
 config.allow_square_glyphs_to_overflow_width = "Always"
@@ -32,7 +51,7 @@ config.send_composed_key_when_right_alt_is_pressed = false
 
 config.window_background_opacity = 0.6
 config.text_background_opacity = 0.6
-wezterm.on('toggle-opacity', function(window, pane)
+wezterm.on('toggle-opacity', function(window)
   local overrides = window:get_config_overrides() or {}
   if not overrides.window_background_opacity then
     overrides.window_background_opacity = 1.0
@@ -47,7 +66,7 @@ end)
 
 config.enable_tab_bar = false
 -- config.hide_tab_bar_if_only_one_tab = true
-wezterm.on('toggle-tab-bar', function(window, pane)
+wezterm.on('toggle-tab-bar', function(window)
   local overrides = window:get_config_overrides() or {}
   overrides.enable_tab_bar =  not overrides.enable_tab_bar
   window:set_config_overrides(overrides)
