@@ -50,7 +50,7 @@ impl AsRef<Path> for Expansion<'_, '_> {
     }
 }
 
-fn get_normal(part: Component) -> Option<&OsStr> {
+fn get_normal(part: Component<'_>) -> Option<&OsStr> {
     match part {
         Component::Normal(s) => Some(s),
         _ => None,
