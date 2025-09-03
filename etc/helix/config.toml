@@ -13,6 +13,9 @@ editor.mouse = false
 editor.end-of-line-diagnostics = "hint"
 editor.inline-diagnostics.cursor-line = "warning"
 
+# Remove "line-numbers" to toggle them.
+# editor.gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
+
 [editor.soft-wrap]
 enable = true
 # Indenting wrapped lines eases visual parsing of Markdown lists. I haven't
