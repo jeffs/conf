@@ -1,4 +1,5 @@
 theme = 'ayu_dark'
+# theme = 'base16_terminal'
 
 # I use the mouse for Wezterm, and Helix gets in the way by default, like by
 # stealing Command+click (which I use to drag Wezterm windows). Wezterm
