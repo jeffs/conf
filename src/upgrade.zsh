@@ -21,6 +21,9 @@ rustup update
 echo '* Cargo'
 cargo install $(cargo install --list |awk '/^[^ ][^(]*$/ { print $1 }')
 
+~/conf/src/install-nushell.zsh
+~/conf/src/install-helix.nu
+
 # Passing --install --all rather than --list would cause sudo to prompt for
 # access, but this script is not meant to be interactive.
 echo '* Software Update Tool'
