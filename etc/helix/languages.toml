@@ -19,6 +19,10 @@ file-types = [{ glob = ".gitignore" }, { glob = "gitexcludes" }]
 # name = "html"
 # rulers = [81]
 
+# [[language]]
+# name = "json"
+# indent = { tab-width = 4, unit = "  " }
+
 [[language]]
 name = "markdown"
 

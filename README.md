@@ -20,5 +20,8 @@
   $ hx --version
   helix 25.07.1 (d0218f7e)
   ```
+* General purpose config specialization
+  - Conditional config. Something better than commenting out parts of config files.
+  - Cascading config. Helix has [some support](https://docs.helix-editor.com/configuration.html) for this, but that's totally different from the Nushell support. Wezterm probably has some way to have different windows use different config, probably via Lua magic. Define the various forms of config specialization of different machines (e.g., laptops), profiles (home vs. work), and projects, with sane rules for how they should interact, and implement them (in whole or in part) for each application.
 
 [1]: https://forum.figma.com/t/keyboard-shortcut-are-overriden-by-notion-running-on-background/59521/7
