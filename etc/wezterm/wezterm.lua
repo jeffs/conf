@@ -64,6 +64,11 @@ wezterm.on('toggle-opacity', function(window)
   window:set_config_overrides(overrides)
 end)
 
+-- <https://wezterm.org/config/lua/config/audible_bell.html>
+--
+-- I can't seem to get the visual bell to work, at least in Helix:
+-- <https://wezterm.org/config/lua/config/visual_bell.html>
+-- config.audible_bell = 'Disabled'
 
 config.enable_tab_bar = false
 -- config.hide_tab_bar_if_only_one_tab = true
