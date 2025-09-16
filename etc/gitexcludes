@@ -11,6 +11,15 @@
 /doc/tags
 .zed
 
+# Editor config
+#
+# Which config to commit to which repos quickly gets complicated. The "right"
+# solution may be to selectively ignore files on a repo-by-repo basis; but,
+# since that requires maintenance and coordination, a blanket workaround is
+# employed here. The situation would be a bit nicer if Git supported multiple
+# global "excludes" files as well as multiple repo-local "ignore" files.
+.helix/
+
 # Python droppings
 *.pyc
 .venv
