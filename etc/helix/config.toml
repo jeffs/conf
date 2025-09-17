@@ -32,7 +32,7 @@ normal = 'block'
 select = 'underline'
 
 [keys.insert]
-'C-e' = ['normal_mode', ':write']
+'C-e' = ['normal_mode']
 'C-t' = ['normal_mode', ':write']
 
 [keys.normal]

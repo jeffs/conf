@@ -2,8 +2,12 @@
 #
 # TODO
 #
-# * [] Automate upgrades of forked packages, such as evcxr_repl
-# * [] Automate upgrades of apps from installers: Docker, Firefox, Slack, Steam
+# - [] Upgrade:
+#   * forked packages, such as evcxr_repl
+#   * apps from installers: Docker, Firefox, Slack, Steam
+#   * Docker images
+# - [] Launch SSH agent up front, so this script doesn't pause for a passphrase
+#   half way through.
 
 # Upgrade packages installing using Homebrew.
 echo '* Homebrew'
