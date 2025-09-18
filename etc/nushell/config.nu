@@ -98,7 +98,7 @@ def --env mc [path] { mkdir $path; c $path }
 
 def --env j [target] {
   let path = match $target {
-    y | cy => { (date now) - 1day | format date '~/log/%Y/%m/%d' | path expand },
+    y | cy => { (date now) - 1day | format date '~/file/log/%Y/%m/%d' | path expand },
     _ => { jump $target },
   }
   mc $path
