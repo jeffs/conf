@@ -107,7 +107,7 @@ def --env j [target] {
 alias cl = mc (jump cl)
 
 def clippy [...args: string] {
-    cargo clippy --tests --workspace ...$args -- -W clippy::pedantic
+    cargo clippy --all-targets --tests --workspace ...$args -- -W clippy::pedantic
 }
 
 # Unfreeze a frozen job.
