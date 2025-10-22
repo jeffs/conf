@@ -15,33 +15,29 @@ load-env {
       ~/conf/bin
       ~/.local/bin
       ~/.cargo/bin
-      ~/.local/state/fnm_multishells/45162_1747348875574/bin
-      ~/go/bin
-      /usr/local/go/bin
-      /opt/homebrew/bin
-      /usr/local/bin
-      /usr/bin
-      /bin
-      /usr/sbin
-      /sbin
-      /Library/Developer/CommandLineTools/usr/bin
   ] | path expand)
   RIPGREP_CONFIG_PATH: ('~/conf/etc/ripgreprc' | path expand)
 
   # My own little home-grown tools.
   GRIT_TRUNKS: 'dev,main,master'
   JUMP_PREFIXES: ('~/conf/etc/jump' | path expand)
-
-  # FNM is a version manager for Node.js.
-  FNM_MULTISHELL_PATH: ("~/.local/state/fnm_multishells/45162_1747348875574" | path expand)
-  FNM_VERSION_FILE_STRATEGY: "local"
-  FNM_DIR: ("~/.local/share/fnm" | path expand)
-  FNM_LOGLEVEL: "info"
-  FNM_NODE_DIST_MIRROR: "https://nodejs.org/dist"
-  FNM_COREPACK_ENABLED: "false"
-  FNM_RESOLVE_ENGINES: "true"
-  FNM_ARCH: "arm64"
 }
+
+# FNM is a version manager for Node.js.
+/opt/homebrew/bin/fnm env --json | from json | load-env
+$env.PATH ++= [($env.FNM_MULTISHELL_PATH | path join 'bin')]
+
+$env.PATH ++= [
+    ~/go/bin
+    /usr/local/go/bin
+    /opt/homebrew/bin
+    /usr/local/bin
+    /usr/bin
+    /bin
+    /usr/sbin
+    /sbin
+    /Library/Developer/CommandLineTools/usr/bin
+] | path expand
 
 if $nu.is-interactive {
   source 'ls-colors.nu'
