@@ -1,6 +1,17 @@
 #!/usr/bin/env nu
+#
+# Useful for debugging the language server integration:
+# <https://github.com/helix-editor/helix/discussions/7203#discussioncomment-7819383>
+#
+#   hx -v FILES...
+#   :log-open
+#
+#   tail -f ~/.cache/helix/helix.log
 
 # Install the Rust Language Server.
+#
+# For reasons beyond my ken, this sometimes fails to fix issues when run from
+# the script, but _does_ fix issues when entered manually at a shell prompt.
 rustup component add rust-analyzer
 
 # Install the Debugger Adapter Protocol implementation for macOS.
