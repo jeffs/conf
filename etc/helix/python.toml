@@ -1,0 +1,13 @@
+# https://nathanielknight.ca/articles/helix_for_python.html
+
+[language-server.pylsp.config.pylsp]
+plugins.ruff.enabled = true
+plugins.black.enabled = true
+
+[[language]]
+name = "python"
+roots = ["pyproject.toml", "setup.py", "Poetry.lock", "uv.lock", ".git"]
+# language-server = { command = "pyright-langserver", args = ["--stdio"] }
+auto-format = true
+formatter = {command = 'black', args = ["--quiet", "-"]}
+# config = ""
