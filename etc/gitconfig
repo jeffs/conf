@@ -42,3 +42,21 @@
 	email = jeff@unbuggy.com
 [init]
 	defaultBranch = main
+
+# Munge URLs automatically to save typing.
+#
+# url.insteadOf may also be useful for working around tools that insist
+# on passing https URLs to private URLs when only ssh access is properly
+# configured. In the specific case of the Go language (go get, go list, etc.),
+# the GOPRIVATE environment variable may work better:
+#
+# ```nushell
+# load-env { GOPRIVATE: 'github.com/fireflyprotocol/*' }
+# ```
+#
+# # See also
+#
+# * <https://stackoverflow.com/a/76114722/3116635>.
+# * <https://graphite.dev/guides/git-config-insteadof>
+[url "git@github.com:"]
+	insteadOf = "gh:"
