@@ -1,6 +1,6 @@
 # config.nu
 #
-# TODO
+# # TODO
 #
 # * Add support for exit hooks
 #   - See <https://www.nushell.sh/book/hooks.html#basic-hooks>
@@ -19,7 +19,7 @@ source 'command/fc-list.nu'
 source 'command/tree.nu'
 
 # For reasons beyond my ken, completions sourced from autoload scripts don't
-# respect aliases So, I source them here, in which case they _kinda_ respect
+# respect aliases. So, I source them here, in which case they _kinda_ respect
 # aliases. This seems unrelated to the known issue mentioned in the TODO above.
 #
 # Nushell doesn't appear to have any way (other than autoload) to source files
@@ -27,17 +27,20 @@ source 'command/tree.nu'
 # falling back to empty dummy files committed to this repository.
 use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
 
-# I want the shell to append to the history file on Enter, but to read it only
-# on tartup. I haven't yet figured out how to accomplish that.
-#
+# TODO: Append to the history file on Enter, but read it only on startup.
 # $env.config.history.sync_on_enter = false
 
-alias e = hx
 alias l = ls
 
+# pushd = dirs add
 alias g = dirs goto
 alias n = dirs next
 alias p = dirs prev
+
+def e [...args] {
+  # Remove the a/ and b/ prefixes produced by git diff.
+  hx ...($args | each {str replace -r '^[ab]/' ''})
+}
 
 def lg [...patterns] {
   # TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern
