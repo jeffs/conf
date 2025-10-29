@@ -50,7 +50,7 @@ config.initial_rows = 36
 config.send_composed_key_when_left_alt_is_pressed = false
 config.send_composed_key_when_right_alt_is_pressed = false
 
-config.window_background_opacity = 0.8
+config.window_background_opacity = 0.6
 -- config.text_background_opacity = 1.0
 wezterm.on('toggle-opacity', function(window)
   local overrides = window:get_config_overrides() or {}
