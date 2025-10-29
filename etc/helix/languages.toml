@@ -25,14 +25,7 @@ indent = { tab-width = 4, unit = "  " }
 
 [[language]]
 name = "markdown"
-
-# Don't auto-insert closing ``` ` ```. It plays hell with Markdown code blocks.
-[language.auto-pairs]
-'(' = ')'
-'{' = '}'
-'[' = ']'
-'"' = '"'
-'<' = '>'
+auto-pairs = { '(' = ')', '{' = '}', '[' = ']', '"' = '"', '<' = '>' }
 
 [[language]]
 name = "move"
@@ -42,6 +35,7 @@ language-servers = ["move-analyzer"]
 name = "rust"
 rulers = [81, 101]
 language-servers = ["scls", "rust-analyzer"]
+auto-pairs = { '(' = ')', '{' = '}', '[' = ']', '"' = '"', '<' = '>' }
 
 [[language]]
 name = "sql"

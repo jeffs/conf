@@ -16,7 +16,24 @@ editor.mouse = false
 editor.end-of-line-diagnostics = "hint"
 editor.inline-diagnostics.cursor-line = "warning"
 
-# Remove "line-numbers" to toggle them.
+# Don't auto-insert closing ``` ` ```. It plays hell with Markdown code blocks,
+# including those in Rust doc comments. Sadly:
+#
+# * We have to do this separately for each language, otherwise the language
+#   config overrides it. It _seems_ like setting editor.auto-pairs should
+#   work unless language.auto-pairs has been set explicitly by the user, but
+#   it doesn't. See also:
+#   <https://docs.helix-editor.com/editor.html#editorauto-pairs-section>
+# * There doesn't seem to be any way to modify the default. You have
+#   to explicitly restate the entire mappin, even when that mapping is
+#   language-specific.
+#
+# editor.auto-pairs = { '(' = ')', '{' = '}', '[' = ']', '"' = '"', '<' = '>' }
+
+# Remove "line-numbers" to toggle them. As with auto-pairs, there doesn't seem
+# to be any way to add or remove elements: All you can do is replace the
+# entire collection explicitly.
+#
 # editor.gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
 
 [editor.soft-wrap]
