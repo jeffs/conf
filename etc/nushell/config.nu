@@ -30,17 +30,13 @@ use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
 # TODO: Append to the history file on Enter, but read it only on startup.
 # $env.config.history.sync_on_enter = false
 
+alias e = edit # From rust-kart.
 alias l = ls
 
 # pushd = dirs add
 alias g = dirs goto
 alias n = dirs next
 alias p = dirs prev
-
-def e [...args] {
-  # Remove the a/ and b/ prefixes produced by git diff.
-  hx ...($args | each {str replace -r '^[ab]/' ''})
-}
 
 def lg [...patterns] {
   # TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern
@@ -79,6 +75,15 @@ alias fe = f --bind 'enter:become(hx {})'
 alias glog = git glog
 alias pull = git pull
 alias push = git push
+
+def glog [...args: string] {
+  if ($args | is-empty) {
+    git log --graph --oneline --branches $"(grit trunk).."
+  } else {
+    git glog ...$args
+  }
+}
+
 def yolo [] {
   git commit -a --amend --no-edit --no-verify
   git push -f
