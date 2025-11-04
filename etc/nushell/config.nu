@@ -78,7 +78,7 @@ alias push = git push
 
 def glog [...args: string] {
   if ($args | is-empty) {
-    git log --graph --oneline --branches $"(grit trunk).."
+    git log --graph --oneline --branches $"(grit trunk)^.."
   } else {
     git glog ...$args
   }
