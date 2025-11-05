@@ -1,7 +1,7 @@
 use std::ffi::OsStr;
-use std::fmt;
 use std::io::Write;
 use std::path::{Component, Path, PathBuf};
+use std::{env, fmt};
 
 use crate::as_bytes::AsBytes;
 
@@ -22,12 +22,15 @@ mod cmd {
 pub enum Error {
     /// An expanded path was empty.
     Empty,
+    /// An environment variable was unset.
+    Unset,
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Self::Empty => write!(f, "Empty target"),
+            Self::Unset => write!(f, "Unset variable"),
         }
     }
 }
@@ -36,6 +39,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 enum Expansion<'a, 'b> {
     Path(&'a Path),
+    PathBuf(PathBuf),
     Component(Component<'b>),
     String(String),
 }
@@ -44,16 +48,10 @@ impl AsRef<Path> for Expansion<'_, '_> {
     fn as_ref(&self) -> &Path {
         match self {
             Self::Path(p) => p,
+            Self::PathBuf(p) => p,
             Self::Component(c) => c.as_ref(),
             Self::String(s) => Path::new(s),
         }
-    }
-}
-
-fn get_normal(part: Component<'_>) -> Option<&OsStr> {
-    match part {
-        Component::Normal(s) => Some(s),
-        _ => None,
     }
 }
 
@@ -80,22 +78,35 @@ impl<'a> Expand<'a> {
         Self { home }
     }
 
-    fn special<'b>(&self, s: &str) -> Option<Expansion<'a, 'b>> {
-        if s.starts_with('%') {
+    fn special<'b>(&self, s: &OsStr) -> Result<Option<Expansion<'a, 'b>>> {
+        let Some(s) = s.to_str() else {
+            return Ok(None);
+        };
+        Ok(if s.starts_with('%') {
             let today = chrono::Local::now().date_naive();
             Some(Expansion::String(today.format(s).to_string()))
+        } else if let Some(var) = s.strip_prefix('$') {
+            // TODO: Support non-UTF-8 variable names.
+            let part = env::var_os(var).ok_or(Error::Unset)?;
+            Some(Expansion::PathBuf(part.into()))
         } else if s == "~" {
             Some(Expansion::Path(self.home))
         } else {
             None
-        }
+        })
     }
 
-    fn component<'b>(&self, part: Component<'b>) -> Expansion<'a, 'b> {
-        get_normal(part)
-            .and_then(OsStr::to_str)
-            .and_then(|s| self.special(s))
-            .unwrap_or(Expansion::Component(part))
+    fn component<'b>(&self, part: Component<'b>) -> Result<Expansion<'a, 'b>> {
+        // The input may be a "normal" path component (as opposed to, say, a
+        // Windows drive specifier), yet be subject to "special" expansion;
+        // e.g., `~` or `$VARIABLE`.
+        if let Component::Normal(normal) = part
+            && let Some(special) = self.special(normal)?
+        {
+            Ok(special)
+        } else {
+            Ok(Expansion::Component(part))
+        }
     }
 
     /// # Panics
@@ -115,7 +126,7 @@ impl<'a> Expand<'a> {
     ///
     /// [1]: https://docs.rs/chrono/latest/src/chrono/format/formatting.rs.html#335
     pub fn path(&self, path: &Path) -> Result<PathBuf> {
-        Ok(path.components().map(|c| self.component(c)).collect())
+        path.components().map(|c| self.component(c)).collect()
     }
 
     /// Returns a snippet of shell script suitable for opening the specified path.  The path should

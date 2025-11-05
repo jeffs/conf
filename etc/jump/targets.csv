@@ -3,6 +3,9 @@
 ~/file/log/%Y/%m,month
 
 ~/conf,conf
-~/git/wasm,wasm
 ~/file,file
 ~/pkg,pkg
+
+# These may be at different paths on different machines.
+$JUMP_HOME/git/journey,journey
+$JUMP_HOME/git/wasm,wasm
