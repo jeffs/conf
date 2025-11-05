@@ -21,6 +21,7 @@ load-env {
   # My own little home-grown tools.
   GRIT_TRUNKS: 'dev,main,master'
   JUMP_PREFIXES: ('~/conf/etc/jump' | path expand)
+  JUMP_HOME: ('~' | path expand)
 }
 
 # FNM is a version manager for Node.js.
