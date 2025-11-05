@@ -68,6 +68,12 @@ right = ':buffer-next'
 ';' = 'command_mode'
 ':' = 'collapse_selection'
 
+# <https://docs.helix-editor.com/command-line.html?highlight=expand#expansions>
+#
+# Print the current line's git blame information to the statusline.
+space.B = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
+space.L = ":sh git log %{buffer_name}"
+
 [keys.normal.C-f]
 c = ':buffer-close'
 d = ['save_selection', ":append-output echo ')'", 'jump_backward', ":insert-output echo 'dbg!('", 'jump_forward', 'jump_backward']
