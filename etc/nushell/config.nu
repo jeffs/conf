@@ -72,13 +72,12 @@ alias mat = bat -pl man
 alias f = fzf --walker-skip=.git,dist,node_modules,target,var --preview='bat -p --color=always {}'
 alias fe = f --bind 'enter:become(hx {})'
 
-alias glog = git glog
 alias pull = git pull
 alias push = git push
 
 def glog [...args: string] {
   if ($args | is-empty) {
-    git log --graph --oneline --branches $"(grit trunk)^.."
+    git log --graph --branches $"(grit trunk)^.."
   } else {
     git glog ...$args
   }
@@ -114,8 +113,9 @@ def --env j [target] {
 
 alias cl = mc (jump cl)
 
-def clippy [...args: string] {
-    cargo clippy --all-targets --tests --workspace ...$args -- -W clippy::pedantic
+def clippy [] {
+  # TODO: Default to pedantic, but allow override by local Cargo.toml file.
+  cargo clippy --all-targets --tests --workspace
 }
 
 # Unfreeze a frozen job.
