@@ -35,7 +35,11 @@ language-servers = ["move-analyzer"]
 name = "rust"
 rulers = [81, 101]
 language-servers = ["scls", "rust-analyzer"]
-auto-pairs = { '(' = ')', '{' = '}', '[' = ']', '"' = '"', '<' = '>' }
+
+# The Rust LSP has some magic whereby it knows to match `<` for generics, but
+# not when preceded by whitespace (as in a `<=` comparison). Setting auto-pairs
+# breaks that magic.
+# auto-pairs = { '(' = ')', '{' = '}', '[' = ']', '"' = '"', '<' = '>' }
 
 [[language]]
 name = "sql"
