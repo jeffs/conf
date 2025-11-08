@@ -62,6 +62,10 @@ alias co = git checkout
 alias di = git diff
 alias st = git status
 
+def --env cg [] {
+  c (grit root)
+}
+
 alias lc = loccount
 alias si = grit si
 alias sj = grit -v si
