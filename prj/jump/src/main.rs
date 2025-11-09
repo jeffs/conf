@@ -1,3 +1,4 @@
+#![allow(dead_code, unused_assignments, unused_imports, unused_variables)]
 //! # Notes
 //!
 //! Reads config from `~/.config/jump/targets.csv`. The `targets.csv` file supports blank lines,
@@ -13,11 +14,28 @@
 use std::io::Write;
 use std::os::unix::ffi::OsStrExt;
 use std::process::ExitCode;
-use std::{env, fmt, io};
+use std::{env, fmt, io, mem};
+
+enum ArgError {
+    /// Too many arguments were specified.
+    Extra(String),
+    /// An unrecognized flag was specified.
+    Flag(String),
+    /// No target was specified.
+    Missing,
+}
 
 enum Error {
-    Flag(String),
+    /// Command-line arguments were incorrect.
+    Args(ArgError),
+    /// The jump operation failed.
     Jump(jump::Error),
+}
+
+impl From<ArgError> for Error {
+    fn from(value: ArgError) -> Self {
+        Error::Args(value)
+    }
 }
 
 impl From<jump::Error> for Error {
@@ -26,13 +44,46 @@ impl From<jump::Error> for Error {
     }
 }
 
+impl fmt::Display for ArgError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Self::Extra(s) => write!(f, "{s} is an unexpected argument"),
+            Self::Flag(s) => write!(f, "{s} is not a recognized flag"),
+            Self::Missing => "expected target".fmt(f),
+        }
+    }
+}
+
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Error::Flag(s) => write!(f, "{s} is not a recognized flag"),
-            Error::Jump(err) => err.fmt(f),
+            Error::Args(e) => e.fmt(f),
+            Error::Jump(e) => e.fmt(f),
         }
     }
+}
+
+struct Args {
+    is_command: bool,
+    target: String,
+}
+
+fn parse_args() -> Result<Args, ArgError> {
+    let mut is_command = false;
+    let mut target = None;
+    for arg in env::args().skip(1) {
+        if arg == "-c" || arg == "--command" {
+            is_command = true;
+        } else if arg.starts_with('-') {
+            return Err(ArgError::Flag(arg));
+        } else if target.is_some() {
+            return Err(ArgError::Extra(arg));
+        } else {
+            target = Some(arg);
+        }
+    }
+    let target = target.ok_or(ArgError::Missing)?;
+    Ok(Args { is_command, target })
 }
 
 fn write(mut w: impl Write, s: &[u8]) {
@@ -40,21 +91,19 @@ fn write(mut w: impl Write, s: &[u8]) {
 }
 
 fn main_imp() -> Result<(), Error> {
+    let args = parse_args()?;
     let app = jump::App::from_env()?;
-    let mut is_command = false;
     let stdout = io::stdout();
-    for target in env::args().skip(1) {
-        match target.as_str() {
-            "-c" | "--command" => is_command = true,
-            s if s.starts_with('-') => Err(Error::Flag(target))?,
-            s if is_command => write(&stdout, &app.command(s)?),
-            s => write(&stdout, app.path(s)?.as_os_str().as_bytes()),
-        }
+    if args.is_command {
+        write(&stdout, &app.command(&args.target)?);
+    } else {
+        write(&stdout, app.path(&args.target)?.as_os_str().as_bytes());
     }
     Ok(())
 }
 
 fn main() -> ExitCode {
+    // TODO: Print usage on ArgError.
     if let Err(err) = main_imp() {
         eprintln!("jump: {err}");
         return ExitCode::FAILURE;
