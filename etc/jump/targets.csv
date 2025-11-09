@@ -2,8 +2,8 @@
 ~/file/log/%Y/%m/%d,day,cl,l
 ~/file/log/%Y/%m,month
 
-~/conf,conf
-~/file,file
+~/conf,c,conf
+~/file,f,file
 ~/pkg,pkg
 
 # These may be at different paths on different machines.

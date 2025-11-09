@@ -32,6 +32,7 @@ use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
 
 alias e = edit # From rust-kart.
 alias l = ls
+alias y = yazi # File manager.
 
 # pushd = dirs add
 alias g = dirs goto
