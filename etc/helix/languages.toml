@@ -72,7 +72,10 @@ language-servers = ["vscode-html-language-server", "emmet-ls"]
 command = "move-analyzer"
 
 [language-server.rust-analyzer.config.rust-analyzer]
-check = { command = "clippy", extraArgs = ["--", "-W", "clippy::pedantic"] }
+check = { command = "clippy" }
+
+# Project-specific lints can be configured in Cargo.toml and clippy.toml.
+# check = { command = "clippy", extraArgs = ["--", "-W", "clippy::pedantic"] }
 
 [language-server.rust-analyzer.config.rust-analyzer.diagnostics]
 disabled = [

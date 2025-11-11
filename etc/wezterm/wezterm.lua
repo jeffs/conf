@@ -6,6 +6,8 @@
 --     macOS to open using an Automator script (`on-file-click.app`), which
 --     in turn runs a shell script (`on-file-click.nu`), which calls `wezterm
 --     cli spawn` to open the file in my chosen editor.
+-- * In the list shown by `wezterm.action.ShowTabNavigator`, focus the current
+--   tab by default.
 
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
