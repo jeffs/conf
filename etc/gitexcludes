@@ -18,7 +18,7 @@
 # since that requires maintenance and coordination, a blanket workaround is
 # employed here. The situation would be a bit nicer if Git supported multiple
 # global "excludes" files as well as multiple repo-local "ignore" files.
-.helix/
+.helix
 
 # Python droppings
 *.pyc

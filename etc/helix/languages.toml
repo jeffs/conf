@@ -24,6 +24,11 @@ name = "json"
 indent = { tab-width = 4, unit = "  " }
 
 [[language]]
+# "JSON with comments."
+name = "jsonc"
+indent = { tab-width = 4, unit = "  " }
+
+[[language]]
 name = "markdown"
 auto-pairs = { '(' = ')', '{' = '}', '[' = ']', '"' = '"', '<' = '>' }
 
