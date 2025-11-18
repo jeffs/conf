@@ -1,4 +1,9 @@
-#!/usr/bin/env nu
+#!/usr/bin/env -S zsh -euo pipefail
+
+# If fnm is already installed, print its path and exit this script.
+if whence fnm; then
+  exit 0
+fi
 
 # Download and install fnm:
 curl -o- https://fnm.vercel.app/install | bash
