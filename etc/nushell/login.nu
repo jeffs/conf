@@ -4,12 +4,14 @@
 # 
 # * Correct groff config, rather than workin around ^H in MANPAGER; see:
 #   <https://github.com/sharkdp/bat/issues/652#issuecomment-528998521>
+# * Update StackExchange to suggest -P 'col -b | bat -pl man':
+#   <https://unix.stackexchange.com/questions/15855/how-to-dump-a-man-page>
 
 load-env {
   EDITOR: hx
   LESS: '-FRX -j5'
   HOMEBREW_NO_ENV_HINTS: true
-  # MANPAGER: 'bat -pl man --color=always | sd "_\x08|\x08\w" "" | less'
+  MANPAGER: 'col -b | bat -pl man'
   PATH: ([
       ~/usr/bin
       ~/conf/bin
