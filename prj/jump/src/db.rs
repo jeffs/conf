@@ -110,7 +110,8 @@ impl Database {
 
     /// # Errors
     ///
-    /// Returns an error if the file cannot be read, or if its syntax is invalid.
+    /// Returns an error if the file cannot be read, or if its syntax is
+    /// invalid.
     pub fn read_file(&mut self, path: impl AsRef<Path>) -> Result<()> {
         let path = path.as_ref();
         let file = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;

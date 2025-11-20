@@ -21,15 +21,18 @@ impl AsBytes for OsStr {
 ///
 /// > conflicting implementations of trait `AsBytes` for type `[u8; _]`
 /// >
-/// > upstream crates may add a new impl of trait `std::convert::AsRef<std::path::Path>` for type
+/// > upstream crates may add a new impl of trait
+/// > `std::convert::AsRef<std::path::Path>` for type
 /// > `[u8; _]` in future versions
 ///
-/// In other words:  We can't have both a specific implementation for arrays, and a blank
-/// implementation for paths, because _some future version_ of the upstream implementation might
-/// make arrays [`AsRef<Path>`]. But neither can we remove the specific implementation for arrays,
-/// because no such expansion has yet taken place.  So, we can't have nice things; viz. a blanket
-/// implementation for [`Path`], [`PathBuf`], and [`Component`], as well as an implementation (blank
-/// or otherwise) for arrays.  (The same applies to slices, in case you were wondering.)
+/// In other words:  We can't have both a specific implementation for arrays,
+/// and a blank implementation for paths, because _some future version_ of the
+/// upstream implementation might make arrays [`AsRef<Path>`]. But neither can
+/// we remove the specific implementation for arrays, because no such expansion
+/// has yet taken place.  So, we can't have nice things; viz. a blanket
+/// implementation for [`Path`], [`PathBuf`], and [`Component`], as well as an
+/// implementation (blank or otherwise) for arrays.  (The same applies to
+/// slices, in case you were wondering.)
 impl AsBytes for Path {
     fn as_bytes(&self) -> &[u8] {
         self.as_os_str().as_bytes()

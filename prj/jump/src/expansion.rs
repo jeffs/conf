@@ -5,7 +5,8 @@ use std::{env, fmt};
 
 use crate::as_bytes::AsBytes;
 
-/// Maps semantic command names (such as `cd`) to their implementation in the calling shell.
+/// Maps semantic command names (such as `cd`) to their implementation in the
+/// calling shell.
 ///
 /// TODO: Read shell commands from config, rather than hard-coding them here.
 mod cmd {
@@ -14,7 +15,8 @@ mod cmd {
 
     /// Use the OS native file association.
     ///
-    /// TODO: Compare macOS `open`, Windows/Nushell `start`, and Linux `xdg-open`.
+    /// TODO: Compare macOS `open`, Windows/Nushell `start`, and Linux
+    /// `xdg-open`.
     pub const OPEN: &str = "open";
 }
 
@@ -111,14 +113,16 @@ impl<'a> Expand<'a> {
 
     /// # Panics
     ///
-    /// Panics if the component begins with `%`, but is not a valid `strftime` format string. The
-    /// panic is because the underlying [`chrono::NaiveDate::format`] works lazily, with the actual
-    /// formatting done by [`chrono::format::DelayedFormat::to_string`], which has no good to way to
-    /// report an error.
+    /// Panics if the component begins with `%`, but is not a valid `strftime`
+    /// format string. The panic is because the underlying
+    /// [`chrono::NaiveDate::format`] works lazily, with the actual
+    /// formatting done by [`chrono::format::DelayedFormat::to_string`], which
+    /// has no good to way to report an error.
     ///
     /// # Errors
     ///
-    /// Path expansion currently panics on error, but future versions will instead return [`Err`].
+    /// Path expansion currently panics on error, but future versions will
+    /// instead return [`Err`].
     ///
     /// # TODO
     ///
@@ -129,8 +133,9 @@ impl<'a> Expand<'a> {
         path.components().map(|c| self.component(c)).collect()
     }
 
-    /// Returns a snippet of shell script suitable for opening the specified path.  The path should
-    /// _not_ already be expanded, as this function performs path expansion automatically.
+    /// Returns a snippet of shell script suitable for opening the specified
+    /// path.  The path should _not_ already be expanded, as this function
+    /// performs path expansion automatically.
     ///
     ///
     /// # Errors
