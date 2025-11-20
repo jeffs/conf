@@ -32,6 +32,9 @@ cargo install ${(s: :)crates}
 ~/conf/src/install-nushell.zsh
 ~/conf/src/install-helix.nu
 
+# Run this occasionally to avoid undue bitrot.
+# ~/conf/src/install-uv.zsh
+
 # Passing --install --all rather than --list would cause sudo to prompt for
 # access, but this script is not meant to be interactive.
 echo '* Software Update Tool'
