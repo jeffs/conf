@@ -82,9 +82,17 @@ alias push = git push
 
 def glog [...args: string] {
   if ($args | is-empty) {
-    # TODO: This shouldlreally be trunk^2 if trunk is a merge, and trunk^
-    #  otherwise. Move this into grit.
-    git log --graph --branches $"(grit trunk)^.."
+    # TODO: Move this into grit.
+    let trunk = grit trunk
+    let base = do -i {
+      for base in [$'($trunk)^2' $'($trunk)^'] {
+        if (git rev-parse $base | complete).exit_code == 0 {
+          return $base
+        }
+      }
+      $trunk
+    }
+    git log --graph --branches $"($base).."
   } else {
     git glog ...$args
   }
