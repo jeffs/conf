@@ -103,7 +103,8 @@ def yolo [] {
   git push -f
 }
 
-alias rust = evcxr -q
+alias glow = /opt/homebrew/bin/glow --pager --width=(tput cols)
+alias rust = evcxr # -q
 
 alias d = describe
 alias o = open
