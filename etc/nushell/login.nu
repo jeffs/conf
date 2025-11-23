@@ -20,6 +20,8 @@ load-env {
   ] | path expand)
   RIPGREP_CONFIG_PATH: ('~/conf/etc/ripgreprc' | path expand)
 
+  RUSTC_WRAPPER: '/opt/homebrew/bin/sccache'
+
   # My own little home-grown tools.
   GRIT_TRUNKS: 'dev,main,master'
   JUMP_PREFIXES: ('~/conf/etc/jump' | path expand)
