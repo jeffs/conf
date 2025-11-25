@@ -14,7 +14,10 @@ local config = wezterm.config_builder()
 
 config.term = "wezterm"
 
-config.window_decorations = 'RESIZE';
+-- config.window_decorations = 'RESIZE';
+
+-- Requires nightly build of Wezterm.
+-- config.window_decorations = 'TITLE | RESIZE | MACOS_USE_BACKGROUND_COLOR_AS_TITLEBAR_COLOR';
 
 -- Returns the specified path if it identifies a readable file, and nil
 -- otherwise.
@@ -52,7 +55,7 @@ config.initial_rows = 36
 config.send_composed_key_when_left_alt_is_pressed = false
 config.send_composed_key_when_right_alt_is_pressed = false
 
-config.window_background_opacity = 0.8
+config.window_background_opacity = 0.6
 -- config.text_background_opacity = 1.0
 wezterm.on('toggle-opacity', function(window)
   local overrides = window:get_config_overrides() or {}
