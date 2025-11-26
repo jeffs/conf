@@ -28,6 +28,12 @@ path=(
 
 export XDG_CONFIG_HOME=~/.config
 
+# Settings `WEZTERM_CONFIG_FILE` shouldn't be necessary, but somehow something
+# once created `~/.wezterm.lua`, and somehow Wezterm let that override
+# `~/.config/wezterm/wezterm.lua` (even though it theoretically shouldn't have).
+# I remove the errant file, but am leaving this here preemptively.
+export WEZTERM_CONFIG_FILE=~/conf/etc/wezterm/wezterm.lua
+
 # Per suggestions from brew install libpq; see: bin/install-psql.zsh
 export LDFLAGS="${LDFLAGS:+$LDFLAGS }-L/opt/homebrew/opt/libpq/lib"
 export CPPFLAGS="${CPPFLAGS:+$CPPFLAGS }-I/opt/homebrew/opt/libpq/include"
