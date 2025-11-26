@@ -34,7 +34,11 @@ editor.inline-diagnostics.cursor-line = "warning"
 # to be any way to add or remove elements: All you can do is replace the
 # entire collection explicitly.
 #
+# TODO: Bind a key to (1) run a script (Steel?) that toggles the commented code
+#  here and (2) calls `:config-reload`.
+#
 # editor.gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
+# editor.gutters = ["diff", "diagnostics", "spacer"]
 
 [editor.soft-wrap]
 enable = true
@@ -85,6 +89,7 @@ q = ':quit'
 r = ':reload-all'
 w = ':write'
 z = ':write-quit'
+C-c = ':config-reload'
 C-f = 'page_down'
 
 # Running a sequence of :set or :toggle commands is currently broken. See:
