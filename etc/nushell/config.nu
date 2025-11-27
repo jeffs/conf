@@ -54,6 +54,11 @@ def --env c [path: string = ~] {
   l
 }
 
+# Recognize Obsidian (data)base files.
+def "from base" [] {
+  from yaml
+}
+
 alias w = wezterm
 alias z = zellij
 
