@@ -11,6 +11,8 @@ theme = 'base16_terminal'
 # <https://github.com/helix-editor/helix/pull/9469>
 editor.mouse = false
 
+editor.true-color = true
+
 # [Recommended settings](https://docs.helix-editor.com/editor.html):
 # Show warnings and errors on the cursorline inline.
 editor.end-of-line-diagnostics = "hint"
