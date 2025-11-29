@@ -1,15 +1,21 @@
 [[language]]
 name = "bash"
 file-types = [
+  "sh",
+  "bash",
+  "zsh",
   { glob = "zprofile" },
   { glob = "zshrc" },
   { glob = ".zprofile" },
   { glob = ".zsh{env,login,rc}" },
-  { glob = "*.sh" },
-  { glob = "*.{ba,z}sh" },
 ]
 formatter = { command = "shfmt" }
 rulers = [81]
+
+[[language]]
+name = "yaml"
+# Obsidian (data)base files are `*.base`.
+file-types = ["base", "yaml", "yml"]
 
 [[language]]
 name = "git-ignore"
