@@ -8,16 +8,17 @@
 --     cli spawn` to open the file in my chosen editor.
 -- * In the list shown by `wezterm.action.ShowTabNavigator`, focus the current
 --   tab by default.
+-- * Fix set-window-title; see <https://github.com/wezterm/wezterm/pull/6913>
 
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
 config.term = "wezterm"
 
--- config.window_decorations = 'RESIZE';
 
 -- Requires nightly build of Wezterm.
 -- config.window_decorations = 'TITLE | RESIZE | MACOS_USE_BACKGROUND_COLOR_AS_TITLEBAR_COLOR';
+config.window_decorations = 'RESIZE';
 
 -- Returns the specified path if it identifies a readable file, and nil
 -- otherwise.
@@ -75,7 +76,7 @@ end)
 -- <https://wezterm.org/config/lua/config/visual_bell.html>
 -- config.audible_bell = 'Disabled'
 
-config.enable_tab_bar = false
+config.enable_tab_bar = true
 -- config.hide_tab_bar_if_only_one_tab = true
 wezterm.on('toggle-tab-bar', function(window)
   local overrides = window:get_config_overrides() or {}
