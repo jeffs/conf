@@ -15,7 +15,6 @@ local config = wezterm.config_builder()
 
 config.term = "wezterm"
 
-
 -- Requires nightly build of Wezterm.
 -- config.window_decorations = 'TITLE | RESIZE | MACOS_USE_BACKGROUND_COLOR_AS_TITLEBAR_COLOR';
 config.window_decorations = 'RESIZE';
@@ -184,5 +183,7 @@ config.keys = {
     action = wezterm.action.ToggleFullScreen,
   }
 }
+
+config.hyperlink_rules = require 'hyperlink_rules'
 
 return config
