@@ -85,8 +85,8 @@ alias fe = f --bind 'enter:become(hx {})'
 alias pull = git pull
 alias push = git push
 
-def glog [...args: string] {
-  if ($args | is-empty) {
+def --wrapped glog [...rest] {
+  if ($rest | where $it !~ '^-' | is-empty) {
     # TODO: Move this into grit.
     let trunk = grit trunk
     let base = do -i {
@@ -97,9 +97,9 @@ def glog [...args: string] {
       }
       $trunk
     }
-    git log --graph --branches $"($base).."
+    git log --graph --branches --first-parent --oneline ...$rest $"($base).."
   } else {
-    git glog ...$args
+    git glog ...$rest
   }
 }
 
