@@ -45,6 +45,8 @@ config.unicode_version = 16
 config.allow_square_glyphs_to_overflow_width = "Always"
 
 config.color_scheme = 'Belge (terminal.sexy)'
+
+-- Some applications, such as `md-tui`, require nerd fonts.
 config.font = wezterm.font 'VictorMono Nerd Font'
 -- config.font = wezterm.font 'Monoid'
 
