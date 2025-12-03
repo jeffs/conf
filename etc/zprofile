@@ -32,6 +32,8 @@ export XDG_CONFIG_HOME=~/.config
 # once created `~/.wezterm.lua`, and somehow Wezterm let that override
 # `~/.config/wezterm/wezterm.lua` (even though it theoretically shouldn't have).
 # I remove the errant file, but am leaving this here preemptively.
+#
+# Update: This doesn't always seem to solve the problem, anyway.
 export WEZTERM_CONFIG_FILE=~/conf/etc/wezterm/wezterm.lua
 
 # Per suggestions from brew install libpq; see: bin/install-psql.zsh
