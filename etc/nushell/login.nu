@@ -10,16 +10,19 @@
 load-env {
   EDITOR: hx
   LESS: '-FRX -j5'
-  HOMEBREW_NO_ENV_HINTS: true
   MANPAGER: 'col -b | bat -pl man'
+
   PATH: ([
       ~/usr/bin
       ~/conf/bin
       ~/.local/bin
       ~/.cargo/bin
   ] | path expand)
+
+  FZF_DEFAULT_OPTS_FILE: ('~/conf/etc/fzf' | path expand)
   RIPGREP_CONFIG_PATH: ('~/conf/etc/ripgreprc' | path expand)
 
+  HOMEBREW_NO_ENV_HINTS: true
   RUSTC_WRAPPER: '/opt/homebrew/bin/sccache'
 
   # My own little home-grown tools.
