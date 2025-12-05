@@ -39,6 +39,38 @@ alias g = dirs goto
 alias n = dirs next
 alias p = dirs prev
 
+alias d = describe
+alias o = open
+alias x = explore
+alias xp = x --peek
+alias jobs = job list
+
+alias glow = /opt/homebrew/bin/glow --pager --width=(tput cols)
+alias rust = evcxr # -q
+
+# Don't accidentally run `R` on case-insensitive filesystems like macOS.
+alias r = error make { msg: "Did you mean R?" }
+
+alias lc = loccount
+alias f = fzf --preview='bat -p --color=always {}'
+alias ef = f --bind 'enter:become(hx {})'
+alias mat = bat -pl man
+alias w = wezterm
+alias z = zellij
+
+alias br = git branch
+alias ci = git commit
+alias co = git checkout
+alias di = git diff
+alias st = git status
+
+alias pull = git pull
+alias push = git push
+
+alias si = grit si
+alias sj = grit -v si
+alias up = grit up
+
 def lg [...patterns] {
   # TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern
   #  like `*` is treated as a string instead of a glob.
@@ -49,41 +81,27 @@ def lg [...patterns] {
   } | grid -cis '  '
 }
 
-def --env c [path: string = ~] {
-  cd $path
-  l
+def --env c [path: string = ~] { cd $path; l }
+def --env cf [] { c (fzf --walker=dir,follow,hidden) }
+def --env cg [] { c (grit root) }
+def --env ct [] { c (grit trunk) }
+def --env mc [path] { mkdir $path; c $path }
+
+def --env j [target] {
+  let path = match $target {
+    y | cy => { (date now) - 1day | format date '~/file/log/%Y/%m/%d' | path expand },
+    _ => { jump $target },
+  }
+  mc $path
 }
 
-# Recognize Obsidian (data)base files.
-def "from base" [] {
-  from yaml
-}
+alias cl = mc (jump cl)
+alias cy = j cy
 
-alias w = wezterm
-alias z = zellij
+# TODO: Default to pedantic, but allow override by local Cargo.toml file.
+def clippy [] { cargo clippy --all-targets --tests --workspace }
 
-alias br = git branch
-alias ci = git commit
-alias co = git checkout
-alias di = git diff
-alias st = git status
-
-def --env cg [] {
-  c (grit root)
-}
-
-alias lc = loccount
-alias si = grit si
-alias sj = grit -v si
-alias up = grit up
-
-alias mat = bat -pl man
-
-alias f = fzf --walker-skip=.git,dist,node_modules,target,var --preview='bat -p --color=always {}'
-alias fe = f --bind 'enter:become(hx {})'
-
-alias pull = git pull
-alias push = git push
+def yolo [] { git commit -a --amend --no-edit --no-verify; git push -f }
 
 def --wrapped glog [...rest] {
   if ($rest | where $it !~ '^-' | is-empty) {
@@ -103,42 +121,6 @@ def --wrapped glog [...rest] {
   }
 }
 
-def yolo [] {
-  git commit -a --amend --no-edit --no-verify
-  git push -f
-}
-
-alias glow = /opt/homebrew/bin/glow --pager --width=(tput cols)
-alias rust = evcxr # -q
-
-alias d = describe
-alias o = open
-
-alias jobs = job list
-
-# Don't accidentally run `R` case-insensitive filesystems like macOS.
-alias r = error make { msg: "Did you mean R?" }
-
-alias x = explore
-alias xp = x --peek
-
-def --env mc [path] { mkdir $path; c $path }
-
-def --env j [target] {
-  let path = match $target {
-    y | cy => { (date now) - 1day | format date '~/file/log/%Y/%m/%d' | path expand },
-    _ => { jump $target },
-  }
-  mc $path
-}
-
-alias cl = mc (jump cl)
-
-def clippy [] {
-  # TODO: Default to pedantic, but allow override by local Cargo.toml file.
-  cargo clippy --all-targets --tests --workspace
-}
-
 # Unfreeze a frozen job.
 def fg [id?: int] {
   # TODO: Report the following `job unfreeze` issue: Plain `job unfreeze`
@@ -155,24 +137,6 @@ def fg [id?: int] {
   job unfreeze ($ids | first)
 }
 
-# TODO: Accept an optional list of languages, rather than a scalar.
-def hx-health [lang?: string] {
-  let table = (
-    hx --health |
-    lines |
-    skip 8 |
-    str join "\n" |
-    str replace --regex 'Language serv\S*' 'Servers' |
-    str replace 'Debug adapter' 'Adapter' |
-    detect columns --guess
-  )
-  if $lang == null {
-    $table
-  } else {
-    $table | where Language =~ $lang
-  }
-}
-
 def imgcat [...args: string] {
   let args = $args | each {path expand}
   match $env.TERM_PROGRAM {
@@ -181,15 +145,13 @@ def imgcat [...args: string] {
   }
 }
 
-# # Example
+# Recognize Obsidian (data)base files.
+def "from base" [] { from yaml }
+
+# Example
 #
 #   git diff --numstat dev... | numstat
-#
-# # TODO
-#
-# * Make this a `from` subcommand.
-# * How do I document custom commands in a way that integrates with F1?
-def from-numstat [] {
+def "from numstat" [] {
   detect columns -n | where column0 =~ '\d' | rename '+' '-' name |
   update '+' {into int} |
   update '-' {into int} |
