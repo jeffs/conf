@@ -148,6 +148,10 @@ def imgcat [...args: string] {
 # Recognize Obsidian (data)base files.
 def "from base" [] { from yaml }
 
+def "from md" [] {
+   md-front | from yaml
+}
+
 # Example
 #
 #   git diff --numstat dev... | numstat
