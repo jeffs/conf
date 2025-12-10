@@ -3,13 +3,22 @@
 theme = 'base16_terminal'
 # theme = 'aurara'
 
-# I use the mouse for Wezterm, and Helix gets in the way by default, like by
-# stealing Command+click (which I use to drag Wezterm windows). Wezterm
+# I use the mouse for Wezterm, and Helix gets in the way by default, like
+# by stealing Command+click (which I use to drag Wezterm windows). Wezterm
 # automatically translates scroll events to move the cursor up or down several
-# lines at a time when Helix is active, which is nice. Selective remapping of
-# mouse gestures in Helix is pending:
-# <https://github.com/helix-editor/helix/pull/9469>
-editor.mouse = false
+# lines at a time when Helix is active, which is nice. Gesture remapping in
+# Helix is pending <https://github.com/helix-editor/helix/pull/9469>.
+#
+# WezTerm supports gesture remapping already. In theory, you can bypass the
+# application by holding the Shift key; so, Shift+click moves the window even
+# if Helix mouse support has not disabled. In practice, Helix seems to get the
+# pointerdown event, just not the pointerup. When you click, the cursor moves;
+# and when you release the keys  (regardless of order), you're suddenly in
+# the middle of highlighting text in Helix. Possible workarounds include using
+# WeztTerm's tab bar to move the window, or disabling mouse support in Helix.
+# See also <https://wezterm.org/config/mouse.html>.
+#
+# editor.mouse = false
 
 editor.true-color = true
 
