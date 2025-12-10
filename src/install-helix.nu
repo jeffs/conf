@@ -14,6 +14,11 @@
 # the script, but _does_ fix issues when entered manually at a shell prompt.
 rustup component add rust-analyzer
 
+# Install a Markdown language server. Markdown-Oxide "is inspired by and highly
+# compatible with Obsidian:" <https://oxide.md/index>. See also:
+# <https://helix-editor-tutorials.com/tutorials/writing-documentation-and-prose-in-markdown-using-helix/>.
+cargo install --locked --git https://github.com/Feel-ix-343/markdown-oxide.git markdown-oxide
+
 # Install the Debugger Adapter Protocol implementation for macOS.
 xcrun -f lldb-dap
 
