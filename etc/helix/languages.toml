@@ -37,6 +37,7 @@ indent = { tab-width = 4, unit = "  " }
 [[language]]
 name = "markdown"
 auto-pairs = { '(' = ')', '{' = '}', '[' = ']', '"' = '"', '<' = '>' }
+soft-wrap.wrap-indicator = ""
 
 [[language]]
 name = "move"
