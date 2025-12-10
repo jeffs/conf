@@ -32,7 +32,7 @@ use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
 
 alias e = edit # From rust-kart.
 alias l = ls
-alias y = yazi # File manager.
+alias y = yazi # File manager; see <https://yazi-rs.github.io/features>.
 
 # pushd = dirs add
 alias g = dirs goto
@@ -87,12 +87,13 @@ def --env cg [] { c (grit root) }
 def --env ct [] { c (grit trunk) }
 def --env mc [path] { mkdir $path; c $path }
 
+# TODO: Move this to Rust, so it can (for example) be called from Helix.
 def --env j [target] {
-  let path = match $target {
-    y | cy => { (date now) - 1day | format date '~/file/log/%Y/%m/%d' | path expand },
-    _ => { jump $target },
+  if ($target == 'cy' or $target == 'y') {
+    mc ((date now) - 1day | format date '~/file/log/%Y/%m/%d' | path expand)
+  } else {
+    jump $target
   }
-  mc $path
 }
 
 alias cl = mc (jump cl)
