@@ -1,3 +1,6 @@
+//! TODO: Support URLs, not only paths. The `command` feature probably should go
+//!  away, and be replaced by shell-specific bindings.
+
 use std::ffi::OsStr;
 use std::io::Write;
 use std::path::{Component, Path, PathBuf};
@@ -130,7 +133,17 @@ impl<'a> Expand<'a> {
     ///
     /// [1]: https://docs.rs/chrono/latest/src/chrono/format/formatting.rs.html#335
     pub fn path(&self, path: &Path) -> Result<PathBuf> {
-        path.components().map(|c| self.component(c)).collect()
+        let mut parts = path
+            .components()
+            .map(|c| self.component(c))
+            .collect::<Result<Vec<_>>>()?
+            .into_iter();
+        let first = parts.next().ok_or(Error::Empty)?;
+        if let Some("http:" | "https:") = first.as_ref().to_str() {
+            todo!()
+        } else {
+            todo!()
+        }
     }
 
     /// Returns a snippet of shell script suitable for opening the specified
