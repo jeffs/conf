@@ -6,6 +6,8 @@
 #   <https://github.com/sharkdp/bat/issues/652#issuecomment-528998521>
 # * Update StackExchange to suggest -P 'col -b | bat -pl man':
 #   <https://unix.stackexchange.com/questions/15855/how-to-dump-a-man-page>
+#   The `col -b` _should_ be done automatically by bat once
+#   <https://github.com/sharkdp/bat/pull/3517> ships.
 
 load-env {
   EDITOR: hx
