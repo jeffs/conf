@@ -113,17 +113,17 @@ def yolo [] { git commit -a --amend --no-edit --no-verify; git push -f }
 
 def --wrapped glog [...rest] {
   if ($rest | where $it !~ '^-' | is-empty) {
-    # TODO: Move this into grit.
+    # TODO: Move this into grit. It's a heuristic for telling whether repos
+    #  use squashes or true merges, but it should instead check for the "best"
+    #  parent (^2, ^1, ^0) of the merge-base, not of trunk.
     let trunk = grit trunk
-    let base = do -i {
-      for base in [$'($trunk)^2' $'($trunk)^'] {
-        if (git rev-parse $base | complete).exit_code == 0 {
-          return $base
-        }
-      }
-      $trunk
+    if (git rev-parse $'($trunk)^2' | complete).exit_code == 0 {
+      git log --first-parent --graph --branches $'(git merge-base HEAD (grit trunk))^2..'
+    } else if (git rev-parse $'($trunk)^' | complete).exit_code == 0 {
+      git log --first-parent --graph --branches $'(git merge-base HEAD (grit trunk))^..'
+    } else {
+      git log --first-parent --graph --branches $'(git merge-base HEAD (grit trunk))..'
     }
-    git log --graph --branches --first-parent --oneline ...$rest $"($base).."
   } else {
     git glog ...$rest
   }
