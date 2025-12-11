@@ -89,10 +89,17 @@ def --env mc [path] { mkdir $path; c $path }
 
 # TODO: Move this to Rust, so it can (for example) be called from Helix.
 def --env j [target] {
-  if ($target == 'cy' or $target == 'y') {
+  let found = if ($target == 'cy' or $target == 'y') {
     mc ((date now) - 1day | format date '~/file/log/%Y/%m/%d' | path expand)
   } else {
-    jump $target
+    # Work around a `jump` bug: It "normalizes" URLs to filesystem paths.
+    ^jump $target | str replace 'https:/' 'https://'
+  }
+  print $found
+  if ($found =~ '^https?://') {
+    start $found
+  } else {
+    mc $found
   }
 }
 
