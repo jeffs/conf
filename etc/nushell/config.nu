@@ -2,14 +2,15 @@
 #
 # # TODO
 #
-# * Add support for exit hooks
-#   - See <https://www.nushell.sh/book/hooks.html#basic-hooks>
-#   - Or, as a hack, launch a subshell, and print a message after it exits
-# * Get aliases to autocomplete correctly
-#   - This is a [known issue](https://www.nushell.sh/cookbook/external_completers.html#alias-completions)
-#   - I don't understand the suggested workaround. There's no `$spans` variable
+# - Add support for exit hooks
+#   + See <https://www.nushell.sh/book/hooks.html#basic-hooks>
+#   + Or, as a hack, launch a subshell, and print a message after it exits
+# - Get aliases to autocomplete correctly
+#   + This is a [known issue](https://www.nushell.sh/cookbook/external_completers.html#alias-completions)
+#   + I don't understand the suggested workaround. There's no `$spans` variable
 #     in `git-completions.nu`.
-# * Auto-complete `grit since` with Git refs
+# - Auto-complete `grit since` with Git refs
+# - TODO: Append to the history file on Enter, but read it only on startup
 
 $env.config.show_banner = false
 
@@ -27,7 +28,10 @@ source 'command/tree.nu'
 # falling back to empty dummy files committed to this repository.
 use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
 
-# TODO: Append to the history file on Enter, but read it only on startup.
+# Fun fact: There's now the exact opposite bug to this:
+# <https://github.com/nushell/nushell/issues/7790>
+#
+# TODO: File a bug report.
 # $env.config.history.sync_on_enter = false
 
 alias e = edit # From rust-kart.
