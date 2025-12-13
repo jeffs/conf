@@ -90,12 +90,10 @@ def --env mc [path] { mkdir $path; c $path }
 # TODO: Move this to Rust, so it can (for example) be called from Helix.
 def --env j [target] {
   let found = if ($target == 'cy' or $target == 'y') {
-    mc ((date now) - 1day | format date '~/file/log/%Y/%m/%d' | path expand)
+    (date now) - 1day | format date '~/file/log/%Y/%m/%d' | path expand
   } else {
-    # Work around a `jump` bug: It "normalizes" URLs to filesystem paths.
-    ^jump $target | str replace 'https:/' 'https://'
+    ^jump $target
   }
-  print $found
   if ($found =~ '^https?://') {
     start $found
   } else {
@@ -103,8 +101,8 @@ def --env j [target] {
   }
 }
 
-alias cl = mc (jump cl)
-alias cy = j cy
+alias cl = mc (jump l)
+alias cy = j y
 
 # TODO: Default to pedantic, but allow override by local Cargo.toml file.
 def clippy [] { cargo clippy --all-targets --tests --workspace }
