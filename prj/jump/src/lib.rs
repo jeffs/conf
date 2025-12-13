@@ -1,4 +1,3 @@
-mod as_bytes;
 mod error;
 mod expansion;
 
@@ -33,7 +32,7 @@ fn db_from_env(home: &Path) -> Result<Database> {
     Ok(db)
 }
 
-/// Maps target names to paths or shell commands from a [`Database`].
+/// Maps target names to paths from a [`Database`].
 pub struct App {
     home: PathBuf,
     db: Database,
@@ -90,15 +89,5 @@ impl App {
                 .ok_or(err)
         })?;
         Ok(Expand::with_home(&self.home).path(path)?)
-    }
-
-    /// Returns a shell comamnd for jumping to the specified target.
-    ///
-    /// # Errors
-    ///
-    /// Returns [`Err`] if the target cannot be mapped to a command.
-    pub fn command(&self, target: &str) -> Result<Vec<u8>> {
-        let expand = Expand::with_home(&self.home);
-        Ok(expand.command(self.target(target)?)?)
     }
 }

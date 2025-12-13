@@ -1,27 +1,8 @@
-//! TODO: Support URLs, not only paths. The `command` feature probably should go
-//!  away, and be replaced by shell-specific bindings.
+//! TODO: Support URLs, not only paths.
 
 use std::ffi::OsStr;
-use std::io::Write;
 use std::path::{Component, Path, PathBuf};
 use std::{env, fmt};
-
-use crate::as_bytes::AsBytes;
-
-/// Maps semantic command names (such as `cd`) to their implementation in the
-/// calling shell.
-///
-/// TODO: Read shell commands from config, rather than hard-coding them here.
-mod cmd {
-    /// Change directory.
-    pub const CD: &str = "mc";
-
-    /// Use the OS native file association.
-    ///
-    /// TODO: Compare macOS `open`, Windows/Nushell `start`, and Linux
-    /// `xdg-open`.
-    pub const OPEN: &str = "open";
-}
 
 #[derive(Debug)]
 pub enum Error {
@@ -58,19 +39,6 @@ impl AsRef<Path> for Expansion<'_, '_> {
             Self::String(s) => Path::new(s),
         }
     }
-}
-
-macro_rules! command {
-    ($command:ident, $($arg:expr),*) => {{
-        let mut buffer = Vec::new();
-        buffer.write_all(cmd::$command.as_bytes()).unwrap();
-        buffer.write_all(b" ").unwrap();
-        $(
-            buffer.write_all($arg.as_bytes()).unwrap();
-        )*
-        buffer.write_all(b"\n").unwrap();
-        Ok(buffer)
-    }};
 }
 
 pub struct Expand<'a> {
@@ -143,25 +111,6 @@ impl<'a> Expand<'a> {
             todo!()
         } else {
             todo!()
-        }
-    }
-
-    /// Returns a snippet of shell script suitable for opening the specified
-    /// path.  The path should _not_ already be expanded, as this function
-    /// performs path expansion automatically.
-    ///
-    ///
-    /// # Errors
-    ///
-    /// Returns [`Err`] if the path is empty.
-    pub fn command(&self, path: &Path) -> Result<Vec<u8>> {
-        let path = self.path(path)?;
-        let mut parts = path.components();
-        let first = parts.next().ok_or(Error::Empty)?;
-        if let Some("http:" | "https:") = first.as_os_str().to_str() {
-            command!(OPEN, first, b"//", parts.collect::<PathBuf>())
-        } else {
-            command!(CD, path)
         }
     }
 }
