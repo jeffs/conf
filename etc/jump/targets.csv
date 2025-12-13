@@ -1,6 +1,6 @@
 ~/obs/a,a
 ~/pkg/rust-kart,rk
-~/file/log/%Y/%m/%d,day,cl,l
+~/file/log/%Y/%m/%d,cl,l
 ~/file/log/%Y/%m,month
 
 ~/conf,c,conf
