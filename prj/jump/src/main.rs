@@ -104,9 +104,9 @@ fn main_imp() -> Result<(), Error> {
 
 fn main() -> ExitCode {
     if let Err(err) = main_imp() {
-        eprintln!("jump: {err}");
+        eprintln!("error: {err}");
         if matches!(err, Error::Args(_)) {
-            usage();
+            eprintln!("usage: jump TARGET");
         }
         return ExitCode::FAILURE;
     }

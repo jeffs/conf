@@ -22,15 +22,14 @@ fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
         .collect::<Vec<_>>();
 
     if prefixes.is_empty() {
-        let config_home = env::var_os("XDG_CONFIG_HOME")
-            .map_or_else(|| home.join(".config"), PathBuf::from);
+        let config_home =
+            env::var_os("XDG_CONFIG_HOME").map_or_else(|| home.join(".config"), PathBuf::from);
         prefixes.push(config_home.join("jump"));
     }
 
-    let paths: Vec<PathBuf> = prefixes.iter().map(|p| p.join("targets.csv")).collect();
     let mut db = Database::new();
-    for path in &paths {
-        db.read_file(path)?;
+    for prefix in &prefixes {
+        db.read_file(prefix.join("targets.csv"))?;
     }
     Ok((db, paths))
 }
@@ -65,11 +64,9 @@ impl App {
     ///
     /// Returns [`Error::Target`] if the target is not in this app's database.
     fn target(&self, target: &str) -> Result<&String> {
-        self.db.get(target).ok_or_else(|| {
-            Error::Target {
-                name: target.to_owned(),
-                searched: self.db_paths.clone(),
-            }
+        self.db.get(target).ok_or_else(|| Error::Target {
+            name: target.to_owned(),
+            searched: self.db_paths.clone(),
         })
     }
 
