@@ -8,16 +8,7 @@ use std::path::{Path, PathBuf};
 
 pub use db::Database;
 pub use error::Error;
-pub use expansion::Expand;
-
-/// Represents the resolved value of a jump target lookup.
-#[derive(Debug)]
-pub enum Target {
-    /// A filesystem path (expanded from `~`, `$VAR`, `%date`, or absolute paths).
-    Path(PathBuf),
-    /// A URL or arbitrary string (output verbatim).
-    String(String),
-}
+pub use expansion::{Expand, Target};
 
 pub type Result<T> = std::result::Result<T, Error>;
 

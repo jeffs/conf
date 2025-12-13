@@ -11,6 +11,7 @@
 //! * [ ] Support database file specification at runtime, via args or env.
 //! * [ ] Support complex expansions like "yesterday's date."
 //! * [ ] Add DB path list to error messages about missing or empty targets.
+//! * [ ] Support secondary arguments, such as relative paths or query params.
 
 use std::io::Write;
 use std::os::unix::ffi::OsStrExt;

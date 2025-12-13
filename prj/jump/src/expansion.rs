@@ -9,23 +9,9 @@ use std::ffi::OsStr;
 use std::path::{Component, Path, PathBuf};
 use std::{env, fmt};
 
-/// Returns `true` if the value is a URL (starts with `http://` or `https://`).
-#[must_use]
-pub fn is_url_target(s: &str) -> bool {
-    s.starts_with("http://") || s.starts_with("https://")
-}
-
-/// Returns `true` if the value should be treated as a path and expanded.
-///
-/// Path targets start with `/`, `~`, `$`, or `%`.
-#[must_use]
-pub fn is_path_target(s: &str) -> bool {
-    s.starts_with('/') || s.starts_with('~') || s.starts_with('$') || s.starts_with('%')
-}
-
 #[derive(Debug)]
 pub enum Error {
-    /// An expanded path was empty.
+    /// An expanded target was empty.
     Empty,
     /// An environment variable was unset.
     Unset,
@@ -41,6 +27,15 @@ impl fmt::Display for Error {
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
+
+/// Represents the resolved value of a jump target lookup.
+#[derive(Debug)]
+pub enum Target {
+    /// A filesystem path (expanded from `~`, `$VAR`, `%date`, or absolute paths).
+    Path(PathBuf),
+    /// A URL or arbitrary string (output verbatim).
+    String(String),
+}
 
 enum Expansion<'a, 'b> {
     Path(&'a Path),
@@ -132,24 +127,25 @@ impl<'a> Expand<'a> {
         Ok(parts.iter().map(AsRef::as_ref).collect())
     }
 
-    /// Returns a [`Target`] for the given value.
+    /// Expands the value to an inferred target type.
     ///
-    /// Detection order:
-    /// 1. URLs (`http://`, `https://`) → `Target::String` (verbatim)
-    /// 2. Paths (`/`, `~`, `$`, `%`) → `Target::Path` (expanded)
-    /// 3. Everything else → `Target::String` (verbatim)
+    /// # Panics
+    ///
+    /// Panics if value is inferred to be a path containing an invalid
+    /// `strftime` format string; see [`Self::path`].
     ///
     /// # Errors
     ///
-    /// Returns [`Error::Empty`] if a path target expands to empty, or
-    /// [`Error::Unset`] if an environment variable is not set.
-    pub fn target(&self, value: &str) -> Result<crate::Target> {
-        if is_url_target(value) {
-            return Ok(crate::Target::String(value.to_owned()));
+    /// Returns [`Error::Empty`] if `value` is empty. Returns [`Error::Unset`]
+    /// if value is inferred to be a path, and contains any unset environment
+    /// variable; e.g., `/$NONESUCH`.
+    pub fn target(&self, value: &str) -> Result<Target> {
+        if value.is_empty() {
+            Err(Error::Empty)
+        } else if value.starts_with(['/', '~', '$', '%']) {
+            Ok(Target::Path(self.path(Path::new(value))?))
+        } else {
+            Ok(Target::String(value.to_owned()))
         }
-        if is_path_target(value) {
-            return Ok(crate::Target::Path(self.path(Path::new(value))?));
-        }
-        Ok(crate::Target::String(value.to_owned()))
     }
 }
