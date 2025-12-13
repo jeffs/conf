@@ -12,7 +12,7 @@ pub use expansion::{Expand, Target};
 
 pub type Result<T> = std::result::Result<T, Error>;
 
-fn db_from_env(home: &Path) -> Result<Database> {
+fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
     let mut prefixes = env::var("JUMP_PREFIXES")
         .map(|s| s.split(':').map(str::to_owned).collect::<Vec<_>>())
         .unwrap_or_default()
@@ -22,27 +22,31 @@ fn db_from_env(home: &Path) -> Result<Database> {
         .collect::<Vec<_>>();
 
     if prefixes.is_empty() {
-        prefixes.push(home.join(".config/jump"));
+        let config_home =
+            env::var_os("XDG_CONFIG_HOME").map_or_else(|| home.join(".config"), PathBuf::from);
+        prefixes.push(config_home.join("jump"));
     }
 
+    let paths: Vec<_> = prefixes.iter().map(|p| p.join("targets.csv")).collect();
     let mut db = Database::new();
-    for prefix in prefixes {
-        db.read_file(prefix.join("targets.csv"))?;
+    for path in &paths {
+        db.read_file(path)?;
     }
-    Ok(db)
+    Ok((db, paths))
 }
 
 /// Maps target names to paths from a [`Database`].
 pub struct App {
     home: PathBuf,
     db: Database,
+    db_paths: Vec<PathBuf>,
 }
 
 impl App {
     /// Returns an app that reads from all `PREFIX/targets.csv` files,
     /// where `PREFIX` is each path in the `JUMP_PREFIXES` environment
     /// variable. If `JUMP_PREFIXES` is empty or unset, reads from
-    /// `~/.config/jump/targets.csv`.
+    /// `$XDG_CONFIG_HOME/jump/targets.csv` (defaulting to `~/.config/jump`).
     ///
     /// # Panics
     ///
@@ -51,23 +55,20 @@ impl App {
     /// # Errors
     ///
     /// Returns [`Err`] if the target database cannot be read.
-    ///
-    /// # TODO
-    ///
-    /// Respect `XDG_CONFIG_HOME`.
     pub fn from_env() -> Result<App> {
         let home = env::home_dir().expect("user should have a home directory");
-        let db = db_from_env(&home)?;
-        Ok(App { home, db })
+        let (db, db_paths) = db_from_env(&home)?;
+        Ok(App { home, db, db_paths })
     }
 
     /// # Errors
     ///
     /// Returns [`Error::Target`] if the target is not in this app's database.
     fn target(&self, target: &str) -> Result<&String> {
-        self.db
-            .get(target)
-            .ok_or_else(|| Error::Target(target.to_owned()))
+        self.db.get(target).ok_or_else(|| Error::Target {
+            name: target.to_owned(),
+            searched: self.db_paths.clone(),
+        })
     }
 
     /// Looks up the specified target in this app's database and resolves it

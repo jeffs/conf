@@ -1,16 +1,15 @@
 #![allow(dead_code, unused_assignments, unused_imports, unused_variables)]
 //! # Notes
 //!
-//! Reads config from `~/.config/jump/targets.csv`. The `targets.csv` file
-//! supports blank lines, comment lines (beginning with `#`), and jagged lines.
-//! The first column in each row is a directory path, and all subsequent columns
-//! are short names for that path.
+//! Reads config from `~/.config/jump/targets.csv` (where `~/.config` may be
+//! overriden via `$XDG_CONFIG_HOME`). The `targets.csv` file supports blank
+//! lines, comment lines (beginning with `#`), and jagged lines. The first
+//! column in each row is a directory path, and all subsequent columns are short
+//! names for that path.
 //!
 //! # TODO
 //!
-//! * [ ] Support database file specification at runtime, via args or env.
 //! * [ ] Support complex expansions like "yesterday's date."
-//! * [ ] Add DB path list to error messages about missing or empty targets.
 //! * [ ] Support secondary arguments, such as relative paths or query params.
 
 use std::io::Write;
@@ -100,9 +99,11 @@ fn main_imp() -> Result<(), Error> {
 }
 
 fn main() -> ExitCode {
-    // TODO: Print usage on ArgError.
     if let Err(err) = main_imp() {
-        eprintln!("jump: {err}");
+        eprintln!("error: {err}");
+        if matches!(err, Error::Args(_)) {
+            eprintln!("usage: jump TARGET");
+        }
         return ExitCode::FAILURE;
     }
     ExitCode::SUCCESS

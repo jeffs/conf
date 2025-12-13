@@ -46,6 +46,26 @@ if value.starts_with(['/', '~', '$', '%']) { ... }
 fn is_path_target(s: &str) -> bool { ... }
 ```
 
+This applies to CLI helpers too:
+```rust
+// Prefer: inline the message
+eprintln!("usage: jump TARGET");
+
+// Avoid: single-use function
+fn usage() { eprintln!("usage: jump TARGET"); }
+usage();
+```
+
+### Error Message Style
+- Use `error:` prefix, not the program name
+- Lowercase for usage: `usage: prog ARG`
+- ALLCAPS for metavariables: `TARGET` not `<target>`
+
+```rust
+eprintln!("error: {err}");
+eprintln!("usage: jump TARGET");
+```
+
 ### Use Array Patterns
 ```rust
 // Prefer
