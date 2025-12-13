@@ -7,10 +7,12 @@
 #   * apps from installers: Docker, Firefox, Slack, Steam
 #   * Docker images
 
-# Start SSH agent and prompt for passphrase up front, so this script doesn't
-# pause for a passphrase half way through.
-eval "$(ssh-agent -s)"
-ssh-add
+# Prompt for SSH passphrase up front if no key is loaded, so this script
+# doesn't pause for a passphrase half way through.
+if ! ssh-add -l >/dev/null 2>&1; then
+    eval "$(ssh-agent -s)"
+    ssh-add
+fi
 
 # Upgrade Homebrew packages.
 echo '* Homebrew'
