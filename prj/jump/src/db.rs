@@ -44,7 +44,6 @@ impl IntoLocation for PathBuf {
 pub enum ErrorKind {
     Io(io::Error),
     Syntax,
-    Duplicate(String),
 }
 
 impl fmt::Display for ErrorKind {
@@ -52,8 +51,6 @@ impl fmt::Display for ErrorKind {
         match self {
             Self::Io(e) => e.fmt(f),
             Self::Syntax => write!(f, "Syntax error"),
-            // TODO: XXX Overide instead of returning an error
-            Self::Duplicate(s) => write!(f, "Duplicate entry for {s}"),
         }
     }
 }
@@ -78,11 +75,6 @@ impl Error {
     #[must_use]
     pub fn syntax(location: Location) -> Self {
         Self::new(location, ErrorKind::Syntax)
-    }
-
-    #[must_use]
-    pub fn duplicate(location: Location, name: String) -> Self {
-        Self::new(location, ErrorKind::Duplicate(name))
     }
 }
 
