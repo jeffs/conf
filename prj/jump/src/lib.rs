@@ -27,9 +27,10 @@ fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
         prefixes.push(config_home.join("jump"));
     }
 
+    let paths: Vec<_> = prefixes.iter().map(|p| p.join("targets.csv")).collect();
     let mut db = Database::new();
-    for prefix in &prefixes {
-        db.read_file(prefix.join("targets.csv"))?;
+    for path in &paths {
+        db.read_file(path)?;
     }
     Ok((db, paths))
 }
