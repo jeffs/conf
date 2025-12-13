@@ -10,6 +10,15 @@ pub use db::Database;
 pub use error::Error;
 pub use expansion::Expand;
 
+/// Represents the resolved value of a jump target lookup.
+#[derive(Debug)]
+pub enum Target {
+    /// A filesystem path (expanded from `~`, `$VAR`, `%date`, or absolute paths).
+    Path(PathBuf),
+    /// A URL or arbitrary string (output verbatim).
+    String(String),
+}
+
 pub type Result<T> = std::result::Result<T, Error>;
 
 fn db_from_env(home: &Path) -> Result<Database> {
@@ -64,14 +73,19 @@ impl App {
     /// # Errors
     ///
     /// Returns [`Error::Target`] if the target is not in this app's database.
-    fn target(&self, target: &str) -> Result<&PathBuf> {
+    fn target(&self, target: &str) -> Result<&String> {
         self.db
             .get(target)
             .ok_or_else(|| Error::Target(target.to_owned()))
     }
 
-    /// Looks up the specified target in this app's database, and returns the
-    /// corresponding path.
+    /// Looks up the specified target in this app's database and resolves it
+    /// to a [`Target`] value.
+    ///
+    /// The resolved value depends on the target type:
+    /// - URLs (`http://`, `https://`) → `Target::String` (verbatim)
+    /// - Paths (`/`, `~`, `$`, `%`) → `Target::Path` (expanded)
+    /// - Everything else → `Target::String` (verbatim)
     ///
     /// If the target is not found, but ends with a slash character (`'/'`),
     /// lookup is also attempted without the trailing slash, in case the user's
@@ -80,14 +94,14 @@ impl App {
     ///
     /// # Errors
     ///
-    /// Returns [`Err`] if the target cannot be mapped to a path.
-    pub fn path(&self, target: &str) -> Result<PathBuf> {
-        let path = self.target(target).or_else(|err| {
+    /// Returns [`Err`] if the target cannot be found or resolved.
+    pub fn resolve(&self, target: &str) -> Result<Target> {
+        let value = self.target(target).or_else(|err| {
             target
                 .strip_suffix('/')
                 .and_then(|target| self.target(target).ok())
                 .ok_or(err)
         })?;
-        Ok(Expand::with_home(&self.home).path(path)?)
+        Ok(Expand::with_home(&self.home).target(value)?)
     }
 }

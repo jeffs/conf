@@ -1,8 +1,27 @@
-//! TODO: Support URLs, not only paths.
+//! Target expansion and type detection for jump targets.
+//!
+//! Supports three target types:
+//! - URLs (`http://`, `https://`) - output verbatim
+//! - Paths (`/`, `~`, `$`, `%`) - expanded with variable substitution
+//! - Arbitrary strings - output verbatim
 
 use std::ffi::OsStr;
 use std::path::{Component, Path, PathBuf};
 use std::{env, fmt};
+
+/// Returns `true` if the value is a URL (starts with `http://` or `https://`).
+#[must_use]
+pub fn is_url_target(s: &str) -> bool {
+    s.starts_with("http://") || s.starts_with("https://")
+}
+
+/// Returns `true` if the value should be treated as a path and expanded.
+///
+/// Path targets start with `/`, `~`, `$`, or `%`.
+#[must_use]
+pub fn is_path_target(s: &str) -> bool {
+    s.starts_with('/') || s.starts_with('~') || s.starts_with('$') || s.starts_with('%')
+}
 
 #[derive(Debug)]
 pub enum Error {
@@ -82,35 +101,55 @@ impl<'a> Expand<'a> {
         }
     }
 
+    /// Expands a path by substituting `~`, `$VAR`, and `%date` patterns.
+    ///
     /// # Panics
     ///
-    /// Panics if the component begins with `%`, but is not a valid `strftime`
+    /// Panics if a component begins with `%`, but is not a valid `strftime`
     /// format string. The panic is because the underlying
     /// [`chrono::NaiveDate::format`] works lazily, with the actual
     /// formatting done by [`chrono::format::DelayedFormat::to_string`], which
-    /// has no good to way to report an error.
+    /// has no good way to report an error.
     ///
     /// # Errors
     ///
-    /// Path expansion currently panics on error, but future versions will
-    /// instead return [`Err`].
+    /// Returns [`Error::Empty`] if the path is empty after expansion, or
+    /// [`Error::Unset`] if an environment variable is not set.
     ///
     /// # TODO
     ///
-    /// Avoid the panic.  See the [`chrono` implementation][1].
+    /// Avoid the panic. See the [`chrono` implementation][1].
     ///
     /// [1]: https://docs.rs/chrono/latest/src/chrono/format/formatting.rs.html#335
     pub fn path(&self, path: &Path) -> Result<PathBuf> {
-        let mut parts = path
+        let parts = path
             .components()
             .map(|c| self.component(c))
-            .collect::<Result<Vec<_>>>()?
-            .into_iter();
-        let first = parts.next().ok_or(Error::Empty)?;
-        if let Some("http:" | "https:") = first.as_ref().to_str() {
-            todo!()
-        } else {
-            todo!()
+            .collect::<Result<Vec<_>>>()?;
+        if parts.is_empty() {
+            return Err(Error::Empty);
         }
+        Ok(parts.iter().map(AsRef::as_ref).collect())
+    }
+
+    /// Returns a [`Target`] for the given value.
+    ///
+    /// Detection order:
+    /// 1. URLs (`http://`, `https://`) → `Target::String` (verbatim)
+    /// 2. Paths (`/`, `~`, `$`, `%`) → `Target::Path` (expanded)
+    /// 3. Everything else → `Target::String` (verbatim)
+    ///
+    /// # Errors
+    ///
+    /// Returns [`Error::Empty`] if a path target expands to empty, or
+    /// [`Error::Unset`] if an environment variable is not set.
+    pub fn target(&self, value: &str) -> Result<crate::Target> {
+        if is_url_target(value) {
+            return Ok(crate::Target::String(value.to_owned()));
+        }
+        if is_path_target(value) {
+            return Ok(crate::Target::Path(self.path(Path::new(value))?));
+        }
+        Ok(crate::Target::String(value.to_owned()))
     }
 }

@@ -91,7 +91,10 @@ fn main_imp() -> Result<(), Error> {
     let args = parse_args()?;
     let app = jump::App::from_env()?;
     let stdout = io::stdout();
-    write(&stdout, app.path(&args.target)?.as_os_str().as_bytes());
+    match app.resolve(&args.target)? {
+        jump::Target::Path(path) => write(&stdout, path.as_os_str().as_bytes()),
+        jump::Target::String(s) => write(&stdout, s.as_bytes()),
+    }
     Ok(())
 }
 
