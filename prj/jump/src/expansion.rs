@@ -76,7 +76,9 @@ impl<'a> Expand<'a> {
             return Ok(Some(Expansion::PathBuf(part.into())));
         }
 
-        // Other special expansions (%, ~) require UTF-8.
+        // Other special expansions (%, ~) require UTF-8 values.
+        //
+        // TODO: Support non-UTF-8 values in `~` expansion.
         let Some(s) = s.to_str() else {
             return Ok(None);
         };
