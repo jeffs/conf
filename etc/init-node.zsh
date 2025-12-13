@@ -17,7 +17,8 @@ for command in node npm npx yarn; do
     $command() {
         unset -f node npm npx yarn
 
-        # If NVM hasn't already set our Node version, let it do so.
+        # If NVM hasn't already set our Node version, let it do so. Look for
+        # .nvmrc in pwd and all ancestor directories.
         if [[ -z "$NVM_DIR" ]]; then
             local dir=$PWD nvmrc=
             while [[ "$dir" != "/" ]]; do
