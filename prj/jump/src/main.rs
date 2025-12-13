@@ -15,7 +15,7 @@
 use std::io::Write;
 use std::os::unix::ffi::OsStrExt;
 use std::process::ExitCode;
-use std::{env, fmt, io, mem};
+use std::{env, fmt, io};
 
 enum ArgError {
     /// Too many arguments were specified.
@@ -65,26 +65,22 @@ impl fmt::Display for Error {
 }
 
 struct Args {
-    is_command: bool,
     target: String,
 }
 
 fn parse_args() -> Result<Args, ArgError> {
-    let mut is_command = false;
     let mut target = None;
     for arg in env::args().skip(1) {
-        if arg == "-c" || arg == "--command" {
-            is_command = true;
-        } else if arg.starts_with('-') {
+        if arg.starts_with('-') {
             return Err(ArgError::Flag(arg));
-        } else if target.is_some() {
-            return Err(ArgError::Extra(arg));
-        } else {
-            target = Some(arg);
         }
+        if target.is_some() {
+            return Err(ArgError::Extra(arg));
+        }
+        target = Some(arg);
     }
     let target = target.ok_or(ArgError::Missing)?;
-    Ok(Args { is_command, target })
+    Ok(Args { target })
 }
 
 fn write(mut w: impl Write, s: &[u8]) {
@@ -95,11 +91,7 @@ fn main_imp() -> Result<(), Error> {
     let args = parse_args()?;
     let app = jump::App::from_env()?;
     let stdout = io::stdout();
-    if args.is_command {
-        write(&stdout, &app.command(&args.target)?);
-    } else {
-        write(&stdout, app.path(&args.target)?.as_os_str().as_bytes());
-    }
+    write(&stdout, app.path(&args.target)?.as_os_str().as_bytes());
     Ok(())
 }
 

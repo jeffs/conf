@@ -5,4 +5,3 @@
   2. Path: `j cl<Tab>` => `j /Users/jeff/log/2025/03/27`
 * [ ] Relative jump targets, e.g., `j bfp/...` or `j g/...` (to alias `g` for `~/git`)
 * How should jump support complex ideas like "yesterday's date"
-* Separate path and command expansion; e.g., support `open -a Finder $(jump cl)`
