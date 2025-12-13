@@ -7,15 +7,19 @@
 
 ### Target (New)
 
-Represents the resolved value of a jump target lookup.
+Represents the resolved value of a jump target lookup. Defined in `expansion.rs` alongside `Expand` (locality principle).
 
 ```rust
+// In expansion.rs
 pub enum Target {
-    /// A filesystem path (expanded from `~`, `$VAR`, `%date`, or absolute paths)
+    /// A filesystem path (expanded from `~`, `$VAR`, `%date`, or absolute paths).
     Path(PathBuf),
-    /// A URL or arbitrary string (output verbatim)
+    /// A URL or arbitrary string (output verbatim).
     String(String),
 }
+
+// Re-exported from lib.rs
+pub use expansion::{Expand, Target};
 ```
 
 **Attributes**:
@@ -69,15 +73,17 @@ HashMap<String, String>   // name → value (type determined at resolve time)
 ```text
 Input: raw value string from database
 
-1. Does value start with "http://" or "https://"?
-   └─ YES → Target::String(value)  [URL - verbatim]
+1. Is value empty?
+   └─ YES → Error::Empty
 
 2. Does value start with "/" or "~" or "$" or "%"?
    └─ YES → Target::Path(expand(value))  [Path - apply expansion]
 
 3. Otherwise
-   └─ Target::String(value)  [Arbitrary - verbatim]
+   └─ Target::String(value)  [URL or arbitrary - verbatim]
 ```
+
+Note: URLs don't need explicit detection. They don't start with path prefixes, so they naturally fall through to `Target::String`.
 
 ## CSV Format
 
