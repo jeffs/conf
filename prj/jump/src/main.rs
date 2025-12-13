@@ -1,4 +1,3 @@
-#![allow(dead_code, unused_assignments, unused_imports, unused_variables)]
 //! # Notes
 //!
 //! Reads config from `~/.config/jump/targets.csv` (where `~/.config` may be

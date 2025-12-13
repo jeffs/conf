@@ -22,3 +22,7 @@ ln -s ~/conf/etc/gitconfig .gitconfig
 ln -s ~/conf/etc/tmux.conf .tmux.conf
 ln -s ~/conf/etc/zprofile .zprofile
 ln -s ~/conf/etc/zshrc .zshrc
+
+# VS Code settings
+mkdir -p "Library/Application Support/Code/User"
+ln -sf ~/conf/etc/vscode/settings.json "Library/Application Support/Code/User"
