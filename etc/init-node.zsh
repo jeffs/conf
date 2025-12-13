@@ -18,10 +18,16 @@ for command in node npm npx yarn; do
         unset -f node npm npx yarn
 
         # If NVM hasn't already set our Node version, let it do so.
-        #
-        # TODO: Look for .nvmrc in ancestor directories.
         if [[ -z "$NVM_DIR" ]]; then
-            if [[ -f .nvmrc ]]; then
+            local dir=$PWD nvmrc=
+            while [[ "$dir" != "/" ]]; do
+                if [[ -f "$dir/.nvmrc" ]]; then
+                    nvmrc="$dir/.nvmrc"
+                    break
+                fi
+                dir=${dir:h}
+            done
+            if [[ -n "$nvmrc" ]]; then
                 nvm use 2>/dev/null || nvm install
             else
                 nvm use --lts 2>/dev/null || nvm install --lts
