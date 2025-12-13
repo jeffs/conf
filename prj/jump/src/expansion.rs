@@ -6,6 +6,7 @@
 //! - Arbitrary strings - output verbatim
 
 use std::ffi::OsStr;
+use std::os::unix::ffi::OsStrExt;
 use std::path::{Component, Path, PathBuf};
 use std::{env, fmt};
 
@@ -66,16 +67,24 @@ impl<'a> Expand<'a> {
     }
 
     fn special<'b>(&self, s: &OsStr) -> Result<Option<Expansion<'a, 'b>>> {
+        let bytes = s.as_bytes();
+
+        // Handle $ at byte level to support non-UTF-8 variable names.
+        if bytes.first() == Some(&b'$') && bytes.len() > 1 {
+            let var = OsStr::from_bytes(&bytes[1..]);
+            let part = env::var_os(var).ok_or(Error::Unset)?;
+            return Ok(Some(Expansion::PathBuf(part.into())));
+        }
+
+        // Other special expansions (%, ~) require UTF-8 values.
+        //
+        // TODO: Support non-UTF-8 values in `~` expansion.
         let Some(s) = s.to_str() else {
             return Ok(None);
         };
         Ok(if s.starts_with('%') {
             let today = chrono::Local::now().date_naive();
             Some(Expansion::String(today.format(s).to_string()))
-        } else if let Some(var) = s.strip_prefix('$') {
-            // TODO: Support non-UTF-8 variable names.
-            let part = env::var_os(var).ok_or(Error::Unset)?;
-            Some(Expansion::PathBuf(part.into()))
         } else if s == "~" {
             Some(Expansion::Path(self.home))
         } else {
