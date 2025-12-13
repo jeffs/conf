@@ -1,0 +1,6 @@
+# Collapse diffs of Spec-Kit artifacts in GitHub's "Files changed" view.
+# 
+# The "linguist-generated" attributes is for GitHub, not Git. To collapse
+# changes in `git diff` output, use the "binary" attribute. (You can list
+# multiple attributes, separated by spaces.)
+specs/** linguist-generated
