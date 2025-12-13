@@ -2,6 +2,9 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::{fmt, fs, io};
 
+// Note: Database stores raw target values as String (not PathBuf) to support
+// URLs and arbitrary strings. Type detection happens at resolve time.
+
 #[derive(Debug)]
 pub struct Location {
     pub file: PathBuf,
@@ -92,8 +95,8 @@ impl fmt::Display for Error {
 pub type Result<T> = std::result::Result<T, Error>;
 
 pub struct Database(
-    /// Maps target names to directory paths.
-    HashMap<String, PathBuf>,
+    /// Maps target names to raw target values (paths, URLs, or arbitrary strings).
+    HashMap<String, String>,
 );
 
 impl Default for Database {
@@ -140,7 +143,7 @@ impl Database {
     }
 
     #[must_use]
-    pub fn get(&self, name: &str) -> Option<&PathBuf> {
+    pub fn get(&self, name: &str) -> Option<&String> {
         self.0.get(name)
     }
 }
