@@ -1,4 +1,3 @@
-mod as_bytes;
 mod error;
 mod expansion;
 
@@ -9,7 +8,7 @@ use std::path::{Path, PathBuf};
 
 pub use db::Database;
 pub use error::Error;
-pub use expansion::Expand;
+pub use expansion::{Expand, Target};
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -33,7 +32,7 @@ fn db_from_env(home: &Path) -> Result<Database> {
     Ok(db)
 }
 
-/// Maps target names to paths or shell commands from a [`Database`].
+/// Maps target names to paths from a [`Database`].
 pub struct App {
     home: PathBuf,
     db: Database,
@@ -65,14 +64,19 @@ impl App {
     /// # Errors
     ///
     /// Returns [`Error::Target`] if the target is not in this app's database.
-    fn target(&self, target: &str) -> Result<&PathBuf> {
+    fn target(&self, target: &str) -> Result<&String> {
         self.db
             .get(target)
             .ok_or_else(|| Error::Target(target.to_owned()))
     }
 
-    /// Looks up the specified target in this app's database, and returns the
-    /// corresponding path.
+    /// Looks up the specified target in this app's database and resolves it
+    /// to a [`Target`] value.
+    ///
+    /// The resolved value depends on the target type:
+    /// - URLs (`http://`, `https://`) → `Target::String` (verbatim)
+    /// - Paths (`/`, `~`, `$`, `%`) → `Target::Path` (expanded)
+    /// - Everything else → `Target::String` (verbatim)
     ///
     /// If the target is not found, but ends with a slash character (`'/'`),
     /// lookup is also attempted without the trailing slash, in case the user's
@@ -81,24 +85,14 @@ impl App {
     ///
     /// # Errors
     ///
-    /// Returns [`Err`] if the target cannot be mapped to a path.
-    pub fn path(&self, target: &str) -> Result<PathBuf> {
-        let path = self.target(target).or_else(|err| {
+    /// Returns [`Err`] if the target cannot be found or resolved.
+    pub fn resolve(&self, target: &str) -> Result<Target> {
+        let value = self.target(target).or_else(|err| {
             target
                 .strip_suffix('/')
                 .and_then(|target| self.target(target).ok())
                 .ok_or(err)
         })?;
-        Ok(Expand::with_home(&self.home).path(path)?)
-    }
-
-    /// Returns a shell comamnd for jumping to the specified target.
-    ///
-    /// # Errors
-    ///
-    /// Returns [`Err`] if the target cannot be mapped to a command.
-    pub fn command(&self, target: &str) -> Result<Vec<u8>> {
-        let expand = Expand::with_home(&self.home);
-        Ok(expand.command(self.target(target)?)?)
+        Ok(Expand::with_home(&self.home).target(value)?)
     }
 }

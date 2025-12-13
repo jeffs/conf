@@ -1,31 +1,17 @@
-//! TODO: Support URLs, not only paths. The `command` feature probably should go
-//!  away, and be replaced by shell-specific bindings.
+//! Target expansion and type detection for jump targets.
+//!
+//! Supports three target types:
+//! - URLs (`http://`, `https://`) - output verbatim
+//! - Paths (`/`, `~`, `$`, `%`) - expanded with variable substitution
+//! - Arbitrary strings - output verbatim
 
 use std::ffi::OsStr;
-use std::io::Write;
 use std::path::{Component, Path, PathBuf};
 use std::{env, fmt};
 
-use crate::as_bytes::AsBytes;
-
-/// Maps semantic command names (such as `cd`) to their implementation in the
-/// calling shell.
-///
-/// TODO: Read shell commands from config, rather than hard-coding them here.
-mod cmd {
-    /// Change directory.
-    pub const CD: &str = "mc";
-
-    /// Use the OS native file association.
-    ///
-    /// TODO: Compare macOS `open`, Windows/Nushell `start`, and Linux
-    /// `xdg-open`.
-    pub const OPEN: &str = "open";
-}
-
 #[derive(Debug)]
 pub enum Error {
-    /// An expanded path was empty.
+    /// An expanded target was empty.
     Empty,
     /// An environment variable was unset.
     Unset,
@@ -41,6 +27,15 @@ impl fmt::Display for Error {
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
+
+/// Represents the resolved value of a jump target lookup.
+#[derive(Debug)]
+pub enum Target {
+    /// A filesystem path (expanded from `~`, `$VAR`, `%date`, or absolute paths).
+    Path(PathBuf),
+    /// A URL or arbitrary string (output verbatim).
+    String(String),
+}
 
 enum Expansion<'a, 'b> {
     Path(&'a Path),
@@ -58,19 +53,6 @@ impl AsRef<Path> for Expansion<'_, '_> {
             Self::String(s) => Path::new(s),
         }
     }
-}
-
-macro_rules! command {
-    ($command:ident, $($arg:expr),*) => {{
-        let mut buffer = Vec::new();
-        buffer.write_all(cmd::$command.as_bytes()).unwrap();
-        buffer.write_all(b" ").unwrap();
-        $(
-            buffer.write_all($arg.as_bytes()).unwrap();
-        )*
-        buffer.write_all(b"\n").unwrap();
-        Ok(buffer)
-    }};
 }
 
 pub struct Expand<'a> {
@@ -114,54 +96,56 @@ impl<'a> Expand<'a> {
         }
     }
 
+    /// Expands a path by substituting `~`, `$VAR`, and `%date` patterns.
+    ///
     /// # Panics
     ///
-    /// Panics if the component begins with `%`, but is not a valid `strftime`
+    /// Panics if a component begins with `%`, but is not a valid `strftime`
     /// format string. The panic is because the underlying
     /// [`chrono::NaiveDate::format`] works lazily, with the actual
     /// formatting done by [`chrono::format::DelayedFormat::to_string`], which
-    /// has no good to way to report an error.
+    /// has no good way to report an error.
     ///
     /// # Errors
     ///
-    /// Path expansion currently panics on error, but future versions will
-    /// instead return [`Err`].
+    /// Returns [`Error::Empty`] if the path is empty after expansion, or
+    /// [`Error::Unset`] if an environment variable is not set.
     ///
     /// # TODO
     ///
-    /// Avoid the panic.  See the [`chrono` implementation][1].
+    /// Avoid the panic. See the [`chrono` implementation][1].
     ///
     /// [1]: https://docs.rs/chrono/latest/src/chrono/format/formatting.rs.html#335
     pub fn path(&self, path: &Path) -> Result<PathBuf> {
-        let mut parts = path
+        let parts = path
             .components()
             .map(|c| self.component(c))
-            .collect::<Result<Vec<_>>>()?
-            .into_iter();
-        let first = parts.next().ok_or(Error::Empty)?;
-        if let Some("http:" | "https:") = first.as_ref().to_str() {
-            todo!()
-        } else {
-            todo!()
+            .collect::<Result<Vec<_>>>()?;
+        if parts.is_empty() {
+            return Err(Error::Empty);
         }
+        Ok(parts.iter().map(AsRef::as_ref).collect())
     }
 
-    /// Returns a snippet of shell script suitable for opening the specified
-    /// path.  The path should _not_ already be expanded, as this function
-    /// performs path expansion automatically.
+    /// Expands the value to an inferred target type.
     ///
+    /// # Panics
+    ///
+    /// Panics if value is inferred to be a path containing an invalid
+    /// `strftime` format string; see [`Self::path`].
     ///
     /// # Errors
     ///
-    /// Returns [`Err`] if the path is empty.
-    pub fn command(&self, path: &Path) -> Result<Vec<u8>> {
-        let path = self.path(path)?;
-        let mut parts = path.components();
-        let first = parts.next().ok_or(Error::Empty)?;
-        if let Some("http:" | "https:") = first.as_os_str().to_str() {
-            command!(OPEN, first, b"//", parts.collect::<PathBuf>())
+    /// Returns [`Error::Empty`] if `value` is empty. Returns [`Error::Unset`]
+    /// if value is inferred to be a path, and contains any unset environment
+    /// variable; e.g., `/$NONESUCH`.
+    pub fn target(&self, value: &str) -> Result<Target> {
+        if value.is_empty() {
+            Err(Error::Empty)
+        } else if value.starts_with(['/', '~', '$', '%']) {
+            Ok(Target::Path(self.path(Path::new(value))?))
         } else {
-            command!(CD, path)
+            Ok(Target::String(value.to_owned()))
         }
     }
 }
