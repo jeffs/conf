@@ -10,7 +10,6 @@
 //!
 //! * [ ] Support database file specification at runtime, via args or env.
 //! * [ ] Support complex expansions like "yesterday's date."
-//! * [ ] Add DB path list to error messages about missing or empty targets.
 //! * [ ] Support secondary arguments, such as relative paths or query params.
 
 use std::io::Write;
@@ -88,6 +87,10 @@ fn write(mut w: impl Write, s: &[u8]) {
     w.write_all(s).expect("output should be writable");
 }
 
+fn usage() {
+    eprintln!("Usage: jump <target>");
+}
+
 fn main_imp() -> Result<(), Error> {
     let args = parse_args()?;
     let app = jump::App::from_env()?;
@@ -100,9 +103,11 @@ fn main_imp() -> Result<(), Error> {
 }
 
 fn main() -> ExitCode {
-    // TODO: Print usage on ArgError.
     if let Err(err) = main_imp() {
         eprintln!("jump: {err}");
+        if matches!(err, Error::Args(_)) {
+            usage();
+        }
         return ExitCode::FAILURE;
     }
     ExitCode::SUCCESS

@@ -1,4 +1,5 @@
 use std::fmt;
+use std::path::PathBuf;
 
 use crate::{db, expansion};
 
@@ -9,7 +10,7 @@ pub enum Error {
     /// An error occurred expanding a path.
     Expansion(expansion::Error),
     /// No target was found for the argument.
-    Target(String),
+    Target { name: String, searched: Vec<PathBuf> },
 }
 
 impl std::error::Error for Error {}
@@ -31,7 +32,16 @@ impl fmt::Display for Error {
         match self {
             Self::Database(e) => e.fmt(f),
             Self::Expansion(e) => e.fmt(f),
-            Self::Target(arg) => write!(f, "{arg}: Target not found"),
+            Self::Target { name, searched } => {
+                write!(f, "{name}: Target not found in ")?;
+                for (i, path) in searched.iter().enumerate() {
+                    if i > 0 {
+                        write!(f, ", ")?;
+                    }
+                    write!(f, "{}", path.display())?;
+                }
+                Ok(())
+            }
         }
     }
 }
