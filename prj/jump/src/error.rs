@@ -10,7 +10,10 @@ pub enum Error {
     /// An error occurred expanding a path.
     Expansion(expansion::Error),
     /// No target was found for the argument.
-    Target { name: String, searched: Vec<PathBuf> },
+    Target {
+        name: String,
+        searched: Vec<PathBuf>,
+    },
 }
 
 impl std::error::Error for Error {}
@@ -33,12 +36,9 @@ impl fmt::Display for Error {
             Self::Database(e) => e.fmt(f),
             Self::Expansion(e) => e.fmt(f),
             Self::Target { name, searched } => {
-                write!(f, "{name}: Target not found in ")?;
-                for (i, path) in searched.iter().enumerate() {
-                    if i > 0 {
-                        write!(f, ", ")?;
-                    }
-                    write!(f, "{}", path.display())?;
+                write!(f, "{name}: Target not found; searched:")?;
+                for path in searched {
+                    write!(f, "\n  {}", path.display())?;
                 }
                 Ok(())
             }
