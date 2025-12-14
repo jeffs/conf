@@ -2,10 +2,13 @@
 #
 # TODO
 #
-# - [] Upgrade:
-#   * forked packages, such as evcxr_repl
-#   * apps from installers: Docker, Firefox, Slack, Steam
-#   * Docker images
+# - [ ] Upgrade:
+#   + forked packages, such as evcxr_repl
+#   + apps from installers: Docker, Firefox, Slack, Steam
+#   + Docker images
+# - [ ] Install:
+#   + projects; e.g., `../prj/jump`
+#   + apps; e.g., `../app/on-file-click.app`
 
 # Prompt for SSH passphrase up front if no key is loaded, so this script
 # doesn't pause for a passphrase half way through.
