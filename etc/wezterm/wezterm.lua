@@ -78,7 +78,7 @@ end)
 -- config.audible_bell = 'Disabled'
 
 config.enable_tab_bar = true
--- config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = true
 wezterm.on('toggle-tab-bar', function(window)
   local overrides = window:get_config_overrides() or {}
   overrides.enable_tab_bar =  not overrides.enable_tab_bar
