@@ -23,6 +23,12 @@ ln -s ~/conf/etc/tmux.conf .tmux.conf
 ln -s ~/conf/etc/zprofile .zprofile
 ln -s ~/conf/etc/zshrc .zshrc
 
-# VS Code settings
-mkdir -p "Library/Application Support/Code/User"
-ln -sf ~/conf/etc/vscode/settings.json "Library/Application Support/Code/User"
+# TODO: These paths are specific to macOS. On Linux et al, the path should be
+#  $XDG_CONFIG, defaulting to ~/.config.
+readonly config_home='Library/Application Support'
+
+mkdir -p "$config_home/rustfmt"
+ln -s ~/conf/etc/rustfmt.toml "$config_home/rustfmt"
+
+mkdir -p "$config_home/Code/User"
+ln -sf ~/conf/etc/vscode/settings.json "$config_home/Code/User"
