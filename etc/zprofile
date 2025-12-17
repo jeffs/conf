@@ -2,10 +2,11 @@
 #  than doing string manipulation, variable existence checks, etc. directly in
 #  shell script.
 
-alias conf-log="echo -n conf:"
+alias conf-log=: # "echo -n conf:"
+alias log-profile=: # ~/conf/prj/target/release/log-profile
 
 conf-log 'primary profile...'
-local start_time=$(~/conf/prj/target/release/log-profile)
+local start_time=$(log-profile)
 
 path=(
     ~/usr/bin
@@ -87,13 +88,13 @@ export PYRIGHT_PYTHON_PYLANCE_VERSION=v2024.7.1
 export GRIT_TRUNKS=dev,main,master
 export JUMP_PREFIXES=~/conf/etc/jump
 
-~/conf/prj/target/release/log-profile $start_time
+log-profile $start_time
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zprofile ]; then
         conf-log "${conf_module#*/conf-} profile..."
-        local start_time=$(~/conf/prj/target/release/log-profile)
+        local start_time=$(log-profile)
         source $conf_module/etc/zprofile
-        ~/conf/prj/target/release/log-profile $start_time
+        log-profile $start_time
     fi
 done
 

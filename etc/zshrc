@@ -1,7 +1,8 @@
-alias conf-log="echo -n conf:"
+alias conf-log=: # "echo -n conf:"
+alias log-profile=: # ~/conf/prj/target/release/log-profile
 
 conf-log 'primary rc...     '
-local start_time=$(~/conf/prj/target/release/log-profile)
+local start_time=$(log-profile)
 
 ## VARIABLES
 
@@ -182,7 +183,7 @@ bindkey '^[l' down-case-word
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
-~/conf/prj/target/release/log-profile $start_time
+log-profile $start_time
 
 ## PROFILES
 #
@@ -192,12 +193,12 @@ complete -o nospace -C /opt/homebrew/bin/terraform terraform
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zshrc ]; then
         conf-log "${conf_module#*/conf-} rc...     "
-        local start_time=$(~/conf/prj/target/release/log-profile)
+        local start_time=$(log-profile)
         source $conf_module/etc/zshrc
-        ~/conf/prj/target/release/log-profile $start_time
+        log-profile $start_time
     fi
 done
 
-date +'%n%A, %B %d %l:%M %p'
+# date +'%n%A, %B %d %l:%M %p'
 
 unalias conf-log
