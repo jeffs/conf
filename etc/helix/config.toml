@@ -18,7 +18,7 @@ theme = 'base16_terminal'
 # WeztTerm's tab bar to move the window, or disabling mouse support in Helix.
 # See also <https://wezterm.org/config/mouse.html>.
 #
-# editor.mouse = false
+editor.mouse = false
 
 editor.true-color = true
 
