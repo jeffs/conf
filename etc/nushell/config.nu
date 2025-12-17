@@ -74,6 +74,7 @@ alias push = git push
 alias si = grit si
 alias sj = grit -v si
 alias up = grit up
+alias u = grit up
 
 def lg [...patterns] {
   # TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern
