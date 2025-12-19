@@ -43,6 +43,8 @@ cargo install ${(s: :)crates}
 # Run this occasionally to avoid undue bitrot.
 # ~/conf/src/install-uv.zsh
 
+uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git
+
 # Passing --install --all rather than --list would cause sudo to prompt for
 # access, but this script is not meant to be interactive.
 echo '* Software Update Tool'
