@@ -7,14 +7,14 @@ let mapleader = " "
 inoremap <C-g> <Esc>
 
 " Swap ; with : (which is Shift+;) to save hundreds more left-pinky keystrokes per day.
-" nnoremap : ;
-" nnoremap ; :
-" nnoremap q: q;
-" nnoremap q; q:
-" vnoremap : ;
-" vnoremap ; :
-" vnoremap q: q;
-" vnoremap q; q:
+nnoremap : ;
+nnoremap ; :
+nnoremap q: q;
+nnoremap q; q:
+vnoremap : ;
+vnoremap ; :
+vnoremap q: q;
+vnoremap q; q:
 
 " This one saves all fingers involved in C-^ _except_ the left pinky.
 nnoremap <Tab> <C-^>
