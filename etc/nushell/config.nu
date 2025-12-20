@@ -159,10 +159,10 @@ def imgcat [...args: string] {
 # Recognize Obsidian (data)base files.
 def "from base" [] { from yaml }
 
-# Extract YAML front matter from Obsidian notes.
-def "from md" [] {
-   md-front | from yaml
-}
+# # Extract YAML front matter from Obsidian notes.
+# def "from md" [] {
+#    md-front | from yaml
+# }
 
 # Example
 #
