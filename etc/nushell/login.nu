@@ -27,6 +27,9 @@ load-env {
   HOMEBREW_NO_ENV_HINTS: true
   RUSTC_WRAPPER: '/opt/homebrew/bin/sccache'
 
+  # Let Claude access language servers.
+  ENABLE_LSP_TOOLS: 1
+
   # My own little home-grown tools.
   GRIT_TRUNKS: 'dev,main,master'
   JUMP_PREFIXES: ('~/conf/etc/jump' | path expand)
