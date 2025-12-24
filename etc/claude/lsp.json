@@ -1,0 +1,25 @@
+{
+  "rust-analyzer": {
+    "command": "/Users/jeff/.cargo/bin/rust-analyzer",
+    "extensionToLanguage": {
+      ".rs": "rust"
+    }
+  },
+  "typescript-language-server": {
+    "command": "/Users/jeff/.local/share/fnm/aliases/default/bin/typescript-language-server",
+    "args": ["--stdio"],
+    "extensionToLanguage": {
+      ".ts": "typescript",
+      ".tsx": "typescriptreact",
+      ".js": "javascript",
+      ".jsx": "javascriptreact"
+    }
+  },
+  "pyright-langserver": {
+    "command": "/Users/jeff/.local/bin/pyright-langserver",
+    "args": ["--stdio"],
+    "extensionToLanguage": {
+      ".py": "python"
+    }
+  }
+}
