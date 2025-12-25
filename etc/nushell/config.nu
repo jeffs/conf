@@ -36,7 +36,7 @@ use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
 
 alias e = edit # From rust-kart.
 alias l = ls
-alias y = yazi # File manager; see <https://yazi-rs.github.io/features>.
+# alias y = yazi # File manager; see <https://yazi-rs.github.io/features>.
 
 # pushd = dirs add
 alias g = dirs goto
@@ -172,4 +172,15 @@ def "from numstat" [] {
   update '+' {into int} |
   update '-' {into int} |
   upsert delta {|r| ($r | get +) - ($r | get -)} | move delta --before name
+}
+
+# <https://yazi-rs.github.io/docs/quick-start>
+def --env y [...args] {
+	let tmp = (mktemp -t "yazi-cwd.XXXXXX")
+	yazi ...$args --cwd-file $tmp
+	let cwd = (open $tmp)
+	if $cwd != "" and $cwd != $env.PWD {
+		cd $cwd
+	}
+	rm -fp $tmp
 }
