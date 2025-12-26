@@ -1,23 +1,10 @@
 # <https://github.com/henriklovhaug/md-tui?tab=readme-ov-file#configuration>
 
-# # Keyboard actions
-# up = 'k'
-# down = 'j'
-# page_up = 'u'
-# page_down = ' '
-# half_page_down = 'l'
-# half_page_up = 'h'
-# top = 'g'
-# bottom = 'G'
-# search = 'f'
-# search_next = 'n'
-# search_previous = 'N'
-# # This will search downwards until it finds one or select the last link in document.
-# select_link = 's'
-# # Finds the link 2/3 up the page. It will search then for closest in both direction.
-# select_link_alt = 'S'
-# edit = 'e'
-# hover = 'K'
-# back = 'b'
-# file_tree = 't'
-# sort = 'o'
+# General settings
+emoji_check_marks = false
+help_box = false
+
+# Keyboard actions
+down = ["j", "C-e"]
+up = ["k", "C-y"]
+page_down = ["d", " "]
