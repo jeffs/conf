@@ -27,7 +27,9 @@ load-env {
   HOMEBREW_NO_ENV_HINTS: true
   RUSTC_WRAPPER: '/opt/homebrew/bin/sccache'
 
-  # Let Claude access language servers.
+  # Let Claude access language servers. There's some confusion online about
+  # whether the var name is singular or plural.
+  ENABLE_LSP_TOOL: 1
   ENABLE_LSP_TOOLS: 1
 
   # My own little home-grown tools.

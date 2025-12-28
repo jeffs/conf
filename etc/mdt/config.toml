@@ -3,8 +3,9 @@
 # General settings
 emoji_check_marks = false
 help_box = false
+width = 0
 
 # Keyboard actions
 down = ["j", "C-e"]
 up = ["k", "C-y"]
-page_down = ["d", " "]
+page_down = ["d", "space"]
