@@ -2,12 +2,13 @@
 #
 # # TODO
 # 
-# * Correct groff config, rather than workin around ^H in MANPAGER; see:
-#   <https://github.com/sharkdp/bat/issues/652#issuecomment-528998521>
-# * Update StackExchange to suggest -P 'col -b | bat -pl man':
-#   <https://unix.stackexchange.com/questions/15855/how-to-dump-a-man-page>
-#   The `col -b` _should_ be done automatically by bat once
+# * Correct groff config, rather than workin around ^H in MANPAGER
+#   - The `col` command is deprecated. (Weird tab behavior, spotty support on musl.)
+#   - The relevant functionality _should_ be done automatically by bat once
 #   <https://github.com/sharkdp/bat/pull/3517> ships.
+#   - See also:
+#    + <https://github.com/sharkdp/bat/issues/652#issuecomment-528998521>
+#    + <https://unix.stackexchange.com/questions/15855/how-to-dump-a-man-page>
 
 load-env {
   EDITOR: hx
