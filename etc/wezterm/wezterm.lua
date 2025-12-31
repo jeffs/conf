@@ -77,8 +77,18 @@ end)
 -- <https://wezterm.org/config/lua/config/visual_bell.html>
 -- config.audible_bell = 'Disabled'
 
+-- TODO: I keep going back and forth on whether to show the tab bar when
+--  there's only one tab. I pretty much want this when I'm working with multiple
+--  terminal windows, or when I keep opening and closing a second tab. These
+--  have become more common situations since I've been relying more heavily
+--  on terminal-based AI agents. Maybe I should update my existing binding to
+--  toggle the tab bar (CMD+i) to instead cycle through three states: Hidden,
+--  Hidden if only one tab, Shown. See `toggle-opacity` above for an example of
+--  a custom event that triggers a callback function (and its binding below).
+--
+-- config.hide_tab_bar_if_only_one_tab = true
+
 config.enable_tab_bar = true
-config.hide_tab_bar_if_only_one_tab = true
 wezterm.on('toggle-tab-bar', function(window)
   local overrides = window:get_config_overrides() or {}
   overrides.enable_tab_bar =  not overrides.enable_tab_bar
