@@ -1,6 +1,7 @@
 #!/usr/bin/env -S zsh -euo pipefail
 
-brew install helix
+# shellcheck is a recommended dependency of bash-language-server.
+brew install helix shellcheck
 
 # Install the Rust Language Server.
 rustup component add rust-analyzer
@@ -9,7 +10,7 @@ rustup component add rust-analyzer
 xcrun -f lldb-dap
 
 # Install language servers for CSS, etc.
-npm i -g vscode-langservers-extracted
+npm i -g vscode-langservers-extracted bash-language-server
 
 # Install a TOML language server.
 cargo install taplo-cli
