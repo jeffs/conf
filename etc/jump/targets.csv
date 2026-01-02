@@ -8,6 +8,8 @@
 ~/pkg,pkg
 
 # These may be at different paths on different machines.
+$JUMP_HOME/git/kiln,kiln
 $JUMP_HOME/git/kiln/journey,journey
 $JUMP_HOME/git/kiln/brash,brash
+$JUMP_HOME/git/nushell/nushell,nu,nushell
 $JUMP_HOME/git/wasm,wasm

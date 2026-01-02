@@ -164,6 +164,10 @@ def "from base" [] { from yaml }
 #    md-front | from yaml
 # }
 
+def "from brash" [] {
+  gzip -d | from json
+}
+
 # Example
 #
 #   git diff --numstat dev... | numstat
