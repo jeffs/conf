@@ -4,6 +4,7 @@
 emoji_check_marks = false
 help_box = false
 width = 0
+flavor = "claude"
 
 # Keyboard actions
 down = ["j", "C-e"]
