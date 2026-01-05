@@ -57,6 +57,12 @@ config.initial_rows = 36
 config.send_composed_key_when_left_alt_is_pressed = false
 config.send_composed_key_when_right_alt_is_pressed = false
 
+-- config.mouse_bindings = {
+--   -- Slower scroll up/down (3 lines instead of Page Up/Down)
+--   { event = { Down = { streak = 1, button = { WheelUp = 1 } } }, mods = 'NONE', action = wezterm.action.Nop, },
+--   { event = { Down = { streak = 1, button = { WheelDown = 1 } } }, mods = 'NONE', action = wezterm.action.Nop, },
+-- }
+
 config.window_background_opacity = 0.8
 -- config.text_background_opacity = 1.0
 wezterm.on('toggle-opacity', function(window)
