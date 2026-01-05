@@ -50,5 +50,9 @@ target/
 # https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 var/
 
-.claude
+# AI
+.*-mcp
+.claude/*
+!.claude/skills/
+!.claude/agents/
 .gemini

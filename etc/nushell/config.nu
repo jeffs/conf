@@ -159,7 +159,18 @@ def imgcat [...args: string] {
 # Recognize Obsidian (data)base files.
 def "from base" [] { from yaml }
 
-# # Extract YAML front matter from Obsidian notes.
+# Extract YAML front matter from Obsidian notes.
+#
+# NOTE: Claude also uses YAML front matter; for example, in a user-level skill
+#  (`~/.claude/skills/*/SKILL.md`):
+#
+#  ```yaml
+#  name: refresh-rust-expert
+#  description: Update the rust-expert agent with the latest Rust idioms, features, and best practices from official sources. Run this periodically to keep Rust advice current.
+#  allowed-tools: WebSearch, WebFetch, Read, Write, Glob
+#  user-invocable: true
+#  ```
+#
 # def "from md" [] {
 #    md-front | from yaml
 # }
