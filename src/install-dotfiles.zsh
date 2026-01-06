@@ -18,6 +18,7 @@ done
 
 mkdir -p .config
 ln -s ~/conf/etc/claude/agents ~/.claude/agents
+ln -s ~/conf/etc/claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -s ~/conf/etc/claude/skills ~/.claude/skills
 ln -s ~/conf/etc/gitconfig .gitconfig
 ln -s ~/conf/etc/nvim .config
