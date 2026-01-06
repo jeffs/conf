@@ -52,7 +52,7 @@ var/
 
 # AI
 .*-mcp
-.claude/*
+.claude/
 !.claude/skills/
 !.claude/agents/
 .gemini
