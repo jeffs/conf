@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 
-members = ["edit", "itco-edit", "jump", "log-profile"]
+members = ["cl", "edit", "itco-edit", "jump", "log-profile"]
 
 [workspace.lints.clippy]
 pedantic = "deny"
