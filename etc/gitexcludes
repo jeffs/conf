@@ -50,9 +50,19 @@ target/
 # https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 var/
 
-# AI
+# AI agents and editors
 .*-mcp
+*.mcp.json
+.mcp/
 .claude/
 !.claude/skills/
 !.claude/agents/
+!.claude/commands/
 .gemini
+.cursor/
+.aider*
+.continue/
+.copilot/
+.codeium/
+.sourcegraph/
+.ai/
