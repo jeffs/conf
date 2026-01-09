@@ -112,7 +112,7 @@ alias cy = j y
 # TODO: Default to pedantic, but allow override by local Cargo.toml file.
 def clippy [] { cargo clippy --all-targets --tests --workspace }
 
-def yolo [] { git commit -a --amend --no-edit --no-verify; git push -f }
+def yolo [] { git commit -a --amend --no-edit --no-verify; git push --force-with-lease }
 
 def --wrapped glog [...rest] {
   if ($rest | where $it !~ '^-' | is-empty) {
