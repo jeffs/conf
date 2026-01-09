@@ -17,9 +17,11 @@ for f in .config/nvim .gitconfig .tmux.conf .zprofile .zshrc; do
 done
 
 mkdir -p .config
+mkdir -p ~/.claude
 ln -s ~/conf/etc/claude/agents ~/.claude/agents
 ln -s ~/conf/etc/claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -s ~/conf/etc/claude/skills ~/.claude/skills
+ln -s ~/conf/src/claude-notify.sh ~/.claude/claude-notify.sh
 ln -s ~/conf/etc/gitconfig .gitconfig
 ln -s ~/conf/etc/nvim .config
 ln -s ~/conf/etc/tmux.conf .tmux.conf
