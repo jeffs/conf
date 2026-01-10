@@ -27,7 +27,7 @@ fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
         prefixes.push(config_home.join("jump"));
     }
 
-    let paths: Vec<_> = prefixes.iter().map(|p| p.join("targets.csv")).collect();
+    let paths: Vec<_> = prefixes.iter().map(|p| p.join("targets.yaml")).collect();
     let mut db = Database::new();
     for path in &paths {
         db.read_file(path)?;
@@ -43,10 +43,10 @@ pub struct App {
 }
 
 impl App {
-    /// Returns an app that reads from all `PREFIX/targets.csv` files,
+    /// Returns an app that reads from all `PREFIX/targets.yaml` files,
     /// where `PREFIX` is each path in the `JUMP_PREFIXES` environment
     /// variable. If `JUMP_PREFIXES` is empty or unset, reads from
-    /// `$XDG_CONFIG_HOME/jump/targets.csv` (defaulting to `~/.config/jump`).
+    /// `$XDG_CONFIG_HOME/jump/targets.yaml` (defaulting to `~/.config/jump`).
     ///
     /// # Panics
     ///

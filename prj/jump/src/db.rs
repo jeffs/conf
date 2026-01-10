@@ -112,6 +112,7 @@ impl Database {
         let file = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;
 
         for (index, line) in file.lines().enumerate() {
+            let line = line.trim();
             if line.is_empty() || line.starts_with('#') {
                 continue;
             }
@@ -121,13 +122,17 @@ impl Database {
                 line: Some(index + 1),
             };
 
-            let (dir, names) = line
-                .split_once(',')
+            // Parse YAML format: `value: [key1, key2]` or `value: key`
+            let (value, keys) = line
+                .split_once(": ")
                 .ok_or_else(|| Error::syntax(location()))?;
 
-            for name in names.split(',') {
-                // Overwrite any existing entry.
-                self.0.insert(name.into(), dir.into());
+            if let Some(list) = keys.strip_prefix('[').and_then(|s| s.strip_suffix(']')) {
+                for key in list.split(", ") {
+                    self.0.insert(key.into(), value.into());
+                }
+            } else {
+                self.0.insert(keys.into(), value.into());
             }
         }
 

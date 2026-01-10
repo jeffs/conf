@@ -1,10 +1,9 @@
 //! # Notes
 //!
-//! Reads config from `~/.config/jump/targets.csv` (where `~/.config` may be
-//! overriden via `$XDG_CONFIG_HOME`). The `targets.csv` file supports blank
-//! lines, comment lines (beginning with `#`), and jagged lines. The first
-//! column in each row is a directory path, and all subsequent columns are short
-//! names for that path.
+//! Reads config from `~/.config/jump/targets.yaml` (where `~/.config` may be
+//! overriden via `$XDG_CONFIG_HOME`). The `targets.yaml` file uses a simple
+//! YAML subset with blank lines, comments (`#`), and mappings from target
+//! values (paths, URLs) to lists of short names: `~/conf: [c, conf]`.
 //!
 //! # TODO
 //!

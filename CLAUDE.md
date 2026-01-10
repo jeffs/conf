@@ -3,7 +3,7 @@
 Auto-generated from all feature plans. Last updated: 2025-12-12
 
 ## Active Technologies
-- CSV files (`~/.config/jump/targets.csv` or `$JUMP_PREFIXES`) (002-generalize-jump-targets)
+- YAML files (`~/.config/jump/targets.yaml` or `$JUMP_PREFIXES`) (002-generalize-jump-targets)
 
 - Rust 2024 edition (nightly features) + chrono 0.4.40 (retained for date expansion in paths) (001-remove-jump-command-mode)
 
