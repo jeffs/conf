@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Delay before sending notification (seconds)
-DELAY=30
 MARKER_FILE="/tmp/claude-notify-marker"
 
 # Load credentials from file (not versioned)
@@ -18,10 +16,8 @@ MY_ID=$$-$(date +%s%N)
 # Write our ID to the marker file
 echo "$MY_ID" > "$MARKER_FILE"
 
-# Wait in background, then check if we should notify
+# Check in background if we should notify
 (
-  sleep "$DELAY"
-
   # Only notify if our ID is still current (no newer stop event)
   if [ -f "$MARKER_FILE" ] && [ "$(cat "$MARKER_FILE" 2>/dev/null)" = "$MY_ID" ]; then
     curl -s \
