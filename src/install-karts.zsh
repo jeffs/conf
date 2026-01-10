@@ -18,6 +18,5 @@ if [[ ! -d $parent/rust-kart ]]; then
   git clone git@github.com:jeffs/rust-kart $parent/rust-kart
 fi
 
-cargo install --path ~/conf/prj/edit
 cargo install --path $parent/rust-kart/crates/tmux-send
 cargo install --path $parent/rust-kart/crates/vimod

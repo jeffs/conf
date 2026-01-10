@@ -21,7 +21,7 @@
 brew install difftastic entr expect tmux jq
 cargo install fd-find ripgrep sd
 
-for p in cl jump; do
+for p in cl edit jump upgrade; do
     cargo install --path ~/conf/prj/$p
 done
 
