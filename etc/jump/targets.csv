@@ -1,5 +1,3 @@
-# TODO: Does rust-kart belong in `~/pkg` or `$JUMP_HOME/git`?
-~/pkg/rust-kart,rk
 ~/file/log/%Y/%m/%d,cl,l
 ~/file/log/%Y/%m,month
 
@@ -15,3 +13,8 @@ $JUMP_HOME/git/kiln/brash,brash
 $JUMP_HOME/git/md-tui,mdt
 $JUMP_HOME/git/nushell/nushell,nu,nushell
 $JUMP_HOME/git/wasm,wasm
+
+# TODO: Does rust-kart belong in `~/pkg` or `$JUMP_HOME/git`?
+#  - `../../src/install-dotfiles.zsh` clones it into `~/pkg`
+#  - On my home machine, `~/pkg/rust-kart` is a symlink
+$JUMP_HOME/git/rust-kart,rk
