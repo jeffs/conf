@@ -45,12 +45,8 @@ def install-helix-from-source [] {
     git fetch
     git merge origin/master
   }
-  # Make sure Helix builds before uninstalling any existing command.
-  cargo build --release
-  if ('~/.cargo/bin/hx' | path exists) {
-    cargo uninstall helix-term
-  }
   # Install Helix, setting the default runtime directory to the working copy.
+  # (cargo install overwrites any existing binary)
   $env.HELIX_DEFAULT_RUNTIME = '~/pkg/helix/runtime' | path expand
   cargo install --path helix-term --locked
 }
