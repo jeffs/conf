@@ -19,7 +19,6 @@ done
 mkdir -p .config
 mkdir -p ~/.claude
 ln -s ~/conf/etc/claude/agents ~/.claude/agents
-ln -s ~/conf/etc/claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -s ~/conf/etc/claude/skills ~/.claude/skills
 ln -s ~/conf/src/claude-notify.sh ~/.claude/claude-notify.sh
 ln -s ~/conf/etc/claude/settings.json ~/.claude/settings.json
@@ -28,6 +27,13 @@ ln -s ~/conf/etc/nvim .config
 ln -s ~/conf/etc/tmux.conf .tmux.conf
 ln -s ~/conf/etc/zprofile .zprofile
 ln -s ~/conf/etc/zshrc .zshrc
+
+# Symlinking CLAUDE.md is fine on a machine that requires no further
+# user-level config. However, on a machine that wants to augment it at all,
+# you're better off creating a separate ~/.claude/CLAUDE.md file with a
+# @~/conf/etc/claude/CLAUDE.md line.
+#
+# ln -s ~/conf/etc/claude/CLAUDE.md ~/.claude/CLAUDE.md
 
 # TODO: These paths are specific to macOS. On Linux et al, the path should be
 #  $XDG_CONFIG, defaulting to ~/.config.
