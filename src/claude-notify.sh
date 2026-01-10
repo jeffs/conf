@@ -9,6 +9,7 @@ CREDS_FILE="$HOME/.claude/pushover-credentials"
 if [ ! -f "$CREDS_FILE" ]; then
   exit 0  # Silently skip if no credentials configured
 fi
+# shellcheck source="/Users/jeff/.claude/pushover-credentials"
 source "$CREDS_FILE"
 
 # Generate unique ID for this stop event
