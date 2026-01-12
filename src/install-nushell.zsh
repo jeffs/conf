@@ -1,6 +1,6 @@
 #!/usr/bin/env -S zsh -euo pipefail
 
-cargo install nu
+brew install nushell
 
 if [ ! -d ~/pkg/nu_scripts ]; then
   git clone --depth=1 https://github.com/nushell/nu_scripts ~/pkg/nu_scripts
