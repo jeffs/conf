@@ -1,9 +1,18 @@
+use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::{fmt, fs, io};
 
 // Note: Database stores raw target values as String (not PathBuf) to support
 // URLs and arbitrary strings. Type detection happens at resolve time.
+
+/// A single key or list of keys in YAML format.
+#[derive(Deserialize)]
+#[serde(untagged)]
+enum Keys {
+    One(String),
+    Many(Vec<String>),
+}
 
 #[derive(Debug)]
 pub struct Location {
@@ -43,14 +52,14 @@ impl IntoLocation for PathBuf {
 #[derive(Debug)]
 pub enum ErrorKind {
     Io(io::Error),
-    Syntax,
+    Yaml(serde_saphyr::Error),
 }
 
 impl fmt::Display for ErrorKind {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Self::Io(e) => e.fmt(f),
-            Self::Syntax => write!(f, "Syntax error"),
+            Self::Yaml(e) => e.fmt(f),
         }
     }
 }
@@ -73,8 +82,8 @@ impl Error {
     }
 
     #[must_use]
-    pub fn syntax(location: Location) -> Self {
-        Self::new(location, ErrorKind::Syntax)
+    pub fn yaml(file: PathBuf, cause: serde_saphyr::Error) -> Self {
+        Self::new(file, ErrorKind::Yaml(cause))
     }
 }
 
@@ -109,30 +118,21 @@ impl Database {
     /// invalid.
     pub fn read_file(&mut self, path: impl AsRef<Path>) -> Result<()> {
         let path = path.as_ref();
-        let file = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;
+        let contents = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;
 
-        for (index, line) in file.lines().enumerate() {
-            let line = line.trim();
-            if line.is_empty() || line.starts_with('#') {
-                continue;
-            }
+        let yaml: HashMap<String, Keys> =
+            serde_saphyr::from_str(&contents).map_err(|e| Error::yaml(path.into(), e))?;
 
-            let location = || Location {
-                file: path.to_path_buf(),
-                line: Some(index + 1),
-            };
-
-            // Parse YAML format: `value: [key1, key2]` or `value: key`
-            let (value, keys) = line
-                .split_once(": ")
-                .ok_or_else(|| Error::syntax(location()))?;
-
-            if let Some(list) = keys.strip_prefix('[').and_then(|s| s.strip_suffix(']')) {
-                for key in list.split(", ") {
-                    self.0.insert(key.into(), value.into());
+        for (value, keys) in yaml {
+            match keys {
+                Keys::One(key) => {
+                    self.0.insert(key, value);
                 }
-            } else {
-                self.0.insert(keys.into(), value.into());
+                Keys::Many(keys) => {
+                    for key in keys {
+                        self.0.insert(key, value.clone());
+                    }
+                }
             }
         }
 
@@ -142,5 +142,69 @@ impl Database {
     #[must_use]
     pub fn get(&self, name: &str) -> Option<&String> {
         self.0.get(name)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Write;
+
+    fn parse(yaml: &str) -> Database {
+        let mut file = tempfile::NamedTempFile::new().unwrap();
+        file.write_all(yaml.as_bytes()).unwrap();
+        let mut db = Database::new();
+        db.read_file(file.path()).unwrap();
+        db
+    }
+
+    #[test]
+    fn single_key() {
+        let db = parse("~/conf: c\n");
+        assert_eq!(db.get("c"), Some(&"~/conf".into()));
+    }
+
+    #[test]
+    fn multiple_keys() {
+        let db = parse("~/conf: [c, conf]\n");
+        assert_eq!(db.get("c"), Some(&"~/conf".into()));
+        assert_eq!(db.get("conf"), Some(&"~/conf".into()));
+    }
+
+    #[test]
+    fn quoted_value() {
+        let db = parse("\"value with spaces\": key\n");
+        assert_eq!(db.get("key"), Some(&"value with spaces".into()));
+    }
+
+    #[test]
+    fn quoted_key() {
+        let db = parse("~/path: \"key with spaces\"\n");
+        assert_eq!(db.get("key with spaces"), Some(&"~/path".into()));
+    }
+
+    #[test]
+    fn quoted_key_in_list() {
+        let db = parse("~/path: [simple, \"key with spaces\"]\n");
+        assert_eq!(db.get("simple"), Some(&"~/path".into()));
+        assert_eq!(db.get("key with spaces"), Some(&"~/path".into()));
+    }
+
+    #[test]
+    fn comments_ignored() {
+        let db = parse("# comment\n~/conf: c\n");
+        assert_eq!(db.get("c"), Some(&"~/conf".into()));
+    }
+
+    #[test]
+    fn blank_lines_ignored() {
+        let db = parse("\n~/conf: c\n\n");
+        assert_eq!(db.get("c"), Some(&"~/conf".into()));
+    }
+
+    #[test]
+    fn url_value() {
+        let db = parse("https://example.com: ex\n");
+        assert_eq!(db.get("ex"), Some(&"https://example.com".into()));
     }
 }
