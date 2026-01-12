@@ -6,24 +6,21 @@ use ratatui::DefaultTerminal;
 use tokio::sync::mpsc;
 
 use crate::runner;
-use crate::task::{Lane, State, Task, tasks};
-use crate::SshEnv;
+use crate::task::{State, Task, tasks};
 
 pub struct App {
     tasks: Vec<Task>,
     rx: mpsc::UnboundedReceiver<runner::Event>,
     tx: mpsc::UnboundedSender<runner::Event>,
-    ssh_env: SshEnv,
 }
 
 impl App {
-    pub fn new(ssh_env: SshEnv) -> Self {
+    pub fn new() -> Self {
         let (tx, rx) = mpsc::unbounded_channel();
         Self {
             tasks: tasks(),
             rx,
             tx,
-            ssh_env,
         }
     }
 
@@ -57,14 +54,14 @@ impl App {
     }
 
     fn start_initial_tasks(&mut self) {
-        let parallel_ids: Vec<_> = self
+        let ready: Vec<_> = self
             .tasks
             .iter()
-            .filter(|t| t.lane == Lane::Parallel)
+            .filter(|t| t.depends_on.is_none())
             .map(|t| (t.id, t.command.clone()))
             .collect();
 
-        for (id, command) in parallel_ids {
+        for (id, command) in ready {
             self.start_task(id, command);
         }
     }
@@ -74,9 +71,8 @@ impl App {
             task.state = State::Running;
         }
         let tx = self.tx.clone();
-        let ssh_env = self.ssh_env.clone();
         tokio::spawn(async move {
-            runner::run_task(id, command, tx, ssh_env).await;
+            runner::run_task(id, command, tx).await;
         });
     }
 

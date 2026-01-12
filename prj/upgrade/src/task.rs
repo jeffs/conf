@@ -27,7 +27,6 @@ impl State {
 #[derive(Clone, Debug)]
 pub enum Command {
     Shell { program: &'static str, args: &'static [&'static str] },
-    Script(&'static str),
     CargoCrates,
 }
 
@@ -39,13 +38,6 @@ pub struct Task {
     pub state: State,
     pub output: Vec<String>,
     pub depends_on: Option<&'static str>,
-    pub lane: Lane,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Lane {
-    Parallel,
-    Cargo,
 }
 
 impl Task {
@@ -74,7 +66,6 @@ pub fn tasks() -> Vec<Task> {
             state: State::Pending,
             output: Vec::new(),
             depends_on: None,
-            lane: Lane::Parallel,
         },
         Task {
             id: "rustup",
@@ -86,7 +77,6 @@ pub fn tasks() -> Vec<Task> {
             state: State::Pending,
             output: Vec::new(),
             depends_on: None,
-            lane: Lane::Parallel,
         },
         Task {
             id: "uv",
@@ -105,7 +95,6 @@ pub fn tasks() -> Vec<Task> {
             state: State::Pending,
             output: Vec::new(),
             depends_on: None,
-            lane: Lane::Parallel,
         },
         Task {
             id: "softwareupdate",
@@ -117,34 +106,14 @@ pub fn tasks() -> Vec<Task> {
             state: State::Pending,
             output: Vec::new(),
             depends_on: None,
-            lane: Lane::Parallel,
         },
         Task {
             id: "cargo",
-            label: "cargo install",
+            label: "cargo install-update",
             command: Command::CargoCrates,
             state: State::Blocked,
             output: Vec::new(),
             depends_on: Some("rustup"),
-            lane: Lane::Cargo,
-        },
-        Task {
-            id: "nushell",
-            label: "install-nushell.zsh",
-            command: Command::Script("~/conf/src/install-nushell.zsh"),
-            state: State::Blocked,
-            output: Vec::new(),
-            depends_on: Some("cargo"),
-            lane: Lane::Cargo,
-        },
-        Task {
-            id: "helix",
-            label: "install-helix.nu",
-            command: Command::Script("~/conf/src/install-helix.nu"),
-            state: State::Blocked,
-            output: Vec::new(),
-            depends_on: Some("nushell"),
-            lane: Lane::Cargo,
         },
     ]
 }

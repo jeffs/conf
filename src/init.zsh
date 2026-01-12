@@ -14,11 +14,9 @@
 ~/conf/src/install-zsh-syntax-highlighting.zsh
 
 ~/conf/src/install-bat.zsh
-~/conf/src/install-helix.zsh
 ~/conf/src/install-rust.zsh
 
-# The 'expect' package includes unbuffer, which is used by bin/upgrade.zsh.
-brew install difftastic entr expect tmux jq
+brew install difftastic entr helix nu tmux jq
 cargo install fd-find ripgrep sd
 
 for p in cl edit jump upgrade; do

@@ -60,7 +60,7 @@
 				<dict>
 					<key>COMMAND_STRING</key>
 					<string>export XDG_CONFIG_HOME=~/.config
-~/.cargo/bin/nu --login ~/conf/src/on-click-file.nu "$@"
+/opt/homebrew/bin/nu --login ~/conf/src/on-click-file.nu "$@"
 </string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>

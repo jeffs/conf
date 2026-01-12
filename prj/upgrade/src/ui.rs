@@ -4,7 +4,7 @@ use ratatui::style::{Color, Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Paragraph};
 
-use crate::task::{Lane, State, Task};
+use crate::task::{State, Task};
 
 pub fn render(frame: &mut Frame, tasks: &[Task]) {
     let chunks = Layout::default()
@@ -17,21 +17,8 @@ pub fn render(frame: &mut Frame, tasks: &[Task]) {
 }
 
 fn render_tasks(frame: &mut Frame, area: Rect, tasks: &[Task]) {
-    let columns = Layout::default()
-        .direction(Direction::Horizontal)
-        .constraints([Constraint::Percentage(50), Constraint::Percentage(50)])
-        .split(area);
-
-    let parallel_tasks: Vec<_> = tasks.iter().filter(|t| t.lane == Lane::Parallel).collect();
-    let cargo_tasks: Vec<_> = tasks.iter().filter(|t| t.lane == Lane::Cargo).collect();
-
-    render_lane(frame, columns[0], "Parallel", &parallel_tasks);
-    render_lane(frame, columns[1], "Cargo", &cargo_tasks);
-}
-
-fn render_lane(frame: &mut Frame, area: Rect, title: &str, tasks: &[&Task]) {
     let block = Block::default()
-        .title(title)
+        .title("Tasks")
         .borders(Borders::ALL);
 
     let inner = block.inner(area);

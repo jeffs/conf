@@ -49,5 +49,8 @@ uv tool install specify-cli --force --from git+https://github.com/github/spec-ki
 # access, but this script is not meant to be interactive.
 echo '* Software Update Tool'
 echo '** softwareupdate --list'
-unbuffer softwareupdate --list \
-  | rg -v '^(Software Update Tool|Finding available software|No new software available\.|)$'
+
+# brew install expect for unbuffer (or use prj/upgrade instead of upgrade.zsh).
+#
+# unbuffer softwareupdate --list \
+#   | rg -v '^(Software Update Tool|Finding available software|No new software available\.|)$'
