@@ -67,6 +67,7 @@ alias ci = git commit
 alias co = git checkout
 alias di = git diff
 alias st = git status
+alias glog = git-branches # from rust-kart
 
 alias pull = git pull
 alias push = git push
@@ -113,24 +114,6 @@ alias cy = j y
 def clippy [] { cargo clippy --all-targets --tests --workspace }
 
 def yolo [] { git commit -a --amend --no-edit --no-verify; git push --force-with-lease }
-
-def --wrapped glog [...rest] {
-  if ($rest | where $it !~ '^-' | is-empty) {
-    # TODO: Move this into grit. It's a heuristic for telling whether repos
-    #  use squashes or true merges, but it should instead check for the "best"
-    #  parent (^2, ^1, ^0) of the merge-base, not of trunk.
-    let trunk = grit trunk
-    if (git rev-parse $'($trunk)^2' | complete).exit_code == 0 {
-      git log --first-parent --graph --branches $'(git merge-base HEAD (grit trunk))^2..'
-    } else if (git rev-parse $'($trunk)^' | complete).exit_code == 0 {
-      git log --first-parent --graph --branches $'(git merge-base HEAD (grit trunk))^..'
-    } else {
-      git log --first-parent --graph --branches $'(git merge-base HEAD (grit trunk))..'
-    }
-  } else {
-    git glog ...$rest
-  }
-}
 
 # Unfreeze a frozen job.
 def fg [id?: int] {
