@@ -67,7 +67,7 @@ alias ci = git commit
 alias co = git checkout
 alias di = git diff
 alias st = git status
-alias glog = git-branches # from rust-kart
+alias gl = git-branches # from rust-kart
 
 alias pull = git pull
 alias push = git push
@@ -75,7 +75,6 @@ alias push = git push
 alias si = grit si
 alias sj = grit -v si
 alias up = grit up
-alias u = grit up
 
 def lg [...patterns] {
   # TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern
