@@ -40,7 +40,7 @@ cargo install ${(s: :)crates}
 ~/conf/src/install-nushell.zsh
 ~/conf/src/install-helix.nu
 
-# Run this occasionally to avoid undue bitrot.
+# Run this occasionally to avoid undue bitrot. But GOOD LORD this is slow.
 # ~/conf/src/install-uv.zsh
 
 uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git
