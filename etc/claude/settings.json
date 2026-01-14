@@ -5,24 +5,22 @@
   },
   "alwaysThinkingEnabled": true,
   "hooks": {
-    "Notification": [
+    "Stop": [
       {
-        "matcher": "permission_prompt",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/claude-notify.sh",
-            "timeout": 10
+            "command": "~/.claude/hooks/queue-notification.sh"
           }
         ]
-      },
+      }
+    ],
+    "UserPromptSubmit": [
       {
-        "matcher": "idle_prompt",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/claude-notify.sh",
-            "timeout": 10
+            "command": "rm -f /tmp/claude-notify-pending"
           }
         ]
       }
