@@ -8,22 +8,22 @@
   },
   "alwaysThinkingEnabled": true,
   "hooks": {
-    "Stop": [
+    "Notification": [
       {
+        "matcher": "idle_prompt",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/queue-notification.sh"
+            "command": "~/.claude/claude-notify.sh"
           }
         ]
-      }
-    ],
-    "UserPromptSubmit": [
+      },
       {
+        "matcher": "permission_prompt",
         "hooks": [
           {
             "type": "command",
-            "command": "rm -f /tmp/claude-notify-pending"
+            "command": "~/.claude/claude-notify.sh"
           }
         ]
       }

@@ -19,7 +19,6 @@ done
 mkdir -p .config
 mkdir -p ~/.claude
 ln -s ~/conf/etc/claude/agents ~/.claude/agents
-ln -s ~/conf/etc/claude/hooks ~/.claude/hooks
 ln -s ~/conf/etc/claude/skills ~/.claude/skills
 ln -s ~/conf/src/claude-notify.sh ~/.claude/claude-notify.sh
 ln -s ~/conf/etc/claude/settings.json ~/.claude/settings.json
