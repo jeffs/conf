@@ -68,6 +68,7 @@ alias co = git checkout
 alias di = git diff
 alias st = git status
 alias gl = git-branches # from rust-kart
+alias glog = git log --first-parent --oneline
 
 alias pull = git pull
 alias push = git push
