@@ -1,5 +1,7 @@
 -- TODO
 --
+-- * `#include` an unversioned file of overrides
+--   - This comes up a lot for opacity tweaking
 -- * Configure click handling
 --   - See <https://github.com/wezterm/wezterm/discussions/529>
 --   - Nushell `ls` somehow outputs clickable links, which I configure through
@@ -63,8 +65,8 @@ config.send_composed_key_when_right_alt_is_pressed = false
 --   { event = { Down = { streak = 1, button = { WheelDown = 1 } } }, mods = 'NONE', action = wezterm.action.Nop, },
 -- }
 
-config.window_background_opacity = 0.4
--- config.text_background_opacity = 1.0
+config.window_background_opacity = 0.6
+config.text_background_opacity = 1.0
 wezterm.on('toggle-opacity', function(window)
   local overrides = window:get_config_overrides() or {}
   if not overrides.window_background_opacity then
