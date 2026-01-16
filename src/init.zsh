@@ -16,8 +16,11 @@
 ~/conf/src/install-bat.zsh
 ~/conf/src/install-rust.zsh
 
-brew install difftastic entr helix nu tmux jq
+brew install difftastic entr nu tmux jq
 cargo install fd-find ripgrep sd
+
+# Forks
+~/conf/src/install-helix.nu
 
 for p in cl edit jump upgrade; do
     cargo install --path ~/conf/prj/$p

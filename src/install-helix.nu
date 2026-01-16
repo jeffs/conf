@@ -28,4 +28,15 @@ npm i -g vscode-langservers-extracted
 # Install a TOML language server.
 cargo install taplo-cli
 
-brew install helix
+# Clone or update the Helix fork.
+let helix_dir = $"($env.HOME)/pkg/helix"
+if ($helix_dir | path exists) {
+    print "Updating Helix fork..."
+    git -C $helix_dir pull --ff-only
+} else {
+    print "Cloning Helix fork..."
+    mkdir ($helix_dir | path dirname)
+    git clone git@github.com:jeffs/helix.git $helix_dir
+}
+
+cargo install --path $"($helix_dir)/helix-term"
