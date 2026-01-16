@@ -107,7 +107,7 @@ C-f = 'page_down'
 # <https://github.com/helix-editor/helix/issues/13187>
 #
 # So, neither of these works:
-# e = [":toggle end-of-line-diagnostics disable", ":toggle inline-diagnostics.cursor-line disable"]
+e = [":toggle end-of-line-diagnostics hint disable", ":toggle inline-diagnostics.cursor-line warning disable"]
 # e = "@<C-f>1<C-f>2"
 # 1 = ":toggle end-of-line-diagnostics disable"
 # 2 = ":toggle inline-diagnostics.cursor-line disable"
