@@ -1,5 +1,20 @@
 use std::process::ExitStatus;
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum Section {
+    PackageManagers,
+    Forks,
+}
+
+impl Section {
+    pub const fn label(self) -> &'static str {
+        match self {
+            Self::PackageManagers => "Package Managers",
+            Self::Forks => "Forks",
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub enum State {
     Pending,
@@ -28,12 +43,14 @@ impl State {
 pub enum Command {
     Shell { program: &'static str, args: &'static [&'static str] },
     CargoCrates,
+    Helix,
 }
 
 #[derive(Clone, Debug)]
 pub struct Task {
     pub id: &'static str,
     pub label: &'static str,
+    pub section: Section,
     pub command: Command,
     pub state: State,
     pub output: Vec<String>,
@@ -59,6 +76,7 @@ pub fn tasks() -> Vec<Task> {
         Task {
             id: "brew",
             label: "brew upgrade",
+            section: Section::PackageManagers,
             command: Command::Shell {
                 program: "brew",
                 args: &["upgrade", "--quiet"],
@@ -70,6 +88,7 @@ pub fn tasks() -> Vec<Task> {
         Task {
             id: "rustup",
             label: "rustup update",
+            section: Section::PackageManagers,
             command: Command::Shell {
                 program: "rustup",
                 args: &["update"],
@@ -81,6 +100,7 @@ pub fn tasks() -> Vec<Task> {
         Task {
             id: "uv",
             label: "uv tool install",
+            section: Section::PackageManagers,
             command: Command::Shell {
                 program: "uv",
                 args: &[
@@ -99,6 +119,7 @@ pub fn tasks() -> Vec<Task> {
         Task {
             id: "softwareupdate",
             label: "softwareupdate",
+            section: Section::PackageManagers,
             command: Command::Shell {
                 program: "softwareupdate",
                 args: &["--list"],
@@ -110,7 +131,17 @@ pub fn tasks() -> Vec<Task> {
         Task {
             id: "cargo",
             label: "cargo install-update",
+            section: Section::PackageManagers,
             command: Command::CargoCrates,
+            state: State::Blocked,
+            output: Vec::new(),
+            depends_on: Some("rustup"),
+        },
+        Task {
+            id: "helix",
+            label: "helix",
+            section: Section::Forks,
+            command: Command::Helix,
             state: State::Blocked,
             output: Vec::new(),
             depends_on: Some("rustup"),

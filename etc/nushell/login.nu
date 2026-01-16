@@ -37,6 +37,9 @@ load-env {
   GRIT_TRUNKS: 'dev,main,master'
   JUMP_PREFIXES: ('~/conf/etc/jump' | path expand)
   JUMP_HOME: ('~' | path expand)
+
+  # Forks.
+  HELIX_RUNTIME: ('~/pkg/helix/runtime' | path expand)
 }
 
 # FNM is a version manager for Node.js.

@@ -99,16 +99,17 @@ impl App {
     }
 
     fn check_unblock(&mut self, completed_id: &str) {
-        let next_task = self
+        let ready: Vec<_> = self
             .tasks
             .iter()
-            .find(|t| {
+            .filter(|t| {
                 matches!(t.state, State::Blocked)
                     && t.depends_on == Some(completed_id)
             })
-            .map(|t| (t.id, t.command.clone()));
+            .map(|t| (t.id, t.command.clone()))
+            .collect();
 
-        if let Some((id, command)) = next_task {
+        for (id, command) in ready {
             self.start_task(id, command);
         }
     }

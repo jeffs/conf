@@ -109,8 +109,11 @@ C-f = 'page_down'
 # So, neither of these works:
 # e = [":toggle end-of-line-diagnostics disable", ":toggle inline-diagnostics.cursor-line disable"]
 # e = "@<C-f>1<C-f>2"
-1 = ":toggle end-of-line-diagnostics disable"
-2 = ":toggle inline-diagnostics.cursor-line disable"
+# 1 = ":toggle end-of-line-diagnostics disable"
+# 2 = ":toggle inline-diagnostics.cursor-line disable"
+#
+# Hypothetically worked around by forking Helix and applying Kyle Hutchens' PR:
+# https://github.com/helix-editor/helix/pull/14629 # @khutchens
 
 [keys.select.C-f]
 c = ':buffer-close'

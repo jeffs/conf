@@ -4,7 +4,7 @@ use ratatui::style::{Color, Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Paragraph};
 
-use crate::task::{State, Task};
+use crate::task::{Section, State, Task};
 
 pub fn render(frame: &mut Frame, tasks: &[Task]) {
     let chunks = Layout::default()
@@ -28,16 +28,48 @@ fn render_tasks(frame: &mut Frame, area: Rect, tasks: &[Task]) {
         return;
     }
 
-    let constraints: Vec<_> = tasks.iter().map(|_| Constraint::Min(3)).collect();
+    // Group tasks by section, preserving order.
+    let sections: Vec<Section> = {
+        let mut seen = std::collections::HashSet::new();
+        tasks
+            .iter()
+            .filter_map(|t| seen.insert(t.section).then_some(t.section))
+            .collect()
+    };
 
-    let task_areas = Layout::default()
+    // Build constraints: 1 line per section header, Min(3) per task.
+    let mut constraints = Vec::new();
+    for section in &sections {
+        constraints.push(Constraint::Length(1)); // Section header
+        for task in tasks.iter().filter(|t| t.section == *section) {
+            let _ = task;
+            constraints.push(Constraint::Min(3));
+        }
+    }
+
+    let areas = Layout::default()
         .direction(Direction::Vertical)
         .constraints(constraints)
         .split(inner);
 
-    for (task, area) in tasks.iter().zip(task_areas.iter()) {
-        render_task(frame, *area, task);
+    let mut area_idx = 0;
+    for section in &sections {
+        render_section_header(frame, areas[area_idx], *section);
+        area_idx += 1;
+
+        for task in tasks.iter().filter(|t| t.section == *section) {
+            render_task(frame, areas[area_idx], task);
+            area_idx += 1;
+        }
     }
+}
+
+fn render_section_header(frame: &mut Frame, area: Rect, section: Section) {
+    let header = Line::from(Span::styled(
+        section.label(),
+        Style::default().add_modifier(Modifier::BOLD),
+    ));
+    frame.render_widget(Paragraph::new(header), area);
 }
 
 fn render_task(frame: &mut Frame, area: Rect, task: &Task) {
