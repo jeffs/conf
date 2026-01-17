@@ -1,8 +1,13 @@
 # User-level Claude Code instructions
 
-## Git Conventions
+## Version Control
 
-Do not include "Generated with Claude Code" in commit or PR messages. Co-authored-by trailers are fine.
+Use `jj` (Jujutsu) instead of `git` for all version control operations,
+including commits, branches (bookmarks), and history manipulation. Do not use
+raw git commands for history changes.
+
+Do not include "Generated with Claude Code" in commit or PR messages.
+Co-authored-by trailers are fine.
 
 ## Markdown Conventions
 

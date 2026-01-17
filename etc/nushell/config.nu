@@ -62,20 +62,29 @@ alias mat = bat -pl man
 alias w = wezterm
 alias z = zellij
 
-alias br = git branch
-alias ci = git commit
-alias co = git checkout
-alias di = git diff
-alias st = git status
-alias gl = git-branches # from rust-kart
-alias glog = git log --first-parent --oneline
+# alias br = git branch
+# alias ci = git commit
+# alias co = git checkout
+# alias di = git diff
+# alias st = git status
+# 
+# alias gl = git-branches # from rust-kart
+# alias glog = git log --first-parent --graph
 
-alias pull = git pull
-alias push = git push
+alias co = jj edit
+alias di = jj diff
+alias st = jj status
+alias gl = jj log
 
-alias si = grit si
-alias sj = grit -v si
-alias up = grit up
+# TBD: Does jj log have any equivalent of git log --first-parent?
+# alias glog = jj log
+
+# alias pull = git pull
+# alias push = git push
+
+# alias si = grit si
+# alias sj = grit -v si
+# alias up = grit up
 
 def lg [...patterns] {
   # TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern
@@ -90,7 +99,6 @@ def lg [...patterns] {
 def --env c [path: string = ~] { cd $path; l }
 def --env cf [] { c (fzf --walker=dir,follow,hidden) }
 def --env cg [] { c (grit root) }
-def --env ct [] { c (grit trunk) }
 def --env mc [path] { mkdir $path; c $path }
 
 # TODO: Move this to Rust, so it can (for example) be called from Helix.
@@ -113,7 +121,7 @@ alias cy = j y
 # TODO: Default to pedantic, but allow override by local Cargo.toml file.
 def clippy [] { cargo clippy --all-targets --tests --workspace }
 
-def yolo [] { git commit -a --amend --no-edit --no-verify; git push --force-with-lease }
+# def yolo [] { git commit -a --amend --no-edit --no-verify; git push --force-with-lease }
 
 # Unfreeze a frozen job.
 def fg [id?: int] {

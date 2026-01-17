@@ -16,8 +16,9 @@
 ~/conf/src/install-bat.zsh
 ~/conf/src/install-rust.zsh
 
-brew install difftastic entr nu tmux jq
+brew install difftastic entr nu tmux jq viddy
 cargo install fd-find ripgrep sd
+cargo binstall --strategies crate-meta-data jj-cli
 
 # Forks
 ~/conf/src/install-helix.nu
