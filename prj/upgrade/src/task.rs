@@ -3,14 +3,12 @@ use std::process::ExitStatus;
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Section {
     PackageManagers,
-    Forks,
 }
 
 impl Section {
     pub const fn label(self) -> &'static str {
         match self {
             Self::PackageManagers => "Package Managers",
-            Self::Forks => "Forks",
         }
     }
 }
@@ -43,7 +41,6 @@ impl State {
 pub enum Command {
     Shell { program: &'static str, args: &'static [&'static str] },
     CargoCrates,
-    Helix,
 }
 
 #[derive(Clone, Debug)]
@@ -133,15 +130,6 @@ pub fn tasks() -> Vec<Task> {
             label: "cargo install-update",
             section: Section::PackageManagers,
             command: Command::CargoCrates,
-            state: State::Blocked,
-            output: Vec::new(),
-            depends_on: Some("rustup"),
-        },
-        Task {
-            id: "helix",
-            label: "helix",
-            section: Section::Forks,
-            command: Command::Helix,
             state: State::Blocked,
             output: Vec::new(),
             depends_on: Some("rustup"),

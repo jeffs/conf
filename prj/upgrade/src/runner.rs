@@ -20,7 +20,6 @@ pub async fn run_task(
     let result = match command {
         Command::Shell { program, args } => run_shell(id, program, args, tx.clone()).await,
         Command::CargoCrates => run_cargo_crates(id, tx.clone()).await,
-        Command::Helix => run_helix(id, tx.clone()).await,
     };
 
     if let Err(e) = result {
@@ -94,45 +93,4 @@ async fn run_cargo_crates(
     tx: mpsc::UnboundedSender<Event>,
 ) -> Result<(), String> {
     run_shell(id, "cargo", &["install-update", "-a"], tx).await
-}
-
-async fn run_helix(
-    id: &'static str,
-    tx: mpsc::UnboundedSender<Event>,
-) -> Result<(), String> {
-    let home = std::env::var("HOME").map_err(|e| format!("HOME not set: {e}"))?;
-    let helix_dir = format!("{home}/pkg/helix");
-
-    if std::path::Path::new(&helix_dir).exists() {
-        let _ = tx.send(Event::Output(id.to_string(), "Updating Helix fork...".to_string()));
-        let status = run_cmd(
-            id,
-            "git",
-            ["-C", &helix_dir, "pull", "--ff-only"],
-            tx.clone(),
-        )
-        .await?;
-        if !status.success() {
-            let _ = tx.send(Event::Completed(id.to_string(), status));
-            return Ok(());
-        }
-    } else {
-        let _ = tx.send(Event::Output(id.to_string(), "Cloning Helix fork...".to_string()));
-        let parent = format!("{home}/pkg");
-        std::fs::create_dir_all(&parent).map_err(|e| format!("mkdir failed: {e}"))?;
-        let status = run_cmd(
-            id,
-            "git",
-            ["clone", "git@github.com:jeffs/helix.git", &helix_dir],
-            tx.clone(),
-        )
-        .await?;
-        if !status.success() {
-            let _ = tx.send(Event::Completed(id.to_string(), status));
-            return Ok(());
-        }
-    }
-
-    let helix_term = format!("{helix_dir}/helix-term");
-    run_shell(id, "cargo", ["install", "--path", &helix_term], tx).await
 }
