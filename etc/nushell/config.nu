@@ -76,6 +76,9 @@ alias di = jj diff
 alias st = jj status
 alias gl = jj log
 
+# TODO: Prune merged branches, likt `grit up` does.
+alias up = do { jj git fetch; jj }
+
 # TBD: Does jj log have any equivalent of git log --first-parent?
 # alias glog = jj log
 
