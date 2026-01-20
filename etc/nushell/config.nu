@@ -87,6 +87,11 @@ alias gl = jj log
 # TODO: Prune merged branches, likt `grit up` does.
 alias up = do { jj git fetch; jj }
 
+# This is the closest thing I could come up with to git log --first-parent
+def glog [spec: string = 'trunk()::@'] {
+  jj log -r $"first_ancestors\(heads\((($spec)))) & ($spec)"
+}
+
 def lg [...patterns] {
   # TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern
   #  like `*` is treated as a string instead of a glob.
