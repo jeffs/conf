@@ -9,6 +9,9 @@ raw git commands for history changes.
 Do not include "Generated with Claude Code" in commit or PR messages.
 Co-authored-by trailers are fine.
 
+The `var/` directory contains variable/ephemeral data (prompts, temp files) and
+is never committed.
+
 ## Quality
 
 You MUST PROVE all work is correct before considering it done. Use static gaurantees (such as types) where possible, and thorough testing always.
