@@ -71,23 +71,21 @@ alias z = zellij
 # alias gl = git-branches # from rust-kart
 # alias glog = git log --first-parent --graph
 
-alias co = jj edit
-alias di = jj diff
-alias st = jj status
-alias gl = jj log
-
-# TODO: Prune merged branches, likt `grit up` does.
-alias up = do { jj git fetch; jj }
-
-# TBD: Does jj log have any equivalent of git log --first-parent?
-# alias glog = jj log
-
 # alias pull = git pull
 # alias push = git push
 
 # alias si = grit si
 # alias sj = grit -v si
 # alias up = grit up
+
+alias co = jj edit
+alias di = jj diff
+alias st = jj status
+alias gl = jj log
+
+# TODO: Move working copy to updated branch.
+# TODO: Prune merged branches, likt `grit up` does.
+alias up = do { jj git fetch; jj }
 
 def lg [...patterns] {
   # TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern

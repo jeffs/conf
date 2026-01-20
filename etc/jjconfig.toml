@@ -1,3 +1,5 @@
+# Jujutsu configuration.
+
 [aliases] 
 di = ["diff"]
 e = ["edit"]
