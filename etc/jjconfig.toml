@@ -1,9 +1,15 @@
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
+#
 # Jujutsu configuration.
 
 [aliases] 
 di = ["diff"]
 e = ["edit"]
 lb = ["log", "-r", "remote_bookmarks() & mine()", "--no-graph", "-T", "bookmark_list"]
+
+[user]
+name = "Jeff Schwab"
+email = "jeff@unbuggy.com"
 
 [revset-aliases]
 "trunk()" = "latest(present(dev@origin) | present(main@origin) | present(master@origin) | present(trunk@origin))"
@@ -13,9 +19,5 @@ bookmark_list = '''
 separate("\t", change_id.short(), commit_id.short(), bookmarks) ++ "\n"
 '''
 
-# [templates]
-# log = 'builtin_log_comfortable'
-
-# [template-aliases]
-# "format_timestamp(timestamp)" = ''
-# "format_short_signature(signature)" = ''
+[ui]
+default-command = "log"
