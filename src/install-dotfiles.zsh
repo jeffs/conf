@@ -23,6 +23,7 @@ ln -s ~/conf/etc/claude/skills ~/.claude/skills
 ln -s ~/conf/src/claude-notify.sh ~/.claude/claude-notify.sh
 ln -s ~/conf/etc/claude/settings.json ~/.claude/settings.json
 ln -s ~/conf/etc/gitconfig .gitconfig
+ln -s ~/conf/etc/jjconfig.toml ~/.jjconfig.toml
 ln -s ~/conf/etc/nvim .config
 ln -s ~/conf/etc/tmux.conf .tmux.conf
 ln -s ~/conf/etc/zprofile .zprofile
