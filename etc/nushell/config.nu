@@ -78,10 +78,17 @@ alias z = zellij
 # alias sj = grit -v si
 # alias up = grit up
 
-alias co = jj edit
+alias br = jj log -r '@ | bookmarks() | trunk()'
 alias di = jj diff
 alias st = jj status
 alias gl = jj log
+
+# My neuromuscular memory doesn't map cleanly to Jujutsu. I used Fig in anger,
+# both metaphorically and literally, but it never really sank in for me.
+alias jb = jj bookmark
+alias jd = jj describe
+alias je = jj edit
+alias jn = jj new
 
 # TODO: Move working copy to updated branch.
 # TODO: Prune merged branches, likt `grit up` does.
