@@ -20,4 +20,5 @@ separate("\t", change_id.short(), commit_id.short(), bookmarks) ++ "\n"
 '''
 
 [ui]
-default-command = "log"
+default-command = ["log", "-r", "@ | bookmarks() | trunk()"]
+
