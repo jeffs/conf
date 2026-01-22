@@ -90,9 +90,15 @@ alias jd = jj describe
 alias je = jj edit
 alias jn = jj new
 
-# TODO: Move working copy to updated branch.
+# TODO: Move working copy to updated branch, not necessarily trunk.
 # TODO: Prune merged branches, likt `grit up` does.
-alias up = do { jj git fetch; jj }
+alias up = do {
+  jj git fetch --quiet
+  if ((jj -r @ --no-graph -T 'empty ++ parents.len()') == 'true1') {
+    jj rebase --quiet -r @ -o 'trunk()'
+  }
+  jj
+}
 
 # This is the closest thing I could come up with to git log --first-parent
 def glog [spec: string = 'trunk()::@'] {
