@@ -206,4 +206,20 @@ config.keys = {
 
 config.hyperlink_rules = require 'hyperlink_rules'
 
+-- Load any local (unversioned) overrides. Sample local.lua:
+-- 
+--  return {
+--    window_background_opacity = 0.9,
+--  }
+-- 
+local local_config = wezterm.config_dir .. '/local.lua'
+if if_readable(local_config) then
+  local ok, overrides = pcall(dofile, local_config)
+  if ok and type(overrides) == 'table' then
+    for k, v in pairs(overrides) do
+      config[k] = v
+    end
+  end
+end
+
 return config
