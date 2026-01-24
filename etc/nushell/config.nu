@@ -39,7 +39,6 @@ alias l = ls
 # alias y = yazi # File manager; see <https://yazi-rs.github.io/features>.
 
 # pushd = dirs add
-alias g = dirs goto
 alias n = dirs next
 alias p = dirs prev
 
@@ -56,7 +55,7 @@ alias rust = evcxr # -q
 alias r = error make { msg: "Did you mean R?" }
 
 alias lc = loccount
-alias f = fzf --preview='bat -p --color=always {}'
+alias fz = fzf --preview='bat -p --color=always {}'
 alias ef = f --bind 'enter:become(hx {})'
 alias mat = bat -pl man
 alias w = wezterm
@@ -85,6 +84,7 @@ alias gl = jj log
 
 # My neuromuscular memory doesn't map cleanly to Jujutsu. I used Fig in anger,
 # both metaphorically and literally, but it never really sank in for me.
+alias j = jj
 alias jb = jj bookmark
 alias jd = jj describe
 alias je = jj edit
@@ -105,13 +105,15 @@ def glog [spec: string = 'trunk()::@'] {
   jj log -r $"first_ancestors\(heads\((($spec)))) & ($spec)"
 }
 
-def lg [...patterns] {
-  # TODO: How do I type the patterns one_of<glob, string>? Right now, a pattern
-  #  like `*` is treated as a string instead of a glob.
-  if ($patterns | is-empty) {
-    ls
+# TODO: Patch Nushell, so we don't have to:
+#  - special case empty $rest
+#  - redeclare every flag we want to support
+#  See also: <https://github.com/nushell/nushell/issues/12592>
+def --wrapped lg [...rest, --all (-a)] {
+  if ($rest | is-empty) {
+    ls --all=$all
   } else {
-    ls ...$patterns
+    ls --all=$all ...$rest
   } | grid -cis '  '
 }
 
@@ -120,9 +122,14 @@ def --env cf [] { c (fzf --walker=dir,follow,hidden) }
 def --env cg [] { c (grit root) }
 def --env mc [path] { mkdir $path; c $path }
 
-# TODO: Move this to Rust, so it can (for example) be called from Helix.
-def --env j [target] {
+# Jump command wrapper, to (1) work around the shortcoming of jump not
+# understanding relative dates, and (2) open a browser when the resolved target
+# is a URL.
+#
+# Named `f` as in `follow`, instead of `j` for `jump`, because `j` is for `jj`.
+def --env f [target] {
   let found = if ($target == 'cy' or $target == 'y') {
+    # TODO: Move this to Rust, so it can (for example) be called from Helix.
     (date now) - 1day | format date '~/file/log/%Y/%m/%d' | path expand
   } else {
     ^jump $target
