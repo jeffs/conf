@@ -1,14 +1,23 @@
 // Use a wrapper script because default_shell ignores arguments like "--login".
 default_shell "/Users/jeff/conf/src/nu-login.zsh"
 
+default_layout "compact-top"
+
 // Zellij steals basic bindings like ctrl+p/n by default.
 default_mode "locked"
 
 // Session resurrection seems broken and, for my purposes, useless.
 session_serialization false
 
-pane_frames false
+// Toggle with M-z (defined below).
+// pane_frames false
+
+// Gentle nudge when I open a new WezTerm tab, rather than a new Zellij tab.
 // show_startup_tips false
+
+// Similar to default, without so much bright yellow.
+// <https://zellij.dev/documentation/theme-list.html>
+theme "one-half-dark"
 
 keybinds {
     shared_among "normal" "locked" {
@@ -32,11 +41,10 @@ keybinds {
         // Pane actions
         bind "n" { NewPane; SwitchToMode "locked"; }
         bind "d" { NewPane "down"; SwitchToMode "locked"; }
+        bind "f" { ToggleFloatingPanes; SwitchToMode "locked"; }
         bind "r" { NewPane "right"; SwitchToMode "locked"; }
         bind "x" { CloseFocus; SwitchToMode "locked"; }
         bind "z" { ToggleFocusFullscreen; SwitchToMode "locked"; }
-        bind "f" { ToggleFloatingPanes; SwitchToMode "locked"; }
-
         // Tab actions
         bind "t" { NewTab; SwitchToMode "locked"; }
         bind "w" { CloseTab; SwitchToMode "locked"; }
