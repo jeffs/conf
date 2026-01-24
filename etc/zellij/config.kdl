@@ -27,6 +27,8 @@ keybinds {
 
     // Quick actions from normal mode (Ctrl+g then key) that return to locked
     normal {
+        // Send literal Ctrl+g to application (Ctrl+g is ASCII 7)
+        bind "Ctrl g" { Write 7; SwitchToMode "locked"; }
         // Pane actions
         bind "n" { NewPane; SwitchToMode "locked"; }
         bind "d" { NewPane "down"; SwitchToMode "locked"; }

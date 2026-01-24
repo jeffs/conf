@@ -19,6 +19,7 @@ Default mode is **locked** (keystrokes go to terminal). Press `Ctrl+g` to enter 
 
 | Key | Action |
 |-----|--------|
+| `Ctrl+g` | Send literal Ctrl+g to app |
 | `n` | New pane |
 | `d` | Split down |
 | `r` | Split right |
