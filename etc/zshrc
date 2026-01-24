@@ -115,17 +115,6 @@ function mc { mkdir -p $1 && c $1; }
 function l { ls -hl --color=always "$@" | $PAGER }
 function la { ls -Ahl --color=always "$@" | $PAGER }
 
-function e {
-    if [[ -d .git ]]; then
-        # Remove `a/' and `b/` prefixes (used in git diff output) from args.
-        setopt local_options histsubstpattern
-        ${EDITOR:-vi} "${@#[ab]/}"
-    else
-        ${EDITOR:-vi} "$@"
-    fi
-}
-
-
 function clippy {
     cargo clippy --tests "$@" && cargo clippy "$@" -- -W clippy::pedantic
 }

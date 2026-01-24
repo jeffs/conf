@@ -32,12 +32,11 @@ local function if_readable(path)
   return path
 end
 
--- Use Nu from Cargo if available, else Nu from Homebrew, else default shell.
-config.default_prog = {
-  if_readable(wezterm.home_dir .. '/.cargo/bin/nu') or
-    if_readable('/opt/homebrew/bin/nu'),
-  '--login'
-}
+-- Launch Zellij, which will start Nushell (configured in Zellij's config).
+-- Each WezTerm tab/window gets its own Zellij session.
+local zellij = if_readable(wezterm.home_dir .. '/.cargo/bin/zellij')
+  or if_readable('/opt/homebrew/bin/zellij')
+config.default_prog = { zellij }
 
 config.set_environment_variables = {
   XDG_CONFIG_HOME = wezterm.home_dir .. '/.config'
@@ -85,92 +84,19 @@ end)
 -- <https://wezterm.org/config/lua/config/visual_bell.html>
 -- config.audible_bell = 'Disabled'
 
--- TODO: I keep going back and forth on whether to show the tab bar when
---  there's only one tab. I pretty much want this when I'm working with multiple
---  terminal windows, or when I keep opening and closing a second tab. These
---  have become more common situations since I've been relying more heavily
---  on terminal-based AI agents. Maybe I should update my existing binding to
---  toggle the tab bar (CMD+i) to instead cycle through three states: Hidden,
---  Hidden if only one tab, Shown. See `toggle-opacity` above for an example of
---  a custom event that triggers a callback function (and its binding below).
---
+-- Zellij handles tabs/panes; WezTerm's tab bar is just for multiple WezTerm
+-- windows. Can toggle with CMD+i.
 -- config.hide_tab_bar_if_only_one_tab = true
-
-config.enable_tab_bar = true
+config.enable_tab_bar = false
 wezterm.on('toggle-tab-bar', function(window)
   local overrides = window:get_config_overrides() or {}
   overrides.enable_tab_bar =  not overrides.enable_tab_bar
   window:set_config_overrides(overrides)
 end)
 
-config.leader = { mods = 'CTRL', key = 'h', timeout_milliseconds = 1000 }
+-- Multiplexing is handled by Zellij; WezTerm just provides the terminal.
 config.keys = {
-  -- Split
-  {
-    mods = 'LEADER', key = 'S',
-    action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }
-  },
-  {
-    mods = 'LEADER', key = 's',
-    action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' }
-  },
-
-  -- Zoom
-  {
-    mods = 'LEADER', key = 'z',
-    action = wezterm.action.TogglePaneZoomState
-  },
-
-  -- Swap
-  {
-    mods = 'LEADER|CTRL', key = 'h',
-    action = wezterm.action.RotatePanes 'Clockwise'
-  },
-  {
-    mods = 'LEADER', key = 'W',
-    action = wezterm.action.PaneSelect { mode = 'SwapWithActive' }
-  },
-
-  -- Navigate
-  {
-    mods = 'LEADER', key = 'Escape',
-    action = wezterm.action.ActivateCopyMode
-  },
-  {
-    mods = 'LEADER', key = 'h',
-    action = wezterm.action.ActivatePaneDirection('Left')
-  },
-  {
-    mods = 'LEADER', key = 'j',
-    action = wezterm.action.ActivatePaneDirection('Down')
-  },
-  {
-    mods = 'LEADER', key = 'k',
-    action = wezterm.action.ActivatePaneDirection('Up')
-  },
-  {
-    mods = 'LEADER', key = 'l',
-    action = wezterm.action.ActivatePaneDirection('Right')
-  },
-  {
-    mods = 'LEADER', key = 'n',
-    action = wezterm.action.ActivatePaneDirection("Next")
-  },
-  {
-    mods = 'LEADER', key = 'N',
-    action = wezterm.action.ActivatePaneDirection("Prev")
-  },
-  {
-    mods = 'LEADER', key = 't',
-    action = wezterm.action.ShowTabNavigator
-  },
-  {
-    mods = 'LEADER', key = 'w',
-    action = wezterm.action.PaneSelect
-  },
-
-  -- Alter appearance. These don't use the Leader key, which I reserve for the
-  -- experimental mux.
+  -- Alter appearance
   {
     mods = 'CMD', key = 'i',
     action = wezterm.action.EmitEvent 'toggle-tab-bar',
@@ -206,13 +132,19 @@ config.keys = {
 
 config.hyperlink_rules = require 'hyperlink_rules'
 
--- Load any local (unversioned) overrides. Sample local.lua:
+-- Load any local (unversioned) overrides. Sample override:
 -- 
 --  return {
 --    window_background_opacity = 0.9,
 --  }
 -- 
-local local_config = wezterm.config_dir .. '/local.lua'
+-- So, the problem with using a colocated `local.lua` is that `jj rebase`
+-- deletes it. This is obviously a bug in jj, but nobody seems to have filed
+-- it yet, and I can't be bothered right now. Or maybe the jj maintainers don't
+-- think it's a bug, which would be on-brand for Google.
+--
+-- local local_config = wezterm.config_dir .. '/local.lua'
+local local_config = '~/.config/wezterm.local.lua'
 if if_readable(local_config) then
   local ok, overrides = pcall(dofile, local_config)
   if ok and type(overrides) == 'table' then

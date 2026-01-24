@@ -1,0 +1,22 @@
+layout {
+    // Default: no bars
+    pane
+
+    swap_tiled_layout name="full" {
+        tab {
+            pane size=1 borderless=true {
+                plugin location="tab-bar"
+            }
+            pane
+            pane size=2 borderless=true {
+                plugin location="status-bar"
+            }
+        }
+    }
+
+    swap_tiled_layout name="minimal" {
+        tab {
+            pane
+        }
+    }
+}
