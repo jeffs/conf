@@ -3,4 +3,7 @@
 # Zsh is at /bin/zsh at macOS but /usr/bin/zsh on Unbuntu.
 # Can't we all just get along?
 
+# Clean up Zsh-specific variables that are meaningless to Nushell.
+unset PROMPT_COMMAND PS1 PS2 PS3 PS4
+
 exec ~/usr/bin/nu --login "$@"
