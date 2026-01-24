@@ -5,6 +5,8 @@
 [aliases] 
 di = ["diff"]
 e = ["edit"]
+
+# Remote bookmarks applied directly to my changes.
 lb = ["log", "-r", "remote_bookmarks() & mine()", "--no-graph", "-T", "bookmark_list"]
 
 [user]
@@ -14,11 +16,15 @@ email = "jeff@unbuggy.com"
 [revset-aliases]
 "trunk()" = "latest(present(dev@origin) | present(main@origin) | present(master@origin) | present(trunk@origin))"
 
+# "Archive" heads by slapping `ar/` prefixed bookmarks on them.
+'active_heads()' = 'visible_heads() ~ bookmarks(glob:"ar/*")'
+'interesting()' = '@ | trunk() | active_heads()'
+
 [template-aliases]
 bookmark_list = '''
 separate("\t", change_id.short(), commit_id.short(), bookmarks) ++ "\n"
 '''
 
 [ui]
-default-command = "log"
+default-command = ["log", "-r", "fork_point(interesting())::interesting()"]
 

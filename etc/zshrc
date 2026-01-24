@@ -55,6 +55,7 @@ functions[_default]="setopt local_options magic_equal_subst; $functions[_default
 
 unalias l la
 
+alias e=edit # ../prj/edit
 alias vim=nvim
 alias rust='evcxr -q' # Rust REPL
 alias h=history

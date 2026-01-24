@@ -82,7 +82,7 @@ end)
 --
 -- I can't seem to get the visual bell to work, at least in Helix:
 -- <https://wezterm.org/config/lua/config/visual_bell.html>
--- config.audible_bell = 'Disabled'
+config.audible_bell = 'Disabled'
 
 -- Zellij handles tabs/panes; WezTerm's tab bar is just for multiple WezTerm
 -- windows. Can toggle with CMD+i.
