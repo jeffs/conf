@@ -138,13 +138,19 @@ config.hyperlink_rules = require 'hyperlink_rules'
 --    window_background_opacity = 0.9,
 --  }
 -- 
--- So, the problem with using a colocated `local.lua` is that `jj rebase`
--- deletes it. This is obviously a bug in jj, but nobody seems to have filed
--- it yet, and I can't be bothered right now. Or maybe the jj maintainers don't
--- think it's a bug, which would be on-brand for Google.
+-- One problem with using a colocated `local.lua` is that `jj rebase` deletes
+-- it. This is obviously a bug in jj, but nobody seems to have filed it yet,
+-- and I can't be bothered right now. Or maybe the jj maintainers don't think
+-- it's a bug, which would be on-brand for Google. In the meantime, I keep
+-- a copy at ~/.config/wezterm.local.lua, and cp it whenever jj blows it
+-- away.
 --
--- local local_config = wezterm.config_dir .. '/local.lua'
-local local_config = '~/.config/wezterm.local.lua'
+-- If you're dealing with this, and also cannot be bothered to get jj
+-- properly fixed, consider vibe-coding something that automates the cp if
+-- ~/.config/wezterm.local.lua (or whatever) exists but local.lua does not.
+-- Note that a symlink won't work, because WezTerm won't automatically pick up
+-- changes to the linked file.
+local local_config = wezterm.config_dir .. '/local.lua'
 if if_readable(local_config) then
   local ok, overrides = pcall(dofile, local_config)
   if ok and type(overrides) == 'table' then

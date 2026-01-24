@@ -105,15 +105,10 @@ C-f = 'page_down'
 
 # Running a sequence of :set or :toggle commands is currently broken. See:
 # <https://github.com/helix-editor/helix/issues/13187>
-#
-# So, neither of these works:
-e = [":toggle end-of-line-diagnostics hint disable", ":toggle inline-diagnostics.cursor-line warning disable"]
-# e = "@<C-f>1<C-f>2"
-# 1 = ":toggle end-of-line-diagnostics disable"
-# 2 = ":toggle inline-diagnostics.cursor-line disable"
-#
-# Hypothetically worked around by forking Helix and applying Kyle Hutchens' PR:
+# 
+# Worked around by forking Helix and applying Kyle Hutchens' PR:
 # https://github.com/helix-editor/helix/pull/14629 # @khutchens
+e = [":toggle end-of-line-diagnostics hint disable", ":toggle inline-diagnostics.cursor-line warning disable"]
 
 [keys.select.C-f]
 c = ':buffer-close'
