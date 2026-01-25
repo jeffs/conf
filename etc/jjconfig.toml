@@ -17,7 +17,7 @@ email = "jeff@unbuggy.com"
 "trunk()" = "latest(present(dev@origin) | present(main@origin) | present(master@origin) | present(trunk@origin))"
 
 # "Archive" heads by slapping `ar/` prefixed bookmarks on them.
-'active_heads()' = 'visible_heads() ~ bookmarks(glob:"ar/*")'
+'active_heads()' = 'visible_heads() ~ remote_bookmarks(glob:"ar/*")'
 'interesting()' = '@ | trunk() | active_heads()'
 
 [template-aliases]
@@ -27,4 +27,4 @@ separate("\t", change_id.short(), commit_id.short(), bookmarks) ++ "\n"
 
 [ui]
 default-command = ["log", "-r", "fork_point(interesting())::interesting()"]
-
+# default-command = ["log", "-r", "@ | trunk() | bookmarks() ~ bookmarks(glob:ar/*)"]

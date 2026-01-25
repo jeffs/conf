@@ -9,18 +9,11 @@ default_mode "locked"
 // Session resurrection seems broken and, for my purposes, useless.
 session_serialization false
 
-// Toggle with M-z (defined below).
-// pane_frames false
+scrollback_editor "/Users/jeff/conf/src/edit.zsh"
 
-// Gentle nudge when I open a new WezTerm tab, rather than a new Zellij tab.
-// show_startup_tips false
-
-// Similar to default, without so much bright yellow.
-// <https://zellij.dev/documentation/theme-list.html>
-// theme "one-half-dark"
-
-// A little too colorful, but still not as bright as the default.
+// Colorful, but still not as bright as the default.
 // Easier to tell which tab is focused than in one-half-dark.
+// <https://zellij.dev/documentation/theme-list.html>
 theme "blade-runner"
 
 keybinds {

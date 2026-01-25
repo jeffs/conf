@@ -17,8 +17,16 @@ is never committed.
 You MUST PROVE all work is correct before considering it done. Use static gaurantees (such as types) where possible, and thorough testing always.
 When weighing time and effort vs. correctness, ALWAYS prioritize correctness.
 
+Parse, don't validate. Make the type system do the work. Strive for mathematical certainty.
+
 ## Uncertainty & Verification
 
 When describing CLI commands, APIs, or library functions:
 - Distinguish between "I know this exists" vs "I'm inferring this might exist"
 - When uncertain, check `--help`, man pages, or docs before asserting
+
+## Philosophy of Design
+
+- Prefer small, orthogonal, composable pieces over monolithic solutions.
+- Remember Unix philosophy; composition over inheritance; functional core, imperative shell.
+
