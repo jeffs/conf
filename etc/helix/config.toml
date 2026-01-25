@@ -77,7 +77,11 @@ C-e = 'scroll_down'
 C-j = ':pipe-to tmux-send'
 C-t = ':write'
 C-y = 'scroll_up'
-g = { q = ':reflow' }
+
+# NB: Relies on my Helix fork for goto_file_cwd.
+g = { q = ':reflow', F = 'goto_file_cwd' }
+# g = { q = ':reflow' }
+
 left = ':buffer-previous'
 right = ':buffer-next'
 
@@ -125,3 +129,9 @@ C-f = 'page_down'
 ':' = 'collapse_selection'
 '{' = 'goto_prev_paragraph'
 '}' = 'goto_next_paragraph'
+
+# CWD-relative analogs of <c-w>f/F.
+# NB: Relies on my Helix fork for goto_file_cwd.
+[keys.normal.C-w]
+g = "goto_file_cwd_hsplit"   # horizontal split variant
+G = "goto_file_cwd_vsplit"   # vertical split variant
