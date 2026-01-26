@@ -81,7 +81,7 @@ alias jn = jj new
 # TODO: Prune merged branches, likt `grit up` does.
 alias up = do {
   jj git fetch --quiet
-  if ((jj -r @ --no-graph -T 'empty ++ parents.len()') == 'true1') {
+  if ((jj log -r @ --no-graph -T 'empty ++ parents.len()') == 'true1') {
     jj rebase --quiet -r @ -o 'trunk()'
   }
   jj
