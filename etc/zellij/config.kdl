@@ -28,8 +28,19 @@ keybinds {
         // C-g M-[/]
         // bind "Alt [" { PreviousSwapLayout; }
         // bind "Alt ]" { NextSwapLayout; }
+        bind "Alt h" { MoveFocusOrTab "left"; }
 
         // Pane navigation. Left/right also traverses tabs.
+        bind "Alt 1" { GoToTab 1; }
+        bind "Alt 2" { GoToTab 2; }
+        bind "Alt 3" { GoToTab 3; }
+        bind "Alt 4" { GoToTab 4; }
+        bind "Alt 5" { GoToTab 5; }
+        bind "Alt 6" { GoToTab 6; }
+        bind "Alt 7" { GoToTab 7; }
+        bind "Alt 8" { GoToTab 8; }
+        bind "Alt 9" { GoToTab 9; }
+        bind "Alt 0" { GoToTab 10; }
         bind "Alt h" { MoveFocusOrTab "left"; }
         bind "Alt j" { MoveFocus "down"; }
         bind "Alt k" { MoveFocus "up"; }
@@ -45,15 +56,7 @@ keybinds {
     normal {
         // Send literal Ctrl+g to application. (Ctrl+g is ASCII 7.)
         bind "g" { Write 7; SwitchToMode "locked"; }
-    //     // Pane actions
-    //     bind "n" { NewPane; SwitchToMode "locked"; }
         bind "d" { NewPane "down"; SwitchToMode "locked"; }
-    //     bind "f" { ToggleFloatingPanes; SwitchToMode "locked"; }
         bind "r" { NewPane "right"; SwitchToMode "locked"; }
-    //     // bind "x" { CloseFocus; SwitchToMode "locked"; }
-    //     bind "z" { ToggleFocusFullscreen; SwitchToMode "locked"; }
-    //     // Tab actions
-    //     bind "t" { NewTab; SwitchToMode "locked"; }
-    //     // bind "w" { CloseTab; SwitchToMode "locked"; }
     }
 }
