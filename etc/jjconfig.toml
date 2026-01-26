@@ -16,8 +16,11 @@ email = "jeff@unbuggy.com"
 [revset-aliases]
 "trunk()" = "latest(present(dev@origin) | present(main@origin) | present(master@origin) | present(trunk@origin))"
 
-# "Archive" heads by slapping `ar/` prefixed bookmarks on them.
-'active_heads()' = 'visible_heads() ~ remote_bookmarks(glob:"ar/*")'
+# Local bookmarks, plus heads I authored, minus heads I've "archived" by
+# slapping `ar/` prefixed remote bookmarks on them.
+#
+# TODO: Alias `ar` to archive a bookmark: rename, push, untrack, delete.
+'active_heads()' = 'bookmarks() | (visible_heads() & mine()) ~ remote_bookmarks(glob:"ar/*")'
 'interesting()' = '@ | trunk() | active_heads()'
 
 [template-aliases]

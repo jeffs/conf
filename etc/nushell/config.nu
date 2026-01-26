@@ -56,7 +56,7 @@ alias r = error make { msg: "Did you mean R?" }
 
 alias lc = loccount
 alias fz = fzf --preview='bat -p --color=always {}'
-alias ef = f --bind 'enter:become(hx {})'
+alias ef = fzf --bind 'enter:become(hx {})'
 alias mat = bat -pl man
 alias w = wezterm
 alias z = zellij
@@ -128,13 +128,8 @@ def --env f [target] {
   }
 }
 
-alias cl = mc (jump l)
-alias cy = j y
-
 # TODO: Default to pedantic, but allow override by local Cargo.toml file.
-def clippy [] { cargo clippy --all-targets --tests --workspace }
-
-# def yolo [] { git commit -a --amend --no-edit --no-verify; git push --force-with-lease }
+def clippy [] { cargo clippy --all-targets --workspace }
 
 # Unfreeze a frozen job.
 def fg [id?: int] {
@@ -162,22 +157,6 @@ def imgcat [...args: string] {
 
 # Recognize Obsidian (data)base files.
 def "from base" [] { from yaml }
-
-# Extract YAML front matter from Obsidian notes.
-#
-# NOTE: Claude also uses YAML front matter; for example, in a user-level skill
-#  (`~/.claude/skills/*/SKILL.md`):
-#
-#  ```yaml
-#  name: refresh-rust-expert
-#  description: Update the rust-expert agent with the latest Rust idioms, features, and best practices from official sources. Run this periodically to keep Rust advice current.
-#  allowed-tools: WebSearch, WebFetch, Read, Write, Glob
-#  user-invocable: true
-#  ```
-#
-# def "from md" [] {
-#    md-front | from yaml
-# }
 
 def "from brash" [] {
   gzip -d | from json
