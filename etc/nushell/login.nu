@@ -11,6 +11,9 @@
 #    + <https://unix.stackexchange.com/questions/15855/how-to-dump-a-man-page>
 
 load-env {
+  # Suppress default date/time output on every prompt.
+  PROMPT_COMMAND_RIGHT: ''
+  
   EDITOR: hx
   LESS: '-FRX -j5'
   MANPAGER: 'col -b | bat -pl man'

@@ -7,8 +7,7 @@
 
 # These may be at different paths on different machines.
 $JUMP_HOME/git/brash: brash
-$JUMP_HOME/git/kiln/journey: journey
-$JUMP_HOME/git/kiln: kiln
+$JUMP_HOME/git/journey: [j, journey]
 $JUMP_HOME/git/md-tui: mdt
 $JUMP_HOME/git/nushell/nushell: [nu, nushell]
 $JUMP_HOME/git/helix: [hx, helix]

@@ -54,15 +54,16 @@ export LESS='-FR -j5'
 export PAGER=less
 export MANPAGER='bat -pl man --pager="less -Fr -j5"'
 
-if [[ -v CURSOR_TRACE_ID ]]; then
-    export EDITOR='cursor --wait'
-elif [[ "$TERM_PROGRAM" == vscode ]]; then
-    export EDITOR='code --wait'
-elif [[ -v EDITOR ]]; then
-    ;
-else
-    export EDITOR='hx'
-fi
+# if [[ -v CURSOR_TRACE_ID ]]; then
+#     export EDITOR='cursor --wait'
+# elif [[ "$TERM_PROGRAM" == vscode ]]; then
+#     export EDITOR='code --wait'
+# elif [[ -v EDITOR ]]; then
+#     ;
+# else
+#     export EDITOR='hx'
+# fi
+export EDITOR='hx'
 
 # Based on 'brew shellenv' output.
 export HOMEBREW_PREFIX='/usr/local'

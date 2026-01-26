@@ -61,33 +61,20 @@ alias mat = bat -pl man
 alias w = wezterm
 alias z = zellij
 
-# alias br = git branch
-# alias ci = git commit
-# alias co = git checkout
-# alias di = git diff
-# alias st = git status
-# 
-# alias gl = git-branches # from rust-kart
-# alias glog = git log --first-parent --graph
-
-# alias pull = git pull
-# alias push = git push
-
-# alias si = grit si
-# alias sj = grit -v si
-# alias up = grit up
-
+# My neuromuscular memory doesn't map cleanly to Jujutsu. I used Fig in anger,
+# both metaphorically and literally, but it never really sank in for me. This is
+# the first time in 25+ years (since RCS) I haven't had `ci` and `co` commands.
 alias br = jj log -r '@ | bookmarks() | trunk()'
 alias di = jj diff
 alias st = jj status
 alias gl = jj log
 
-# My neuromuscular memory doesn't map cleanly to Jujutsu. I used Fig in anger,
-# both metaphorically and literally, but it never really sank in for me.
 alias j = jj
 alias jb = jj bookmark
 alias jd = jj describe
 alias je = jj edit
+alias jg = jj git
+alias jl = jj log
 alias jn = jj new
 
 # TODO: Move working copy to updated branch, not necessarily trunk.
@@ -100,7 +87,7 @@ alias up = do {
   jj
 }
 
-# This is the closest thing I could come up with to git log --first-parent
+# This is the closest thing I could come up with to `git log --first-parent`.
 def glog [spec: string = 'trunk()::@'] {
   jj log -r $"first_ancestors\(heads\((($spec)))) & ($spec)"
 }

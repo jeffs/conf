@@ -1,7 +1,7 @@
 // Use a wrapper script because default_shell ignores arguments like "--login".
 default_shell "/Users/jeff/conf/src/nu-login.zsh"
 
-default_layout "compact-top"
+// default_layout "compact-top"
 
 // Zellij steals basic bindings like ctrl+p/n by default.
 default_mode "locked"
@@ -9,44 +9,54 @@ default_mode "locked"
 // Session resurrection seems broken and, for my purposes, useless.
 session_serialization false
 
-// Toggle with M-z (defined below).
-// pane_frames false
+scrollback_editor "/Users/jeff/conf/src/edit.zsh"
 
-// Gentle nudge when I open a new WezTerm tab, rather than a new Zellij tab.
-// show_startup_tips false
-
-// Similar to default, without so much bright yellow.
+// Colorful, but still not as bright as the default.
+// Easier to tell which tab is focused than in one-half-dark.
 // <https://zellij.dev/documentation/theme-list.html>
-theme "one-half-dark"
+theme "blade-runner"
 
 keybinds {
     shared_among "normal" "locked" {
+        // Tab navigation. See also M-h/l.
         bind "Alt ," { GoToPreviousTab; }
         bind "Alt ." { GoToNextTab; }
+
+        // C-g C-t n
         bind "Alt t" { NewTab; }
-        bind "Alt [" { PreviousSwapLayout; }
-        bind "Alt ]" { NextSwapLayout; }
+        
+        // C-g M-[/]
+        // bind "Alt [" { PreviousSwapLayout; }
+        // bind "Alt ]" { NextSwapLayout; }
+        bind "Alt h" { MoveFocusOrTab "left"; }
+
+        // Pane navigation. Left/right also traverses tabs.
+        bind "Alt 1" { GoToTab 1; }
+        bind "Alt 2" { GoToTab 2; }
+        bind "Alt 3" { GoToTab 3; }
+        bind "Alt 4" { GoToTab 4; }
+        bind "Alt 5" { GoToTab 5; }
+        bind "Alt 6" { GoToTab 6; }
+        bind "Alt 7" { GoToTab 7; }
+        bind "Alt 8" { GoToTab 8; }
+        bind "Alt 9" { GoToTab 9; }
+        bind "Alt 0" { GoToTab 10; }
         bind "Alt h" { MoveFocusOrTab "left"; }
         bind "Alt j" { MoveFocus "down"; }
         bind "Alt k" { MoveFocus "up"; }
         bind "Alt l" { MoveFocusOrTab "right"; }
-        bind "Alt z" { TogglePaneFrames; }
         bind "Alt n" { FocusNextPane; }
+        bind "Alt p" { FocusPreviousPane; }
+
+        // Zoom.
+        bind "Alt z" { TogglePaneFrames; }
     }
 
     // Quick actions from normal mode (Ctrl+g then key) that return to locked
     normal {
-        // Send literal Ctrl+g to application (Ctrl+g is ASCII 7)
-        bind "Ctrl g" { Write 7; SwitchToMode "locked"; }
-        // Pane actions
-        bind "n" { NewPane; SwitchToMode "locked"; }
+        // Send literal Ctrl+g to application. (Ctrl+g is ASCII 7.)
+        bind "g" { Write 7; SwitchToMode "locked"; }
         bind "d" { NewPane "down"; SwitchToMode "locked"; }
-        bind "f" { ToggleFloatingPanes; SwitchToMode "locked"; }
         bind "r" { NewPane "right"; SwitchToMode "locked"; }
-        bind "x" { CloseFocus; SwitchToMode "locked"; }
-        bind "z" { ToggleFocusFullscreen; SwitchToMode "locked"; }
-        // Tab actions
-        bind "t" { NewTab; SwitchToMode "locked"; }
-        bind "w" { CloseTab; SwitchToMode "locked"; }
     }
 }
