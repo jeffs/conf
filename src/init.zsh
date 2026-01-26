@@ -22,6 +22,7 @@ cargo binstall --strategies crate-meta-data jj-cli
 
 # Forks
 ~/conf/src/install-helix.nu
+~/conf/src/install-nushell.zsh
 
 for p in cl edit jump upgrade; do
     cargo install --path ~/conf/prj/$p
