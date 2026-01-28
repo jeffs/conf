@@ -42,6 +42,7 @@ soft-wrap.wrap-indicator = ""
 [[language]]
 name = "move"
 language-servers = ["move-analyzer"]
+formatter = { command = "prettier-move", args = ["-w", "--parser=move"] }
 
 [[language]]
 name = "rust"
