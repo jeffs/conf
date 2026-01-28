@@ -28,6 +28,9 @@ bookmark_list = '''
 separate("\t", change_id.short(), commit_id.short(), bookmarks) ++ "\n"
 '''
 
+[git]
+import-tags = false
+
 [ui]
 default-command = ["log", "-r", "fork_point(interesting())::interesting()"]
 # default-command = ["log", "-r", "@ | trunk() | bookmarks() ~ bookmarks(glob:ar/*)"]

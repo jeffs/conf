@@ -72,11 +72,30 @@ alias gl = jj log
 
 alias j = jj
 alias jb = jj bookmark
+alias jbc = jj bookmark create
+alias jbd = jj bookmark delete
+alias jbm = jj bookmark move
+alias jbs = jj bookmark set
+alias jbt = jj bookmark track
 alias jd = jj describe
+alias jdm = jj describe --message
 alias je = jj edit
 alias jg = jj git
+alias jgi = jj git init
 alias jl = jj log
+alias jlr = jj log -r
 alias jn = jj new
+alias jnm = jj new --message
+
+def --wrapped jbct [...rest, --revisions (-r): string] {
+  if ($revisions == null) {
+      jj bookmark create ...$rest
+      jj bookmark track ...$rest
+  } else {
+      jj bookmark --revisions $revisions create ...$rest
+      jj bookmark --revisions $revisions track ...$rest
+  }
+}
 
 # TODO: Move working copy to updated branch, not necessarily trunk.
 # TODO: Prune merged branches, likt `grit up` does.

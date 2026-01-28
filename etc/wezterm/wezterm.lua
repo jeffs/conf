@@ -117,6 +117,11 @@ config.keys = {
     mods = 'CTRL', key = 'T',
     action = wezterm.action.DisableDefaultAssignment,
   },
+  {
+    -- Send Alt+t for Zellij's NewTab binding
+    mods = 'CMD', key = 't',
+    action = wezterm.action.SendKey { mods = 'ALT', key = 't' },
+  },
 
   -- Nushell accepts Alt+Enter to enter multiline commands, so I use Cmd+Enter
   -- instead (matching the iTerm2 default).
