@@ -18,6 +18,9 @@ theme = 'jeffs_base16_terminal'
 # WeztTerm's tab bar to move the window, or disabling mouse support in Helix.
 # See also <https://wezterm.org/config/mouse.html>.
 #
+# Update: The mouse event weirdness isn't only in Helix. I'm now running
+# Nushell in Zellij (which I wasn't before) and seeing the same inadvertent
+# text selection.
 editor.mouse = false
 
 editor.true-color = true

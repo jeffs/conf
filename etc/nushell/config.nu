@@ -47,6 +47,7 @@ alias o = open
 alias x = explore
 alias xp = x --peek
 alias jobs = job list
+alias now = date now
 
 alias glow = /opt/homebrew/bin/glow --pager --width=(tput cols)
 alias rust = evcxr # -q
