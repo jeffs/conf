@@ -1,4 +1,21 @@
 {
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "LSP",
+      "WebFetch",
+      "WebSearch",
+      "ListMcpResourcesTool",
+      "ReadMcpResourceTool"
+    ],
+    "deny": [
+      "Read(~/.ssh/**)",
+      "Glob(~/.ssh/**)",
+      "Grep(~/.ssh/**)"
+    ]
+  },
   "enabledPlugins": {
     "repomix-commands@repomix": true,
     "repomix-explorer@repomix": true,
