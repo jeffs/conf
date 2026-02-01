@@ -89,18 +89,17 @@ alias jlr = jj log -r
 alias jn = jj new
 alias jnm = jj new --message
 
-def --wrapped jbct [...rest, --revisions (-r): string] {
-  if ($revisions == null) {
+def --wrapped jbct [...rest, --revision (-r): string] {
+  if ($revision == null) {
       jj bookmark create ...$rest
-      jj bookmark track ...$rest
   } else {
-      jj bookmark --revisions $revisions create ...$rest
-      jj bookmark --revisions $revisions track ...$rest
+      jj bookmark create ...$rest --revision $revision
   }
+    jj bookmark track ...$rest
 }
 
-def --wrapped jbctp [...rest, --revisions (-r): string] {
-  jbct ...$rest --revisions $revisions
+def --wrapped jbctp [...rest, --revision (-r): string] {
+  jbct ...$rest --revision $revision
   jj git push --bookmark ...$rest
 }
 
