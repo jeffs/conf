@@ -1,7 +1,9 @@
 // Use a wrapper script because default_shell ignores arguments like "--login".
 default_shell "/Users/jeff/conf/src/nu-login.zsh"
 
-// default_layout "compact-top"
+// This would let me use Alt+Super+drag to move WezTerm, but I'd lose some
+// niceties like hover effects.
+// advanced_mouse_actions false
 
 // Zellij steals basic bindings like ctrl+p/n by default.
 default_mode "locked"
@@ -61,3 +63,11 @@ keybinds {
         bind "r" { NewPane "right"; SwitchToMode "locked"; }
     }
 }
+
+default_layout "compact"
+plugins {
+    compact-bar location="zellij:compact-bar" {
+      tooltip "F2"
+    }
+}
+

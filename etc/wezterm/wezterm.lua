@@ -1,25 +1,26 @@
 -- TODO
 --
--- * `#include` an unversioned file of overrides
---   - This comes up a lot for opacity tweaking
 -- * Configure click handling
 --   - See <https://github.com/wezterm/wezterm/discussions/529>
---   - Nushell `ls` somehow outputs clickable links, which I configure through
---     macOS to open using an Automator script (`on-file-click.app`), which
---     in turn runs a shell script (`on-file-click.nu`), which calls `wezterm
---     cli spawn` to open the file in my chosen editor.
+--   - Nushell `ls` outputs clickable links using OSC-8 escape sequences.
+--     I configure macOS to open those "links" using an Automator
+--     script (`on-file-click.app`), which in turn runs a shell script
+--     (`on-file-click.nu`), which calls `wezterm cli spawn` to open the file in
+--     my chosen editor. But, macOS file associations are fickle: The OS seems
+--     to forget them on upgrades, and IDEs like to steal them.
 -- * In the list shown by `wezterm.action.ShowTabNavigator`, focus the current
---   tab by default.
+--   tab by default
 -- * Fix set-window-title; see <https://github.com/wezterm/wezterm/pull/6913>
+--   - Workaround: Zellij preserves tab names; apps override pane names
 
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
 config.term = "wezterm"
 
--- Requires nightly build of Wezterm.
+-- Nightly builds of Wezterm would support:
 -- config.window_decorations = 'TITLE | RESIZE | MACOS_USE_BACKGROUND_COLOR_AS_TITLEBAR_COLOR';
-config.window_decorations = 'RESIZE';
+config.window_decorations = 'RESIZE'
 
 -- Returns the specified path if it identifies a readable file, and nil
 -- otherwise.

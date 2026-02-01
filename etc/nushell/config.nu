@@ -81,7 +81,9 @@ alias jd = jj describe
 alias jdm = jj describe --message
 alias je = jj edit
 alias jg = jj git
+alias jgf = jj git fetch # see also `alias up`
 alias jgi = jj git init
+alias jgp = jj git push
 alias jl = jj log
 alias jlr = jj log -r
 alias jn = jj new
@@ -95,6 +97,11 @@ def --wrapped jbct [...rest, --revisions (-r): string] {
       jj bookmark --revisions $revisions create ...$rest
       jj bookmark --revisions $revisions track ...$rest
   }
+}
+
+def --wrapped jbctp [...rest, --revisions (-r): string] {
+  jbct ...$rest --revisions $revisions
+  jj git push --bookmark ...$rest
 }
 
 # TODO: Move working copy to updated branch, not necessarily trunk.
