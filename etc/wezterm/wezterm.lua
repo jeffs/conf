@@ -133,7 +133,13 @@ config.keys = {
   {
     mods = 'CMD', key = 'Enter',
     action = wezterm.action.ToggleFullScreen,
-  }
+  },
+
+  -- Claude Code expects this sequence for Shift+Enter (newline insertion).
+  {
+    mods = 'SHIFT', key = 'Enter',
+    action = wezterm.action.SendString("\x1b\r"),
+  },
 }
 
 config.hyperlink_rules = require 'hyperlink_rules'
