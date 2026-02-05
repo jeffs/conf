@@ -50,7 +50,7 @@ config.color_scheme = 'Belge (terminal.sexy)'
 
 -- Some applications, such as `md-tui`, require nerd fonts.
 config.font = wezterm.font 'VictorMono Nerd Font'
--- config.font = wezterm.font 'Monoid'
+-- config.font = wezterm.font 'Maple Mono NF CN'
 
 config.font_size = 16
 config.initial_cols = 160
