@@ -17,9 +17,6 @@
     ]
   },
   "enabledPlugins": {
-    "repomix-commands@repomix": true,
-    "repomix-explorer@repomix": true,
-    "repomix-mcp@repomix": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
   },
