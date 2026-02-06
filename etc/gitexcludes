@@ -44,7 +44,7 @@ target/
 *.md.html
 
 # NPM package cache
-/node_modules
+node_modules
 
 # Variable data, as described in the Filesystem Hierarchy Standard:
 # https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
