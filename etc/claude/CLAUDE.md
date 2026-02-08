@@ -15,11 +15,13 @@ You MUST PROVE all work is correct before considering it done. Use static gauran
 
 ## Uncertainty & Verification
 
-When describing CLI commands, APIs, or library functions:
-- Distinguish between "I know this exists" vs "I'm inferring this might exist"
-- When uncertain, check `--help`, man pages, or docs before asserting
+Never suggest a command, flag, or API to the user unless you have verified it works in this session. If you haven't verified it, say so explicitly.
 
 When defining or explaining anything, ask yourself: Can I make this less sloppy and more accurate?
+
+## Memory
+
+Never write to the memory directory (~/.claude/projects/*/memory/) unless I explicitly ask you to.
 
 ## Philosophy of Design
 
