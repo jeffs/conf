@@ -16,11 +16,6 @@
       "Grep(~/.ssh/**)"
     ]
   },
-  "enabledPlugins": {
-    "rust-analyzer-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
-  },
-  "alwaysThinkingEnabled": true,
   "hooks": {
     "Notification": [
       {
@@ -42,5 +37,10 @@
         ]
       }
     ]
-  }
+  },
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true
 }
