@@ -18,5 +18,4 @@
 - Use `jj` (Jujutsu) instead of `git`
 - Do not include "Generated with Claude Code" in commit or PR messages
 - The `var/` directory contains ephemeral data and is never committed
-- Never write to the memory directory (~/.claude/projects/*/memory/) unless I explicitly ask you to
-
+- Never write to the memory directory (`~/.claude/projects/*/memory/`) unless I explicitly ask you to
