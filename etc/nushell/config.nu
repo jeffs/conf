@@ -118,6 +118,8 @@ def glog [spec: string = 'trunk()::@'] {
   jj log -r $"first_ancestors\(heads\((($spec)))) & ($spec)"
 }
 
+# TODO: Fix path expansion so `lg ~/Downloads` works.
+#  Is this a known issue with wrapped commands? Seems like a Nushell bug.
 # TODO: Patch Nushell, so we don't have to:
 #  - special case empty $rest
 #  - redeclare every flag we want to support

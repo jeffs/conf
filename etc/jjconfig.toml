@@ -1,6 +1,14 @@
 #:schema https://docs.jj-vcs.dev/latest/config-schema.json
 #
 # Jujutsu configuration.
+#
+# # TODO
+#
+# Wrap JJ to automatically:
+# 
+# - Rebase local changes when upstream bookmarks have advanced
+# - Rebase local branches onto trunk
+# - Track position of each user workstation, (host1@origin, host2@origin, etc.)
 
 [aliases] 
 di = ["diff"]
@@ -8,6 +16,9 @@ e = ["edit"]
 
 # Remote bookmarks applied directly to my changes.
 lb = ["log", "-r", "remote_bookmarks() & mine()", "--no-graph", "-T", "bookmark_list"]
+
+[colors]
+"diff token" = { underline = false }
 
 [user]
 name = "Jeff Schwab"

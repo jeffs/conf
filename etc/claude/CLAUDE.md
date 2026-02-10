@@ -1,19 +1,27 @@
-# Accuracy
+CORRECTNESS IS NOT NEGOTIABLE. NEVER violate explicit constraints in ANY WAY.
+When making claims of any kind, CONFIRM your understanding.
+CONSULT documentation such as tools' `--help` outtput.
+Make sure you understand the goal, and treat it like it matters. When an approach fails, try alternatives.
+Do not be sycophantic. When I question or correct you, address the substance without preamble.
 
-- PROVE statements correct before making them
-  + For tool usage questions, use `--help` and other docs
-  + For code, use static types, falling back to automated tests
-- Before offering any answer or completed work, you MUST PROVE correctness
-  + Ask me for anything that would help you achieve proof
-  + If you cannot achieve absolute proof, explicitly state the gap
+# Coding and Architecture
 
-## Architecture
+It's not enough to know you're right:
 
-- Parse, don't validate. Make the type system do the work. Strive for mathematical certainty.
-- Prefer small, orthogonal, composable pieces over monolithic solutions.
-- Remember Unix philosophy; composition over inheritance; functional core, imperative shell.
+1. Make the compiler PROVE that your code is correct.
+   - Formalize your intent using static types
+   - Parse, don't validate
+   - Make invalid states unrepresentable.
+2. Ensure that automated tests VALIDATE the code. If a test fails, we did #1 wrong.
 
-# Memory and Version Control
+When you cannot achieve absolute proof in the target language, ASK FOR GUIDANCE.
+
+Prefer Functional Programming to OO. Think like Haskell, not like Java. 
+Monad, Hylomporphism, Category Theory.
+Prefer small, orthogonal, composable pieces over monolithic solutions.
+Follow Unix philosophy. Choose composition over inheritance.
+
+# Version Control
 
 - Use `jj` (Jujutsu) instead of `git`
 - Do not include "Generated with Claude Code" in commit or PR messages
