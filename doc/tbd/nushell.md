@@ -1,0 +1,2 @@
+- [ ] `rest` parameters to wrapped commands (`def --wrapped`) don't respect path expansion; e.g., `~/Downloads`
+- [ ] `dirs drop --help` mistakenly shows help text from the `drop` command

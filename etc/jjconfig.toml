@@ -25,7 +25,7 @@ name = "Jeff Schwab"
 email = "jeff@unbuggy.com"
 
 [revset-aliases]
-"trunk()" = "latest(present(dev@origin) | present(main@origin) | present(master@origin) | present(trunk@origin))"
+# "trunk()" = "latest(present(dev@origin) | present(main@origin) | present(master@origin) | present(trunk@origin))"
 
 # Local bookmarks, plus heads I authored, minus heads I've "archived" by
 # slapping `ar/` prefixed remote bookmarks on them.

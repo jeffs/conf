@@ -62,7 +62,7 @@ keybinds {
         bind "f" { ToggleFloatingPanes; SwitchToMode "locked"; }
         bind "j" { NewPane "down"; SwitchToMode "locked"; }
         bind "l" { NewPane "right"; SwitchToMode "locked"; }
-        bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
+        // bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
    }
 }
 
