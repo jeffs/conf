@@ -89,6 +89,8 @@ alias jlr = jj log -r
 alias jn = jj new
 alias jnm = jj new --message
 
+def co (dest: string) { jj new $dest }
+
 def --wrapped jbct [...rest, --revision (-r): string] {
   if ($revision == null) {
       jj bookmark create ...$rest

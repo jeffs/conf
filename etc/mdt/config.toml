@@ -2,7 +2,7 @@
 
 # General settings
 emoji_check_marks = false
-help_box = false
+help_menu = false
 width = 0
 flavor = "claude"
 
