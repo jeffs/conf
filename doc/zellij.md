@@ -1,111 +1,114 @@
 # Zellij Keybindings Reference
 
-Default mode is **locked** (keystrokes pass through to terminal). Press `Ctrl+g` to enter normal mode.
+Zellij 0.43.1. Default mode is **locked** (keystrokes pass through to terminal). Press `Ctrl+g` to enter normal mode.
 
-## Always Available (including locked mode)
+## Locked Mode (default)
 
-These bindings work in locked mode, your primary mode for interacting with the terminal.
+All keystrokes pass through to the terminal except:
 
 | Key | Description |
 |-----|-------------|
-| `Alt+h` | Focus pane to the left, or previous tab if at edge |
+| `Ctrl+g` | Enter normal mode (unlock) |
+| `Alt+h` | Focus pane left, or previous tab at edge |
 | `Alt+j` | Focus pane below |
 | `Alt+k` | Focus pane above |
-| `Alt+l` | Focus pane to the right, or next tab if at edge |
-| `Alt+n` | Cycle focus to next pane |
-| `Alt+,` | Go to previous tab |
-| `Alt+.` | Go to next tab |
-| `Alt+z` | Toggle pane border frames on/off |
+| `Alt+l` | Focus pane right, or next tab at edge |
+| `Alt+n` | Focus next pane |
+| `Alt+p` | Focus previous pane |
+| `Alt+,` | Previous tab |
+| `Alt+.` | Next tab |
+| `Alt+t` | New tab |
+| `Alt+1`–`9` | Go to tab 1–9 |
+| `Alt+0` | Go to tab 10 |
+| `Alt+z` | Toggle fullscreen zoom |
+| `Alt+Z` | Toggle fullscreen zoom + toggle pane frames |
 
-## Unlocking: Locked → Normal
+## Normal Mode (`Ctrl+g`)
+
+### Quick Actions (return to locked)
 
 | Key | Description |
 |-----|-------------|
-| `Ctrl+g` | Enter normal mode (unlocks keybindings) |
-
-## Normal Mode
-
-From normal mode, you can switch to specialized modes or perform quick actions.
+| `g` | Send literal Ctrl+g to terminal |
+| `f` | Toggle floating panes |
+| `j` | New pane below (split down) |
+| `l` | New pane right (split right) |
+| `r` | Rename current tab (enters rename mode) |
 
 ### Mode Switching
 
 | Key | Description |
 |-----|-------------|
-| `g` | Send literal Ctrl+g to terminal, return to locked |
-| `Ctrl+g` | Return to locked |
+| `Ctrl+g` | Return to locked mode |
 | `Ctrl+p` | Enter **Pane** mode |
 | `Ctrl+t` | Enter **Tab** mode |
 | `Ctrl+n` | Enter **Resize** mode |
 | `Ctrl+s` | Enter **Scroll** mode |
 | `Ctrl+o` | Enter **Session** mode |
-| `Ctrl+h` | Enter **Move** mode (rearrange panes) |
-| `Ctrl+b` | Enter **Tmux** mode (tmux-style bindings) |
+| `Ctrl+h` | Enter **Move** mode |
+| `Ctrl+b` | Enter **Tmux** mode |
 | `Ctrl+q` | Quit Zellij |
 
-### Quick Actions (all unlocked modes)
+## Shared Across Unlocked Modes
 
-These work in normal and other unlocked modes:
+Available in normal mode and all sub-modes, but **not** locked mode:
 
 | Key | Description |
 |-----|-------------|
-| `Alt+f` | Toggle floating pane layer visibility |
-| `Alt+n` | Create new pane in best available space |
-| `Alt+h` / `Alt+Left` | Focus left pane or previous tab |
-| `Alt+l` / `Alt+Right` | Focus right pane or next tab |
+| `Alt+f` | Toggle floating pane layer |
+| `Alt+n` | New pane (note: overridden to focus-next in normal) |
+| `Alt+h` / `Alt+Left` | Focus pane left or previous tab |
+| `Alt+l` / `Alt+Right` | Focus pane right or next tab |
 | `Alt+j` / `Alt+Down` | Focus pane below |
 | `Alt+k` / `Alt+Up` | Focus pane above |
 | `Alt+i` | Move current tab left in tab bar |
 | `Alt+o` | Move current tab right in tab bar |
-| `Alt+=` / `Alt++` | Increase size of focused pane |
-| `Alt+-` | Decrease size of focused pane |
-| `Alt+[` | Switch to previous layout variant |
-| `Alt+]` | Switch to next layout variant |
-| `Alt+p` | Toggle pane in/out of current group |
+| `Alt+=` / `Alt++` | Increase pane size |
+| `Alt+-` | Decrease pane size |
+| `Alt+[` | Previous swap layout |
+| `Alt+]` | Next swap layout |
+| `Alt+p` | Toggle pane in/out of group (note: overridden to focus-prev in normal) |
 | `Alt+Shift+p` | Toggle group marking mode |
-| `Enter` / `Esc` | Return to normal mode (from other modes) |
+| `Enter` / `Esc` | Return to normal mode (from sub-modes) |
 
 ---
 
 ## Pane Mode (`Ctrl+g` → `Ctrl+p`)
 
-Manage pane creation, navigation, and properties.
-
 | Key | Description |
 |-----|-------------|
 | `Ctrl+p` | Return to normal mode |
-| `h` / `Left` | Focus pane to the left |
+| `h` / `Left` | Focus pane left |
 | `j` / `Down` | Focus pane below |
 | `k` / `Up` | Focus pane above |
-| `l` / `Right` | Focus pane to the right |
+| `l` / `Right` | Focus pane right |
 | `p` | Toggle focus between current and previous pane |
-| `n` | Create new pane in best available space |
-| `d` | Create new pane below (split down) |
-| `r` | Create new pane to the right (split right) |
-| `s` | Create new stacked pane |
+| `n` | New pane in best available space |
+| `d` | New pane below (split down) |
+| `r` | New pane to the right (split right) |
+| `s` | New stacked pane |
 | `x` | Close focused pane |
 | `f` | Toggle fullscreen zoom on focused pane |
 | `z` | Toggle pane border frames globally |
-| `w` | Toggle floating pane layer visibility |
+| `w` | Toggle floating pane layer |
 | `e` | Convert floating pane to tiled, or vice versa |
 | `c` | Rename focused pane |
-| `i` | Pin/unpin pane (prevents auto-closing) |
+| `i` | Pin/unpin pane |
 
 ---
 
 ## Tab Mode (`Ctrl+g` → `Ctrl+t`)
 
-Manage tabs and move panes between them.
-
 | Key | Description |
 |-----|-------------|
 | `Ctrl+t` | Return to normal mode |
-| `h` / `Left` / `k` / `Up` | Go to previous tab |
-| `l` / `Right` / `j` / `Down` | Go to next tab |
-| `n` | Create new tab |
+| `h` / `Left` / `k` / `Up` | Previous tab |
+| `l` / `Right` / `j` / `Down` | Next tab |
+| `n` | New tab |
 | `x` | Close current tab |
 | `r` | Rename current tab |
 | `Tab` | Toggle between current and last-used tab |
-| `1`-`9` | Jump to tab by number |
+| `1`–`9` | Jump to tab by number |
 | `s` | Sync mode: send keystrokes to all panes in tab |
 | `b` | Break focused pane into new tab |
 | `]` | Break focused pane into new tab to the right |
@@ -114,8 +117,6 @@ Manage tabs and move panes between them.
 ---
 
 ## Resize Mode (`Ctrl+g` → `Ctrl+n`)
-
-Resize the focused pane.
 
 | Key | Description |
 |-----|-------------|
@@ -128,14 +129,12 @@ Resize the focused pane.
 | `J` | Shrink pane from bottom edge |
 | `K` | Shrink pane from top edge |
 | `L` | Shrink pane from right edge |
-| `=` / `+` | Increase pane size equally in all directions |
-| `-` | Decrease pane size equally in all directions |
+| `=` / `+` | Increase pane size equally |
+| `-` | Decrease pane size equally |
 
 ---
 
 ## Move Mode (`Ctrl+g` → `Ctrl+h`)
-
-Physically relocate panes within the layout.
 
 | Key | Description |
 |-----|-------------|
@@ -150,8 +149,6 @@ Physically relocate panes within the layout.
 ---
 
 ## Scroll Mode (`Ctrl+g` → `Ctrl+s`)
-
-Scroll through terminal history and search.
 
 | Key | Description |
 |-----|-------------|
@@ -178,8 +175,8 @@ Scroll through terminal history and search.
 
 | Key | Description |
 |-----|-------------|
-| `n` | Jump to next match |
-| `p` | Jump to previous match |
+| `n` | Next match |
+| `p` | Previous match |
 | `c` | Toggle case sensitivity |
 | `w` | Toggle wrap-around search |
 | `o` | Toggle whole-word matching |
@@ -191,18 +188,16 @@ Scroll through terminal history and search.
 
 ## Session Mode (`Ctrl+g` → `Ctrl+o`)
 
-Manage the Zellij session and plugins.
-
 | Key | Description |
 |-----|-------------|
 | `Ctrl+o` | Return to normal mode |
 | `Ctrl+s` | Enter scroll mode |
 | `d` | Detach from session (session keeps running) |
-| `w` | Open session manager (switch/create sessions) |
-| `c` | Open configuration plugin |
-| `p` | Open plugin manager |
-| `a` | Open about dialog |
-| `s` | Open sharing settings |
+| `w` | Session manager (switch/create sessions) |
+| `c` | Configuration plugin |
+| `p` | Plugin manager |
+| `a` | About dialog |
+| `s` | Sharing settings |
 
 ---
 
@@ -217,10 +212,10 @@ Tmux-compatible bindings for muscle memory.
 | `"` | Split pane horizontally (new pane below) |
 | `%` | Split pane vertically (new pane right) |
 | `z` | Toggle fullscreen zoom |
-| `c` | Create new tab |
+| `c` | New tab |
 | `,` | Rename current tab |
-| `p` | Go to previous tab |
-| `n` | Go to next tab |
+| `p` | Previous tab |
+| `n` | Next tab |
 | `h` / `Left` | Focus pane left |
 | `j` / `Down` | Focus pane down |
 | `k` / `Up` | Focus pane up |
@@ -234,7 +229,7 @@ Tmux-compatible bindings for muscle memory.
 
 ## Rename Modes
 
-### Rename Tab (from Tab mode: `r`)
+### Rename Tab (Normal: `r`, or Tab mode: `r`)
 
 | Key | Description |
 |-----|-------------|
@@ -242,7 +237,7 @@ Tmux-compatible bindings for muscle memory.
 | `Ctrl+c` | Confirm and return to normal mode |
 | `Esc` | Cancel rename, return to tab mode |
 
-### Rename Pane (from Pane mode: `c`)
+### Rename Pane (Pane mode: `c`)
 
 | Key | Description |
 |-----|-------------|
