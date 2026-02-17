@@ -28,6 +28,10 @@ file-types = [{ glob = ".gitignore" }, { glob = "gitexcludes" }]
 [[language]]
 name = "json"
 # indent = { tab-width = 4, unit = "  " }
+roots = ["deno.json", "deno.jsonc", "package.json"]
+file-types = ["json"]
+auto-format = true
+language-servers = ["deno-lsp"]
 
 [[language]]
 # "JSON with comments."

@@ -39,6 +39,7 @@ alias l = ls
 # alias y = yazi # File manager; see <https://yazi-rs.github.io/features>.
 
 # pushd = dirs add
+alias g = dirs goto
 alias n = dirs next
 alias p = dirs prev
 

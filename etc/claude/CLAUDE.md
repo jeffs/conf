@@ -14,13 +14,13 @@ It's not enough to know you're right:
 
 When you cannot achieve absolute proof in the target language, ASK FOR GUIDANCE.
 
-Prefer Functional Programming to OO. Think like Haskell, not like Java. 
+Prefer Functional Programming to OO. Think Haskell, not Java. 
 Monad, Hylomporphism, Category Theory.
 Prefer small, orthogonal, composable pieces over monolithic solutions.
-Follow Unix philosophy. Choose composition over inheritance.
+Follow Unix philosophy. Composition over inheritance.
 
 Use `jj` (Jujutsu) instead of `git`.
 Do not include "Generated with Claude Code" in commit or PR messages.
 The `var/` directory contains ephemeral data and is never committed.
 Never write to the memory directory (`~/.claude/projects/*/memory/`) unless I explicitly ask you to.
-Prefer the Nushell MCP server over Bash for shell commands.
+NEVER use Bash for file reading, searching, or text processing. Use Read, Grep, Glob, Edit, or Nushell. This applies to all agents and subagents.
