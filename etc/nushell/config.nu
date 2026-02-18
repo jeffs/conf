@@ -13,6 +13,7 @@
 # - TODO: Append to the history file on Enter, but read it only on startup
 
 $env.config.show_banner = false
+$env.config.history.file_format = 'sqlite'
 
 use std/dirs
 
