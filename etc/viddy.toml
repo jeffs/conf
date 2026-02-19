@@ -1,0 +1,3 @@
+[general]
+shell = "nu"
+shell_options = "--no-history --env-config=~/conf/etc/nushell/viddy-env.nu"

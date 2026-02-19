@@ -45,3 +45,6 @@ ln -s ~/conf/etc/rustfmt.toml "$config_home/rustfmt"
 
 mkdir -p "$config_home/Code/User"
 ln -sf ~/conf/etc/vscode/settings.json "$config_home/Code/User"
+
+# TODO: Conditionallize on existence of target directory.
+# ln -s ~/conf/etc/viddy.toml ~/Library/Application\ Support/viddy.toml
