@@ -11,8 +11,13 @@
 #    + <https://unix.stackexchange.com/questions/15855/how-to-dump-a-man-page>
 
 load-env {
-  PROMPT_COMMAND: {|| date now | format date '%H:%M:%S'}
-  PROMPT_COMMAND_RIGHT: ''
+  PROMPT_COMMAND: {||
+    let t = date now
+    $"(ansi green)($t | format date '%-I:%M %p')(ansi reset)"
+  }
+  PROMPT_COMMAND_RIGHT: {||
+    $"(ansi green_dimmed)(date now | format date '%b %-d')(ansi reset)"
+  }
 
   EDITOR: hx
   LESS: '-FRX -j5'
