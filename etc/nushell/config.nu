@@ -99,7 +99,8 @@ def --wrapped jbct [...rest, --revision (-r): string] {
   } else {
       jj bookmark create ...$rest --revision $revision
   }
-    jj bookmark track ...$rest
+  jj bookmark track ...$rest
+  jj
 }
 
 def --wrapped jbctp [...rest, --revision (-r): string] {
