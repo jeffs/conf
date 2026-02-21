@@ -41,6 +41,7 @@ indent = { tab-width = 4, unit = "  " }
 [[language]]
 name = "markdown"
 soft-wrap.wrap-indicator = ""
+language-servers = []
 
 [language.auto-pairs]
 '(' = ')'

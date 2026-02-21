@@ -32,6 +32,7 @@ load-env {
 
   FZF_DEFAULT_OPTS_FILE: ('~/conf/etc/fzf' | path expand)
   RIPGREP_CONFIG_PATH: ('~/conf/etc/ripgreprc' | path expand)
+  COPILOT_CUSTOM_INSTRUCTIONS_DIRS: ('~/conf/etc/copilot/instructions.md' | path expand)
 
   HOMEBREW_NO_ENV_HINTS: true
   RUSTC_WRAPPER: '/opt/homebrew/bin/sccache'

@@ -1,3 +1,4 @@
 [general]
 shell = "nu"
 shell_options = "--no-history --env-config=~/conf/etc/nushell/viddy-env.nu"
+disable_auto_save = true
