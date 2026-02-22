@@ -12,7 +12,7 @@ use clap::{Parser, Subcommand};
 #[command(name = "sync", about = "Source-installed package manager")]
 struct Cli {
     /// Manifest path
-    #[arg(short, long, default_value = "~/conf/src.toml")]
+    #[arg(short, long, default_value = "~/conf/etc/src.toml")]
     manifest: String,
 
     /// Operate on specific repo(s) (repeatable)

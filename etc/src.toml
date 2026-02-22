@@ -7,7 +7,6 @@ clone = "git@github.com:jeffs/helix.git"
 upstream = "https://github.com/helix-editor/helix"
 bookmarks = ["custom"]
 upstream_ref = "master"
-path = "~/home/git/helix"
 build = ["cargo install --path helix-term"]
 post_build = ["hx --grammar fetch", "hx --grammar build"]
 
@@ -16,7 +15,6 @@ clone = "git@github.com:jeffs/md-tui.git"
 upstream = "https://github.com/henriklovhaug/md-tui"
 bookmarks = ["custom"]
 upstream_ref = "main"
-path = "~/pkg/md-tui"
 build = ["cargo install --path ."]
 
 [repos.viddy]
@@ -24,7 +22,6 @@ clone = "git@github.com:jeffs/viddy.git"
 upstream = "https://github.com/sachaos/viddy"
 bookmarks = ["custom"]
 upstream_ref = "master"
-path = "~/pkg/viddy"
 build = ["cargo install --path ."]
 
 [repos.zellij]
@@ -60,24 +57,16 @@ build = ["cargo install --path ."]
 
 [repos.uv]
 clone = "https://github.com/astral-sh/uv"
-path = "~/pkg/uv"
 build = ["cargo install --path crates/uv"]
-
-[repos.steel]
-clone = "https://github.com/mattwparas/steel"
-path = "~/pkg/steel"
-build = ["cargo install --path ."]
 
 # De novo
 
 [repos.rust-kart]
 clone = "git@github.com:jeffs/rust-kart.git"
-path = "~/pkg/rust-kart"
 build = ["cargo install --path crates/days", "cargo install --path crates/lev"]
 
 [repos.ralph]
 clone = "git@github.com:jeffs/ralph.git"
-path = "~/git/ralph"
 build = ["cargo install --path ."]
 
 [repos.conf]
