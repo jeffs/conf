@@ -191,15 +191,28 @@ fn update_one(repo: &Repo, dry_run: bool) -> Outcome {
         return outcome;
     }
 
-    // Sync trunk + rebase (fork-rebase only)
-    if let RepoKind::ForkRebase { upstream_ref, .. } = &repo.kind {
-        if !sync_trunk(repo, upstream_ref, dry_run) {
-            return Outcome::Failed("sync trunk failed".into());
+    // Sync trunk + rebase (fork-rebase), or advance working copy (others)
+    match &repo.kind {
+        RepoKind::ForkRebase { upstream_ref, .. } => {
+            if !sync_trunk(repo, upstream_ref, dry_run) {
+                return Outcome::Failed("sync trunk failed".into());
+            }
+            let outcome = rebase_one(repo, dry_run);
+            if !matches!(outcome, Outcome::Ok) {
+                return outcome;
+            }
         }
-
-        let outcome = rebase_one(repo, dry_run);
-        if !matches!(outcome, Outcome::Ok) {
-            return outcome;
+        RepoKind::ForkTrack { upstream_ref, .. } => {
+            let r = jj::new_at(&repo.path, upstream_ref, dry_run);
+            if !r.success {
+                return Outcome::Failed("jj new failed".into());
+            }
+        }
+        RepoKind::Own => {
+            let r = jj::new_at(&repo.path, "trunk()", dry_run);
+            if !r.success {
+                return Outcome::Failed("jj new failed".into());
+            }
         }
     }
 

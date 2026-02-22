@@ -172,6 +172,11 @@ pub fn build(cwd: &Path, cmd_str: &str, dry_run: bool) -> RunResult {
     run_shell(cmd_str, cwd, dry_run)
 }
 
+/// Move the working copy to a new empty commit on top of the given revision.
+pub fn new_at(cwd: &Path, revision: &str, dry_run: bool) -> RunResult {
+    run(&["jj", "new", revision], cwd, dry_run)
+}
+
 /// Get a summary of repo status (working copy clean, bookmarks, etc.).
 pub fn status(cwd: &Path) -> RunResult {
     run_quiet(&["jj", "status"], cwd)
