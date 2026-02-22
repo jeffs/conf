@@ -83,12 +83,7 @@ pub fn bookmark_set(cwd: &Path, bookmark: &str, revision: &str, dry_run: bool) -
     )
 }
 
-pub fn rebase(
-    cwd: &Path,
-    bookmark: &str,
-    upstream_ref: &str,
-    dry_run: bool,
-) -> RunResult {
+pub fn rebase(cwd: &Path, bookmark: &str, dest: &str, dry_run: bool) -> RunResult {
     run(
         &[
             "jj",
@@ -96,7 +91,7 @@ pub fn rebase(
             "-b",
             bookmark,
             "-d",
-            &format!("{upstream_ref}@upstream"),
+            dest,
             "--skip-emptied",
         ],
         cwd,
@@ -183,8 +178,8 @@ pub fn status(cwd: &Path) -> RunResult {
 }
 
 /// Get log of bookmarks relative to upstream.
-pub fn log_bookmark(cwd: &Path, bookmark: &str, upstream_ref: &str) -> RunResult {
-    let revset = format!("{bookmark}:: ~ {upstream_ref}@upstream::");
+pub fn log_bookmark(cwd: &Path, bookmark: &str, upstream_qualified: &str) -> RunResult {
+    let revset = format!("{bookmark}:: ~ {upstream_qualified}::");
     run_quiet(
         &[
             "jj",

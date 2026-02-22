@@ -2,7 +2,7 @@ I just added a tool called `sync` to my `~/conf` repo. It's a Rust CLI that mana
 
 ## Steps
 
-1. **Pull conf.** In `~/conf`, run `jj git fetch` and make sure you're on the latest main that includes `etc/src.toml` and `prj/sync/`.
+1. **Pull conf.** In `~/conf`, run `jj git fetch` and make sure you're on the latest main that includes `etc/sync.toml` and `prj/sync/`.
 
 2. **Build sync.** Run `cargo install --path ~/conf/prj/sync`.
 
@@ -10,7 +10,7 @@ I just added a tool called `sync` to my `~/conf` repo. It's a Rust CLI that mana
 
 4. **For each repo that exists but fails with "no jj repo"**, `cd` into that repo's directory and run `jj git init --colocate`. Then follow any hints jj prints (e.g. `jj bookmark track main --remote=origin`).
 
-5. **For each fork repo that has jj but is missing an `upstream` remote** (check with `jj git remote list`), add it. The upstream URLs are in `~/conf/etc/src.toml` — read that file to find them.
+5. **For each fork repo that has jj but is missing an `upstream` remote** (check with `jj git remote list`), add it. The upstream URLs are in `~/conf/etc/sync.toml` — read that file to find them.
 
 6. **Check for path mismatches.** Most repos are expected at `~/usr/src/<name>/`. If a repo on this machine lives elsewhere, move it to `~/usr/src/<name>/` and leave a symlink at the old path. The only exception is `conf`, which stays at `~/conf`.
 

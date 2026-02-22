@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use crate::jj;
-use crate::manifest::{Repo, RepoKind};
+use crate::manifest::{self, Repo, RepoKind};
 use crate::output::{self, Outcome};
 
 /// Run the status check for a single repo.
@@ -31,19 +31,21 @@ fn status_one(repo: &Repo) -> Outcome {
             bookmarks,
             ..
         } => {
+            let qualified = upstream_ref.qualified();
             for bm in bookmarks {
-                let log = jj::log_bookmark(&repo.path, bm, upstream_ref);
+                let log = jj::log_bookmark(&repo.path, bm, &qualified);
                 let commits: Vec<&str> = log
                     .stdout
                     .lines()
                     .filter(|l| !l.trim().is_empty())
                     .collect();
                 if commits.is_empty() {
-                    output::info(&format!("{bm}: up to date with {upstream_ref}"));
+                    output::info(&format!("{bm}: up to date with {}", upstream_ref.name));
                 } else {
                     output::info(&format!(
-                        "{bm}: {} commit(s) ahead of {upstream_ref}",
-                        commits.len()
+                        "{bm}: {} commit(s) ahead of {}",
+                        commits.len(),
+                        upstream_ref.name,
                     ));
                 }
             }
@@ -84,13 +86,14 @@ fn fetch_one(repo: &Repo, dry_run: bool) -> Outcome {
 }
 
 /// Sync the trunk bookmark for a fork: set local trunk to upstream, push to origin.
-fn sync_trunk(repo: &Repo, upstream_ref: &str, dry_run: bool) -> bool {
-    let target = format!("{upstream_ref}@upstream");
-    let r = jj::bookmark_set(&repo.path, upstream_ref, &target, dry_run);
+/// Only meaningful for branches; tags (`@git`) can't be managed as bookmarks.
+fn sync_trunk(repo: &Repo, upstream_ref: &manifest::UpstreamRef, dry_run: bool) -> bool {
+    let target = upstream_ref.qualified();
+    let r = jj::bookmark_set(&repo.path, &upstream_ref.name, &target, dry_run);
     if !r.success {
         return false;
     }
-    let r = jj::push(&repo.path, "origin", upstream_ref, dry_run);
+    let r = jj::push(&repo.path, "origin", &upstream_ref.name, dry_run);
     r.success
 }
 
@@ -107,8 +110,9 @@ fn rebase_one(repo: &Repo, dry_run: bool) -> Outcome {
         ..
     } = &repo.kind
     {
+        let qualified = upstream_ref.qualified();
         for bm in bookmarks {
-            let r = jj::rebase(&repo.path, bm, upstream_ref, dry_run);
+            let r = jj::rebase(&repo.path, bm, &qualified, dry_run);
             if !r.success {
                 return Outcome::Failed(format!("rebase {bm} failed"));
             }
@@ -167,9 +171,11 @@ fn push_one(repo: &Repo, dry_run: bool) -> Outcome {
                 return Outcome::Failed(format!("push {bm} failed"));
             }
         }
-        let r = jj::push(&repo.path, "origin", upstream_ref, dry_run);
-        if !r.success {
-            return Outcome::Failed(format!("push {upstream_ref} failed"));
+        if upstream_ref.is_branch() {
+            let r = jj::push(&repo.path, "origin", &upstream_ref.name, dry_run);
+            if !r.success {
+                return Outcome::Failed(format!("push {} failed", upstream_ref.name));
+            }
         }
         Outcome::Ok
     } else {
@@ -194,8 +200,10 @@ fn update_one(repo: &Repo, dry_run: bool) -> Outcome {
     // Sync trunk + rebase (fork-rebase), or advance working copy (others)
     match &repo.kind {
         RepoKind::ForkRebase { upstream_ref, .. } => {
-            if !sync_trunk(repo, upstream_ref, dry_run) {
-                return Outcome::Failed("sync trunk failed".into());
+            if upstream_ref.is_branch() {
+                if !sync_trunk(repo, upstream_ref, dry_run) {
+                    return Outcome::Failed("sync trunk failed".into());
+                }
             }
             let outcome = rebase_one(repo, dry_run);
             if !matches!(outcome, Outcome::Ok) {
@@ -203,7 +211,7 @@ fn update_one(repo: &Repo, dry_run: bool) -> Outcome {
             }
         }
         RepoKind::ForkTrack { upstream_ref, .. } => {
-            let r = jj::new_at(&repo.path, upstream_ref, dry_run);
+            let r = jj::new_at(&repo.path, &upstream_ref.qualified(), dry_run);
             if !r.success {
                 return Outcome::Failed("jj new failed".into());
             }

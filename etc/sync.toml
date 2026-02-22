@@ -30,7 +30,7 @@ build = ["cargo install --path ."]
 clone = "git@github.com:jeffs/zellij.git"
 upstream = "https://github.com/zellij-org/zellij"
 bookmarks = ["fix-stack-cycle-order", "fix-typos"]
-upstream_ref = "v0.43.1"
+upstream_ref = "v0.43.1@git"
 build = ["cargo install --path . --locked"]
 
 [repos.nushell]
@@ -38,7 +38,7 @@ clone = "git@github.com:jeffs/nushell.git"
 upstream = "https://github.com/nushell/nushell"
 bookmarks = ["custom"]
 upstream_ref = "main"
-build = ["cargo install --path ."]
+build = ["cargo install --path . --locked"]
 
 [repos.reedline]
 clone = "git@github.com:jeffs/reedline.git"

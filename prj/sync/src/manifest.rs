@@ -24,19 +24,69 @@ pub struct RawRepo {
     pub path: Option<String>,
 }
 
+/// A parsed `upstream_ref` value: ref name + remote qualifier.
+///
+/// In jj, remote branches are `name@remote` (e.g. `main@upstream`) while tags
+/// imported from git are `name@git`.  The TOML value can be:
+///   - `"main"` → name="main", remote="upstream" (default)
+///   - `"main@upstream"` → explicit
+///   - `"v0.43.1@git"` → tag
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UpstreamRef {
+    pub name: String,
+    pub remote: String,
+}
+
+impl UpstreamRef {
+    /// Parse an `upstream_ref` string, splitting on the last `@`.
+    /// If no `@` is present, defaults the remote to `"upstream"`.
+    fn parse(s: &str) -> Result<Self, String> {
+        if let Some(pos) = s.rfind('@') {
+            let name = &s[..pos];
+            let remote = &s[pos + 1..];
+            if name.is_empty() {
+                return Err("upstream_ref name must not be empty".into());
+            }
+            if remote.is_empty() {
+                return Err("upstream_ref remote must not be empty".into());
+            }
+            Ok(Self {
+                name: name.into(),
+                remote: remote.into(),
+            })
+        } else {
+            Ok(Self {
+                name: s.into(),
+                remote: "upstream".into(),
+            })
+        }
+    }
+
+    /// The fully qualified ref for use in jj revsets (e.g. `main@upstream`).
+    pub fn qualified(&self) -> String {
+        format!("{}@{}", self.name, self.remote)
+    }
+
+    /// Whether this ref is a remote branch (can be synced/pushed as a bookmark).
+    /// Tags (`@git`) cannot.
+    pub fn is_branch(&self) -> bool {
+        self.remote != "git"
+    }
+}
+
 /// Inferred behavior for a repo.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RepoKind {
     /// Fork with upstream + bookmarks to rebase and push.
     ForkRebase {
         upstream: String,
-        upstream_ref: String,
+        upstream_ref: UpstreamRef,
         bookmarks: Vec<String>,
     },
     /// Fork tracking upstream, no custom bookmarks.
     ForkTrack {
         upstream: String,
-        upstream_ref: String,
+        upstream_ref: UpstreamRef,
     },
     /// Own repo or upstream-only (no fork relationship).
     Own,
@@ -109,10 +159,13 @@ pub fn load(path: &Path) -> Result<Vec<Repo>, ManifestError> {
 
         let kind = match (&raw.upstream, &raw.bookmarks) {
             (Some(upstream), Some(bookmarks)) => {
-                let upstream_ref = raw.upstream_ref.clone().ok_or_else(|| {
+                let raw_ref = raw.upstream_ref.clone().ok_or_else(|| {
                     ManifestError::Validation(format!(
                         "{name}: `bookmarks` requires `upstream_ref`"
                     ))
+                })?;
+                let upstream_ref = UpstreamRef::parse(&raw_ref).map_err(|e| {
+                    ManifestError::Validation(format!("{name}: {e}"))
                 })?;
                 if bookmarks.is_empty() {
                     return Err(ManifestError::Validation(format!(
@@ -126,10 +179,13 @@ pub fn load(path: &Path) -> Result<Vec<Repo>, ManifestError> {
                 }
             }
             (Some(upstream), None) => {
-                let upstream_ref = raw.upstream_ref.clone().ok_or_else(|| {
+                let raw_ref = raw.upstream_ref.clone().ok_or_else(|| {
                     ManifestError::Validation(format!(
                         "{name}: `upstream` requires `upstream_ref`"
                     ))
+                })?;
+                let upstream_ref = UpstreamRef::parse(&raw_ref).map_err(|e| {
+                    ManifestError::Validation(format!("{name}: {e}"))
                 })?;
                 RepoKind::ForkTrack {
                     upstream: upstream.clone(),
