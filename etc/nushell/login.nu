@@ -48,7 +48,7 @@ load-env {
   JUMP_HOME: ('~' | path expand)
 
   # Forks.
-  HELIX_RUNTIME: ('~/pkg/helix/runtime' | path expand)
+  HELIX_RUNTIME: ('~/usr/src/helix/runtime' | path expand)
 }
 
 # FNM is a version manager for Node.js.

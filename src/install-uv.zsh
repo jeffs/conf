@@ -15,18 +15,18 @@
 #
 # # Requirements
 #
-# Git and Rust/Cargo must already be installed, and in PATH.
+# Here's how you would build from source, assuming git and cargo are in PATH:
 #
-# # TODO
+# ```zsh
+# if [ ! -d ~/pkg/uv ]; then
+#     git clone git@github.com:astral-sh/uv ~/pkg/uv
+#     cd ~/pkg/uv
+# else
+#     cd ~/pkg/uv
+#     git pull
+# fi
 #
-# Replace this script with a Rust program.
+# cargo install --path crates/uv
+# ```
 
-if [ ! -d ~/pkg/uv ]; then
-    git clone git@github.com:astral-sh/uv ~/pkg/uv
-    cd ~/pkg/uv
-else
-    cd ~/pkg/uv
-    git pull
-fi
-
-cargo install --path crates/uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
