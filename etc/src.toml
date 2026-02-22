@@ -30,8 +30,8 @@ build = ["cargo install --path ."]
 clone = "git@github.com:jeffs/zellij.git"
 upstream = "https://github.com/zellij-org/zellij"
 bookmarks = ["fix-stack-cycle-order", "fix-typos"]
-upstream_ref = "main"
-build = ["cargo install --path ."]
+upstream_ref = "v0.43.1"
+build = ["cargo install --path . --locked"]
 
 [repos.nushell]
 clone = "git@github.com:jeffs/nushell.git"
@@ -49,11 +49,11 @@ build = []
 
 # Fork-track: upstream, no custom bookmarks
 
-[repos.crush]
-clone = "git@github.com:jeffs/crush.git"
-upstream = "https://github.com/liljencrantz/crush"
-upstream_ref = "main"
-build = ["cargo install --path ."]
+# [repos.crush]
+# clone = "git@github.com:jeffs/crush.git"
+# upstream = "https://github.com/liljencrantz/crush"
+# upstream_ref = "main"
+# build = ["cargo install --path ."]
 
 # Upstream-only
 
