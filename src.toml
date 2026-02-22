@@ -1,0 +1,86 @@
+root = "~/usr/src"
+
+# Forks: upstream + bookmarks to rebase
+
+[repos.helix]
+clone = "git@github.com:jeffs/helix.git"
+upstream = "https://github.com/helix-editor/helix"
+bookmarks = ["custom"]
+upstream_ref = "master"
+path = "~/home/git/helix"
+build = ["cargo install --path helix-term"]
+post_build = ["hx --grammar fetch", "hx --grammar build"]
+
+[repos.md-tui]
+clone = "git@github.com:jeffs/md-tui.git"
+upstream = "https://github.com/henriklovhaug/md-tui"
+bookmarks = ["custom"]
+upstream_ref = "main"
+path = "~/pkg/md-tui"
+build = ["cargo install --path ."]
+
+[repos.viddy]
+clone = "git@github.com:jeffs/viddy.git"
+upstream = "https://github.com/sachaos/viddy"
+bookmarks = ["custom"]
+upstream_ref = "master"
+path = "~/pkg/viddy"
+build = ["cargo install --path ."]
+
+[repos.zellij]
+clone = "git@github.com:jeffs/zellij.git"
+upstream = "https://github.com/zellij-org/zellij"
+bookmarks = ["fix-stack-cycle-order", "fix-typos"]
+upstream_ref = "main"
+build = ["cargo install --path ."]
+
+[repos.nushell]
+clone = "git@github.com:jeffs/nushell.git"
+upstream = "https://github.com/nushell/nushell"
+bookmarks = ["custom"]
+upstream_ref = "main"
+build = ["cargo install --path ."]
+
+[repos.reedline]
+clone = "git@github.com:jeffs/reedline.git"
+upstream = "https://github.com/nushell/reedline"
+bookmarks = ["custom"]
+upstream_ref = "main"
+build = []
+
+# Fork-track: upstream, no custom bookmarks
+
+[repos.crush]
+clone = "git@github.com:jeffs/crush.git"
+upstream = "https://github.com/liljencrantz/crush"
+upstream_ref = "main"
+build = ["cargo install --path ."]
+
+# Upstream-only
+
+[repos.uv]
+clone = "https://github.com/astral-sh/uv"
+path = "~/pkg/uv"
+build = ["cargo install --path crates/uv"]
+
+[repos.steel]
+clone = "https://github.com/mattwparas/steel"
+path = "~/pkg/steel"
+build = ["cargo install --path ."]
+
+# De novo
+
+[repos.rust-kart]
+clone = "git@github.com:jeffs/rust-kart.git"
+path = "~/pkg/rust-kart"
+build = ["cargo install --path crates/days", "cargo install --path crates/lev"]
+
+[repos.ralph]
+clone = "git@github.com:jeffs/ralph.git"
+path = "~/git/ralph"
+build = ["cargo install --path ."]
+
+[repos.conf]
+clone = "git@github.com:jeffs/conf.git"
+path = "~/conf"
+build = ["cargo install --path prj/edit", "cargo install --path prj/jump"]
