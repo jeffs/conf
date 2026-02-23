@@ -50,6 +50,10 @@ keybinds {
         bind "Alt n" { FocusNextPane; }
         bind "Alt p" { FocusPreviousPane; }
 
+        // Resize (stack/unstack).
+        bind "Alt =" { Resize "Increase"; }
+        bind "Alt -" { Resize "Decrease"; }
+
         // Zoom.
         bind "Alt z" { ToggleFocusFullscreen; }
         bind "Alt Z" { ToggleFocusFullscreen; TogglePaneFrames; }
