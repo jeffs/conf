@@ -29,7 +29,7 @@ build = ["cargo install --path ."]
 [repos.zellij]
 clone = "git@github.com:jeffs/zellij.git"
 upstream = "https://github.com/zellij-org/zellij"
-bookmarks = ["fix-stack-cycle-order", "fix-typos"]
+bookmarks = ["fix-stack-cycle-order"]
 upstream_ref = "v0.43.1@git"
 build = ["cargo install --path . --locked"]
 
