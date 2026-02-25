@@ -35,15 +35,13 @@ use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
 # TODO: File a bug report.
 # $env.config.history.sync_on_enter = false
 
-alias e = edit # From rust-kart.
+# Nushell builtins. I usually prefer symlinks and small scripts to shell
+# aliases, so that they'll work across shells; but it wouldn't do any good to
+# call these in a subprocess.
 alias l = ls
-# alias y = yazi # File manager; see <https://yazi-rs.github.io/features>.
-
-# pushd = dirs add
 alias g = dirs goto
 alias n = dirs next
 alias p = dirs prev
-
 alias d = describe
 alias o = open
 alias x = explore
@@ -51,7 +49,8 @@ alias xp = x --peek
 alias jobs = job list
 alias now = date now
 
-alias glow = /opt/homebrew/bin/glow --pager --width=(tput cols)
+# alias y = yazi # File manager; see <https://yazi-rs.github.io/features>.
+
 alias rust = evcxr # -q
 
 # Don't accidentally run `R` on case-insensitive filesystems like macOS.
@@ -63,35 +62,6 @@ alias ef = fzf --bind 'enter:become(hx {})'
 alias mat = bat -pl man
 alias w = wezterm
 alias z = zellij
-
-# My neuromuscular memory doesn't map cleanly to Jujutsu. I used Fig in anger,
-# both metaphorically and literally, but it never really sank in for me. This is
-# the first time in 25+ years (since RCS) I haven't had `ci` and `co` commands.
-alias br = jj log -r '@ | bookmarks() | trunk()'
-alias di = jj diff
-alias st = jj status
-alias gl = jj log
-
-alias j = jj
-alias jb = jj bookmark
-alias jbc = jj bookmark create
-alias jbd = jj bookmark delete
-alias jbm = jj bookmark move
-alias jbs = jj bookmark set
-alias jbt = jj bookmark track
-alias jd = jj describe
-alias jdm = jj describe --message
-alias je = jj edit
-alias jg = jj git
-alias jgf = jj git fetch # see also `alias up`
-alias jgi = jj git init
-alias jgp = jj git push
-alias jl = jj log
-alias jlr = jj log -r
-alias jn = jj new
-alias jnm = jj new --message
-
-def co (dest: string) { jj new $dest }
 
 def --wrapped jbct [...rest, --revision (-r): string] {
   if ($revision == null) {
