@@ -1,7 +1,7 @@
 // Use a wrapper script because default_shell ignores arguments like "--login".
 //
 // TODO: Never spawn Nushell as a login shell. Instead, have a 
-default_shell "/Users/jeff/conf/prj/target/release/nu-login"
+default_shell "/Users/jeff/conf/prj/target/release/jeff-login"
 
 // This would let me use Alt+Super+drag to move WezTerm, but I'd lose some
 // niceties like hover effects.

@@ -1,6 +1,6 @@
 # Login shell spawner
 
-The point of doing this in Rust is that I use multiple shells, and want them all to inherit common settings. (It's currently hard-coded to launch Nushell, but I intend to use it for Bash and Zsh, and possibly more exotic shells like Xonsh.) There doesn't appear to be any portable format for environment variables, such that mutliple shells could load the same file. The closest is .env, but sourcing a `.env` file from a POSIX shell doesn't export the variables; so you end up needing a wrapper that uses something like `dotenvy`, at which point you might as well use the wrapper's own language to declare the variables.
+The point of doing this in Rust is that I use multiple shells, and want them all to inherit common settings. There doesn't appear to be any portable format for environment variables, such that mutliple shells could load the same file. The closest is .env, but sourcing a `.env` file from a POSIX shell doesn't export the variables; so you end up needing a wrapper that uses something like `dotenvy`, at which point you might as well use the wrapper's own language to declare the variables.
 
 I would welcome any well-informed guidance on this. I think most people don't bump their heads on this issue because they don't use multiple shells, or don't significantly customize their process environments, or both.
 
