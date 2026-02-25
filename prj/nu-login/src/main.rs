@@ -7,8 +7,8 @@ use std::{
     process,
 };
 
-fn path_join<P: AsRef<Path>>(dirs: &[P]) -> ffi::OsString {
-    dirs.iter()
+fn path_join<P: AsRef<Path>, I: IntoIterator<Item = P>>(dirs: I) -> ffi::OsString {
+    dirs.into_iter()
         .enumerate()
         .fold(ffi::OsString::new(), |mut path, (index, dir)| {
             if index > 0 {
@@ -22,21 +22,24 @@ fn path_join<P: AsRef<Path>>(dirs: &[P]) -> ffi::OsString {
 fn main() {
     let home = env::home_dir().expect("home dir");
 
-    let path = [
-        home.join("usr/bin"),
-        home.join("conf/bin"),
-        home.join(".local/bin"),
-        home.join(".cargo/bin"),
-        home.join("go/bin"),
-        PathBuf::from("/usr/local/go/bin"),
-        PathBuf::from("/opt/homebrew/bin"),
-        PathBuf::from("/usr/local/bin"),
-        PathBuf::from("/usr/bin"),
-        PathBuf::from("/bin"),
-        PathBuf::from("/usr/sbin"),
-        PathBuf::from("/sbin"),
-        PathBuf::from("/Library/Developer/CommandLineTools/usr/bin"),
+    let home_path =
+        ["usr/bin", "conf/bin", ".local/bin", ".cargo/bin", "go/bin"].map(|dir| home.join(dir));
+
+    let sys_path = [
+        "/usr/local/go/bin",
+        "/opt/homebrew/bin",
+        "/usr/local/bin",
+        "/usr/bin",
+        "/bin",
+        "/usr/sbin",
+        "/sbin",
+        "/Library/Developer/CommandLineTools/usr/bin",
     ];
+
+    let path = home_path
+        .iter()
+        .map(PathBuf::as_path)
+        .chain(sys_path.map(Path::new));
 
     let err = process::Command::new(home.join("usr/bin/nu"))
         .arg("--login")
@@ -62,7 +65,7 @@ fn main() {
             ("HELIX_RUNTIME", home.join("usr/src/helix/runtime")),
             ("JUMP_HOME", home),
         ])
-        .env("PATH", path_join(path.as_slice()))
+        .env("PATH", path_join(path))
         .exec();
 
     // exec should have replaced the current process.
