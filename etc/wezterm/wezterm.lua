@@ -35,13 +35,13 @@ end
 
 -- Launch Zellij, which will start Nushell (configured in Zellij's config).
 -- Each WezTerm tab/window gets its own Zellij session.
-local zellij = if_readable(wezterm.home_dir .. '/.cargo/bin/zellij')
-  or if_readable('/opt/homebrew/bin/zellij')
-config.default_prog = { zellij }
-
-config.set_environment_variables = {
-  XDG_CONFIG_HOME = wezterm.home_dir .. '/.config'
-}
+--
+-- Zellij looks for config in `~/.config/zellij`, which is symlinked to
+-- `~/conf/etc/zellij` by `~/conf/src/install-dotfiles.zsh`.
+config.default_prog = {
+  if_readable(wezterm.home_dir .. '/.cargo/bin/zellij')
+    or if_readable('/opt/homebrew/bin/zellij')
+ }
 
 config.unicode_version = 16
 config.allow_square_glyphs_to_overflow_width = "Always"

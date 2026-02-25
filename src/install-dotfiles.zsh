@@ -26,6 +26,7 @@ ln -s ~/conf/etc/gitconfig .gitconfig
 ln -s ~/conf/etc/jjconfig.toml .config/jj/config.toml
 ln -s ~/conf/etc/nvim .config
 ln -s ~/conf/etc/tmux.conf .tmux.conf
+ln -s ~/conf/etc/zellij .config
 ln -s ~/conf/etc/zprofile .zprofile
 ln -s ~/conf/etc/zshrc .zshrc
 

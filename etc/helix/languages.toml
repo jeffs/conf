@@ -71,6 +71,7 @@ command = "sqls"
 [[language]]
 name = "sql"
 language-servers = ["sqls"]
+formatter = { command = "squint" }
 
 # [[language]]
 # name = "toml"
