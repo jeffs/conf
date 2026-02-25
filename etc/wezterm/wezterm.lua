@@ -1,17 +1,18 @@
 -- TODO
 --
--- * Configure click handling
---   - See <https://github.com/wezterm/wezterm/discussions/529>
---   - Nushell `ls` outputs clickable links using OSC-8 escape sequences.
---     I configure macOS to open those "links" using an Automator
---     script (`on-file-click.app`), which in turn runs a shell script
---     (`on-file-click.nu`), which calls `wezterm cli spawn` to open the file in
---     my chosen editor. But, macOS file associations are fickle: The OS seems
---     to forget them on upgrades, and IDEs like to steal them.
--- * In the list shown by `wezterm.action.ShowTabNavigator`, focus the current
---   tab by default
--- * Fix set-window-title; see <https://github.com/wezterm/wezterm/pull/6913>
---   - Workaround: Zellij preserves tab names; apps override pane names
+-- Configure click handling. Nushell `ls` outputs clickable links using
+-- OSC-8 escape sequences, and I configure macOS to open those "links" using
+-- an Automator script (`on-file-click.app`), which in turn runs a shell
+-- script (`on-file-click.nu`), which calls `wezterm cli spawn` to open the
+-- file in my chosen editor. But, macOS file associations are fickle: The OS
+-- seems to forget them on upgrades, and IDEs like to steal them. See also
+-- <https://github.com/wezterm/wezterm/discussions/529>.
+-- 
+-- In the list shown by `wezterm.action.ShowTabNavigator`, focus the current tab
+-- by default.
+-- 
+-- Fix set-window-title; see <https://github.com/wezterm/wezterm/pull/6913>.
+-- Workaround: Zellij preserves tab names; apps override pane names.
 
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
@@ -19,7 +20,7 @@ local config = wezterm.config_builder()
 config.term = "wezterm"
 
 -- Nightly builds of Wezterm would support:
--- config.window_decorations = 'TITLE | RESIZE | MACOS_USE_BACKGROUND_COLOR_AS_TITLEBAR_COLOR';
+-- config.window_decorations = 'TITLE | RESIZE | MACOS_USE_BACKGROUND_COLOR_AS_TITLEBAR_COLOR'
 config.window_decorations = 'RESIZE'
 
 -- Returns the specified path if it identifies a readable file, and nil
@@ -79,10 +80,10 @@ wezterm.on('toggle-opacity', function(window)
   window:set_config_overrides(overrides)
 end)
 
--- <https://wezterm.org/config/lua/config/audible_bell.html>
---
--- I can't seem to get the visual bell to work, at least in Helix:
--- <https://wezterm.org/config/lua/config/visual_bell.html>
+-- I can't seem to get the visual bell to work, at least in Helix. See also:
+-- 
+-- - <https://wezterm.org/config/lua/config/audible_bell.html>
+-- - <https://wezterm.org/config/lua/config/visual_bell.html>
 config.audible_bell = 'Disabled'
 
 -- Zellij handles tabs/panes; WezTerm's tab bar is just for multiple WezTerm
@@ -151,18 +152,14 @@ config.hyperlink_rules = require 'hyperlink_rules'
 --  }
 -- 
 -- One problem with using a colocated `local.lua` is that `jj rebase` deletes
--- it. This is obviously a bug in jj, but nobody seems to have filed it yet,
--- and I can't be bothered right now. Or maybe the jj maintainers don't think
--- it's a bug, which would be on-brand for Google. In the meantime, I keep
--- a copy at ~/.config/wezterm.local.lua, and cp it whenever jj blows it
--- away.
+-- it. This is obviously a bug in jj, but nobody seems to have filed it yet, and
+-- I can't be bothered right now. Or maybe the jj maintainers don't think it's
+-- a bug, which would be on-brand for Google. In the meantime, I keep a copy at
+-- ~/var/bak, and cp it whenever jj blows it away.
 --
--- If you're dealing with this, and also cannot be bothered to get jj
--- properly fixed, consider vibe-coding something that automates the cp if
--- ~/.config/wezterm.local.lua (or whatever) exists but local.lua does not.
--- Note that a symlink won't work, because WezTerm won't automatically pick up
--- changes to the linked file.
-local local_config = wezterm.config_dir .. '/local.lua'
+-- TODO: Automate the cp if the backup exists but local.lua does not. A symlink
+--  won't work, because WezTerm doesn't watch the linked file.
+local local_config = wezterm.home_dir .. '/conf/etc/wezterm/local.lua'
 if if_readable(local_config) then
   local ok, overrides = pcall(dofile, local_config)
   if ok and type(overrides) == 'table' then
