@@ -1,38 +1,19 @@
-alias conf-log=: # "echo -n conf:"
-alias log-profile=: # ~/conf/prj/target/release/log-profile
+## HISTORY
 
-conf-log 'primary rc...     '
-local start_time=$(log-profile)
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+setopt append_history
+setopt hist_ignore_dups
+setopt hist_ignore_space
 
-## VARIABLES
+## COMPLETION
 
-CASE_SENSITIVE=true
-COMPLETION_WAITING_DOTS=true
-DISABLE_AUTO_TITLE=true
-DISABLE_UNTRACKED_FILES_DIRTY=true
+autoload -Uz compinit && compinit
 
-# Use precmd to format a nice separator for use in a colorized PROMPT.
-#
-# TODO: Replace with Rust, or teach VS Code shell-format extension about Zsh.
-typeset -H prompt_bar
-PROMPT=$'\n%{$fg[cyan]%}(%h) $(hostname):$prompt_bar\n$%{$reset_color%} '
-function precmd {
-    local d=$(dirs -p | head -1)
-    local -i n=$(($COLUMNS - ${#d} - ${#$(hostname)} - 10))
-    prompt_bar="$d $(printf '─%.0s' $(=/usr/bin/seq $n))"
-}
+## PROMPT
 
-## PLUGINS
-
-# Note that zsh-syntax-highlighting must be the last plugin sourced.
-# https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md
-plugins=(
-    # Adds ~10ms to zsh startup time.
-    # poetry
-    zsh-syntax-highlighting
-)
-
-source $ZSH/oh-my-zsh.sh
+PROMPT=$'\n%F{cyan}%~%f\n%# '
 
 ## OPTIONS
 
@@ -53,32 +34,13 @@ functions[_default]="setopt local_options magic_equal_subst; $functions[_default
 
 ## ALIASES
 
-unalias l la
-
 alias e=edit # ../prj/edit
 alias vim=nvim
 alias rust='evcxr -q' # Rust REPL
 alias h=history
 alias hd='hexdump -C'
 alias ls='eza -F'
-alias u='c ..'
-alias uu='c ../..'
-alias uuu='c ../../..'
-alias py='python -q'
 alias tf=terraform
-alias w=wezterm
-alias z=zellij
-
-alias si='grit si'
-alias up='grit up'
-
-### Tree
-
-alias tree='eza --group-directories-first --tree --ignore-glob="__pycache__|dist|node_modules|target"'
-alias t='tree --git-ignore'
-
-# Show directory tree to a specified depth.
-for i in $(seq 9); do alias t$i="t -L$i"; done
 
 ### Git
 
@@ -110,70 +72,10 @@ function // { "$@" }
 
 function c { cd "$@" && ls; }
 function cg { c $(git rev-parse --show-toplevel); }
-function cy { cl --yesterday; }
 function mc { mkdir -p $1 && c $1; }
 
 function l { ls -hl --color=always "$@" | $PAGER }
 function la { ls -Ahl --color=always "$@" | $PAGER }
-
-function clippy {
-    cargo clippy --tests "$@" && cargo clippy "$@" -- -W clippy::pedantic
-}
-
-function re { cargo eval --expr "$*"; }
-
-# This is the nuclear option: Forward args to a binary, and eval its output.
-# Ultimately, I expect most of my commands to be binaries, rather than shell
-# functions or aliases; however, "eval" wrappers should not be necessary except
-# to change the state of the shell itself.  Such changes include:
-#
-# * Changing the shell's working directory.
-# * Setting shell or environment variables.
-function j { eval $(jump -c "$@"); }
-
-function _jump {
-    local -ra targets=(rk day cl l month conf file)
-    _describe target targets
-}
-
-compdef _jump j
-compdef _jump jump
-
-source ~/conf/etc/init-node.zsh
-
-function eza {
-    if ! /usr/bin/which eza >/dev/null; then
-        cargo install eza
-    fi
-    unset -f eza
-    eza "$@"
-}
-
-function poetry-activate {
-    readonly env_path="$(poetry env info --path)"
-    if [[ -z "$VIRTUAL_ENV" ]]; then
-        # No venv was already active.
-        source "$env_path/bin/activate"
-    elif [[ "$VIRTUAL_ENV" != "$env_path" ]]; then
-        # A different venv was already active.
-        deactivate
-        source "$env_path/bin/activate"
-    else
-        # This very venv was already active.
-    fi
-}
-
-## BINDINGS
-
-# https://github.com/ohmyzsh/ohmyzsh/issues/5071
-bindkey '^[l' down-case-word
-
-### Terraform
-# https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /opt/homebrew/bin/terraform terraform
-
-log-profile $start_time
 
 ## PROFILES
 #
@@ -182,13 +84,6 @@ log-profile $start_time
 
 for conf_module in ~/git/conf-*(N); do
     if [ -r $conf_module/etc/zshrc ]; then
-        conf-log "${conf_module#*/conf-} rc...     "
-        local start_time=$(log-profile)
         source $conf_module/etc/zshrc
-        log-profile $start_time
     fi
 done
-
-# date +'%n%A, %B %d %l:%M %p'
-
-unalias conf-log
