@@ -65,9 +65,12 @@ language-servers = ["scls", "rust-analyzer"]
 # breaks that magic.
 # auto-pairs = { '(' = ')', '{' = '}', '[' = ']', '"' = '"', '<' = '>' }
 
+[language-server.sqls]
+command = "sqls"
+
 [[language]]
 name = "sql"
-formatter = { command = "pg_format" }
+language-servers = ["sqls"]
 
 # [[language]]
 # name = "toml"
