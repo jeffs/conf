@@ -2,23 +2,30 @@
 #
 # # TODO
 #
-# - Add support for exit hooks
-#   + See <https://www.nushell.sh/book/hooks.html#basic-hooks>
-#   + Or, as a hack, launch a subshell, and print a message after it exits
-# - Get aliases to autocomplete correctly
-#   + This is a [known issue](https://www.nushell.sh/cookbook/external_completers.html#alias-completions)
-#   + I don't understand the suggested workaround. There's no `$spans` variable
-#     in `git-completions.nu`.
-# - Auto-complete `grit since` with Git refs
-# - TODO: Append to the history file on Enter, but read it only on startup
+# Add support for exit hooks
+# - See <https://www.nushell.sh/book/hooks.html#basic-hooks>
+# - Or, as a hack, launch a subshell, and print a message after it exits
+# 
+# Get aliases to autocomplete correctly
+# - This is a [known issue](https://www.nushell.sh/cookbook/external_completers.html#alias-completions)
+# - I don't understand the suggested workaround. There's no `$spans` variable in `git-completions.nu`.
+# 
+# Auto-complete `grit since` with Git refs.
+# 
+# Append to the history file on Enter, but read it only on startup.
+#
+# Get imgcat working in Zellij. It should run `wezterm imgcat` in WezTerm
+# wth without Zellij, `imgcat` in other terminals without Zellij, and
+# [apparently](https://github.com/zellij-org/zellij/issues/2158) `sixel` in
+# Zellij
 
 $env.config.show_banner = false
 $env.config.history.file_format = 'sqlite'
 
 use std/dirs
 
-source 'command/fc-list.nu'
-source 'command/tree.nu'
+# Commented out because I almost never use this. It lists fonts.
+# source 'command/fc-list.nu'
 
 # For reasons beyond my ken, completions sourced from autoload scripts don't
 # respect aliases. So, I source them here, in which case they _kinda_ respect
@@ -49,46 +56,30 @@ alias xp = x --peek
 alias jobs = job list
 alias now = date now
 
-# alias y = yazi # File manager; see <https://yazi-rs.github.io/features>.
-
-alias rust = evcxr # -q
+# TODO: Plain `job unfreeze` sometimes mistakenly thinks there's no job running,
+# so you have to give it the job ID explicitly.
+alias fg = job unfreeze
 
 # Don't accidentally run `R` on case-insensitive filesystems like macOS.
+# Like shell builtins, I can't really work around this one with a symlink.
 alias r = error make { msg: "Did you mean R?" }
 
-alias lc = loccount
-alias fz = fzf --preview='bat -p --color=always {}'
-alias ef = fzf --bind 'enter:become(hx {})'
-alias mat = bat -pl man
-alias w = wezterm
-alias z = zellij
+def --env c [path: string = ~] { cd $path; l }
+def --env cf [] { c (fzf --walker=dir,follow,hidden) }
+def --env cg [] { c (grit root) }
+def --env mc [path] { mkdir $path; c $path }
 
-def --wrapped jbct [...rest, --revision (-r): string] {
-  if ($revision == null) {
-      jj bookmark create ...$rest
-  } else {
-      jj bookmark create ...$rest --revision $revision
-  }
-  jj bookmark track ...$rest
-  jj
-}
-
-def --wrapped jbctp [...rest, --revision (-r): string] {
-  jbct ...$rest --revision $revision
-  jj git push --bookmark ...$rest
-}
-
-# This is the closest thing I could come up with to `git log --first-parent`.
-def glog [spec: string = 'trunk()::@'] {
-  jj log -r $"first_ancestors\(heads\((($spec)))) & ($spec)"
-}
-
-# TODO: Fix path expansion so `lg ~/Downloads` works.
-#  Is this a known issue with wrapped commands? Seems like a Nushell bug.
-# TODO: Patch Nushell, so we don't have to:
-#  - special case empty $rest
-#  - redeclare every flag we want to support
-#  See also: <https://github.com/nushell/nushell/issues/12592>
+# `ls`, and put results in a grid.
+#
+# TODO
+#
+# Fix path expansion so `lg ~/Downloads` works. Is this a known issue with
+# wrapped commands? Seems like a Nushell bug.
+# 
+# Patch Nushell, so you don't have to:
+# - special case empty $rest
+# - redeclare every flag you want to support
+# See also: <https://github.com/nushell/nushell/issues/12592>
 def --wrapped lg [...rest, --all (-a)] {
   if ($rest | is-empty) {
     ls --all=$all
@@ -97,14 +88,13 @@ def --wrapped lg [...rest, --all (-a)] {
   } | grid -cis '  '
 }
 
-def --env c [path: string = ~] { cd $path; l }
-def --env cf [] { c (fzf --walker=dir,follow,hidden) }
-def --env cg [] { c (grit root) }
-def --env mc [path] { mkdir $path; c $path }
-
-# Jump command wrapper, to (1) work around the shortcoming of jump not
-# understanding relative dates, and (2) open a browser when the resolved target
-# is a URL.
+# Jump command wrapper, to:
+#
+# 1. Work around the shortcoming of jump not understanding relative dates
+# 2. open a browser when the resolved target is a URL.
+# 3. cd to the output directory
+#
+# (1) and (2) could be done in Rust, but (3) requires shell support.
 #
 # Named `f` as in `follow`, instead of `j` for `jump`, because `j` is for `jj`.
 def --env f [target] {
@@ -121,31 +111,18 @@ def --env f [target] {
   }
 }
 
-# TODO: Default to pedantic, but allow override by local Cargo.toml file.
-def clippy [] { cargo clippy --all-targets --workspace }
-
-# Unfreeze a frozen job.
-def fg [id?: int] {
-  # TODO: Report the following `job unfreeze` issue: Plain `job unfreeze`
-  #  sometimes mistakenly thinks there's no job running, so you have to give it
-  #  the job ID explicitly.
-  if $id != null {
-    return (job unfreeze $id)
-  }
-  let ids = job list | where type == 'frozen' | get 'id'
-  if ($ids | is-empty) {
-    # TODO: `error make` seems to return early. Is that its intende behavior?
-    error make --unspanned { msg: 'No frozen jobs' }
-  }
-  job unfreeze ($ids | first)
-}
-
-def imgcat [...args: string] {
-  let args = $args | each {path expand}
-  match $env.TERM_PROGRAM {
-    'WezTerm' => {^wezterm imgcat ...$args},
-    _ => {^imgcat ...$args},
-  }
+# File manager; see:
+# 
+# - <https://yazi-rs.github.io/features>.
+# - <https://yazi-rs.github.io/docs/quick-start>
+def --env y [...args] {
+	let tmp = (mktemp -t "yazi-cwd.XXXXXX")
+	yazi ...$args --cwd-file $tmp
+	let cwd = (open $tmp)
+	if $cwd != "" and $cwd != $env.PWD {
+		cd $cwd
+	}
+	rm -fp $tmp
 }
 
 # Recognize Obsidian (data)base files.
@@ -165,13 +142,21 @@ def "from numstat" [] {
   upsert delta {|r| ($r | get +) - ($r | get -)} | move delta --before name
 }
 
-# <https://yazi-rs.github.io/docs/quick-start>
-def --env y [...args] {
-	let tmp = (mktemp -t "yazi-cwd.XXXXXX")
-	yazi ...$args --cwd-file $tmp
-	let cwd = (open $tmp)
-	if $cwd != "" and $cwd != $env.PWD {
-		cd $cwd
-	}
-	rm -fp $tmp
+# ------------------
+# TODO: Move to Rust
+# ------------------
+
+def --wrapped jbct [...rest, --revision (-r): string] {
+  if ($revision == null) {
+      jj bookmark create ...$rest
+  } else {
+      jj bookmark create ...$rest --revision $revision
+  }
+  jj bookmark track ...$rest
+  jj
+}
+
+def --wrapped jbctp [...rest, --revision (-r): string] {
+  jbct ...$rest --revision $revision
+  jj git push --bookmark ...$rest
 }
