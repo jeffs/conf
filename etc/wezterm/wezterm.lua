@@ -17,6 +17,11 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
+-- For `~/conf/prj/nu-login`, which (despite its name) defaults to `/bin/sh`.
+config.set_environment_variables = {
+  JEFF_LOGIN_SHELL = wezterm.home_dir .. '/usr/bin/nu'
+}
+
 config.term = "wezterm"
 
 -- Nightly builds of Wezterm would support:

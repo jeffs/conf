@@ -21,10 +21,10 @@ fn path_join<P: AsRef<Path>, I: IntoIterator<Item = P>>(dirs: I) -> ffi::OsStrin
 
 fn main() {
     let home = env::home_dir().expect("home dir");
+    let shell = env::var_os("JEFF_LOGIN_SHELL");
 
     let home_path =
         ["usr/bin", "conf/bin", ".local/bin", ".cargo/bin", "go/bin"].map(|dir| home.join(dir));
-
     let sys_path = [
         "/usr/local/go/bin",
         "/opt/homebrew/bin",
@@ -35,13 +35,12 @@ fn main() {
         "/sbin",
         "/Library/Developer/CommandLineTools/usr/bin",
     ];
-
     let path = home_path
         .iter()
         .map(PathBuf::as_path)
         .chain(sys_path.map(Path::new));
 
-    let err = process::Command::new(home.join("usr/bin/nu"))
+    let err = process::Command::new(shell.as_deref().unwrap_or(ffi::OsStr::new("/bin/sh")))
         .arg("--login")
         .envs([
             ("EDITOR", "hx"),
