@@ -1,7 +1,5 @@
-// Use a wrapper script because default_shell ignores arguments like "--login".
-//
-// TODO: Never spawn Nushell as a login shell. Instead, have a 
-default_shell "/Users/jeff/conf/prj/target/release/jeff-login"
+// Symlink so I can switch between cargo and brew installed versions.
+default_shell "/Users/jeff/usr/bin/nu"
 
 // This would let me use Alt+Super+drag to move WezTerm, but I'd lose some
 // niceties like hover effects.

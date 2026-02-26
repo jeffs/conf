@@ -1,22 +1,16 @@
-# This file runs for login shells only. Weirdly, it runs *after* config.nu.
+# Bail early on recursive login shells. `config-nu` also sources this file,
+# which Nushell then sources again *after* `config.nu`, so this check saves us
+# from redefining the environment in interactive login shells.
+if $env.JEFF_DID_LOGIN? == null {
+  $env.JEFF_DID_LOGIN = 1
 
-# Environment variables are of two ilks:
-# 
-# 1. Specific to Nushell, like PROMPT_COMMAND.
-# 2. Not specific to Nushell, like EDITOR or MANPAGER.
-#
-# Only ilk 1 belongs in this file. The other ilk should be defined by
-# the calling process. See also `~/conf/prj/jeff-login`.
-load-env {
-  PROMPT_COMMAND: {||
-    let t = date now
-    $"(ansi green)($t | format date '%-I:%M %p')(ansi reset)"
+  if ('~/conf/var/env.json' | path exists) {
+    open ~/conf/var/env.json | load-env
   }
-  PROMPT_COMMAND_RIGHT: {|| ''}
-}
 
-# FNM is a version manager for Node.js.
-#
-# TODO: Move this to jeff-login, which will need to parse the JSON.
-/opt/homebrew/bin/fnm env --json | from json | load-env
-$env.PATH ++= [($env.FNM_MULTISHELL_PATH | path join 'bin')]
+  # FNM is a version manager for Node.js.
+  #
+  # TODO: Move this to jeff-login, which will need to parse the JSON.
+  /opt/homebrew/bin/fnm env --json | from json | load-env
+  $env.PATH ++= [($env.FNM_MULTISHELL_PATH | path join 'bin')]
+}

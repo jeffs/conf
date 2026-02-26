@@ -19,6 +19,27 @@
 # [apparently](https://github.com/zellij-org/zellij/issues/2158) `sixel` in
 # Zellij
 
+# Source login script from interactive shells for two reason:
+#
+# 1. Zellij `default_shell` ignores arguments like `--login`. (We could work
+#    around this using a wrapper script, but this is just as easy.)
+# 2. Nushell sources `login.nu` *after* `config.nu`; so, by dfeault, anything
+#    that needs a variable (such as an external command lookup via `PATH`) works
+#    differently in the top level login shell than in subshells. Doing login
+#    initialization in `config.nu` directly wouldn't help us for noninteractive
+#    login shells, so we keep that logic in `login.nu`.
+if $env.JEFF_DID_LOGIN? == null {
+  source ~/conf/etc/nushell/login.nu
+
+  load-env {
+    PROMPT_COMMAND: {||
+      let t = date now
+      $"(ansi green)($t | format date '%-I:%M %p')(ansi reset)"
+    }
+    PROMPT_COMMAND_RIGHT: {|| ''}
+  }
+}
+
 $env.config.show_banner = false
 $env.config.history.file_format = 'sqlite'
 

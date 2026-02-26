@@ -8,13 +8,9 @@
 # These may be at different paths on different machines.
 $JUMP_HOME/git/brash: brash
 $JUMP_HOME/git/journey: [j, journey]
-$JUMP_HOME/git/md-tui: mdt
-$JUMP_HOME/git/nushell/nushell: [nu, nushell]
-$JUMP_HOME/git/helix: [hx, helix]
 $JUMP_HOME/git/wasm: wasm
+$JUMP_HOME/usr/src/helix: [hx, helix]
+$JUMP_HOME/usr/src/md-tui: mdt
+$JUMP_HOME/usr/src/nushell: [nu, nushell]
+$JUMP_HOME/usr/src/rust-kart: rk
 $JUMP_HOME/vault: a
-
-# TODO: Does rust-kart belong in `~/pkg` or `$JUMP_HOME/git`?
-#  - `../../src/install-dotfiles.zsh` clones it into `~/pkg`
-#  - On my home machine, `~/pkg/rust-kart` is a symlink
-$JUMP_HOME/git/rust-kart: rk

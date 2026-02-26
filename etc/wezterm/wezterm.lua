@@ -17,9 +17,8 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
--- For `~/conf/prj/jeff-login`, which defaults to `/bin/sh`.
 config.set_environment_variables = {
-  JEFF_LOGIN_SHELL = wezterm.home_dir .. '/usr/bin/nu'
+  XDG_CONFIG_HOME = wezterm.home_dir .. '/.config'
 }
 
 config.term = "wezterm"

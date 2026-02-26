@@ -1,10 +1,6 @@
-# Login shell spawner
+# Environment file generator
 
-The point of doing this in Rust is that I use multiple shells, and want them all to inherit common settings. There doesn't appear to be any portable format for environment variables, such that mutliple shells could load the same file. The closest is .env, but sourcing a `.env` file from a POSIX shell doesn't export the variables; so you end up needing a wrapper that uses something like `dotenvy`, at which point you might as well use the wrapper's own language to declare the variables.
-
-I would welcome any well-informed guidance on this. I think most people don't bump their heads on this issue because they don't use multiple shells, or don't significantly customize their process environments, or both.
-
-In the meantime, I gave up and started exec'ing my login shells from Rust. This works well, but requires the Rust build chain be installed before I can get my shell working right on a new machine. Other options don't totally avoid the problem, because not all systems (especially Windows) provide the same shells or interpreters by default. Moreover, scripting languages like Python are just slow enough on startup that I don't want to impose them on every login shell.
+I use multiple shells, and want them all to be able to load settings from a common source; so, I declare them in Rust, then serialize them to JSON (for Nushell) and POSIX (for Bash, Zsh, et al).
 
 # Notes
 
@@ -17,10 +13,6 @@ Nushell loads its own config (including `login.nu`) from an OS-specific director
 `GRIT` and `JUMP` are my own little home-grown tools. Setting `HELIX_RUNTIME` is necessary because my Helix is a fork.
 
 # TODO
-
-Support shell path provided through pre-existing env var, so terminals can dictate what shell to start.
-
-`exec` on Unix only; spawn on Windows.
 
 Correct groff config, rather than working around `^H` in `MANPAGER`.
 

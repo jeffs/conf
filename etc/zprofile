@@ -1,0 +1,16 @@
+if [[ ! -v JEFF_LOGIN_DONE ]]; then
+    export JEFF_LOGIN_DONE=1
+
+    if test -r ~/conf/var/env.sh; then
+        source ~/conf/var/env.sh
+    fi
+
+    # Prepends to PATH. TODO: Let Rust handle that.
+    eval "$(fnm env --shell zsh)"
+
+    for conf_module in ~/git/conf-*(N); do
+        if [ -r $conf_module/etc/zprofile ]; then
+            source $conf_module/etc/zprofile
+        fi
+    done
+fi
