@@ -29,6 +29,7 @@ fn main() {
     let sys_path = [
         "/usr/local/go/bin",
         "/opt/homebrew/bin",
+        "/opt/homebrew/opt/sqlite/bin",
         "/usr/local/bin",
         "/usr/bin",
         "/bin",
