@@ -1,3 +1,17 @@
+if [[ ! -v JEFF_LOGIN_DONE ]]; then
+    export JEFF_LOGIN_DONE=1
+    export LS_COLORS='di=01;36'
+    export READNULLCMD=$PAGER
+
+    eval "$(fnm env --shell zsh)"
+
+    for conf_module in ~/git/conf-*(N); do
+        if [ -r $conf_module/etc/zprofile ]; then
+            source $conf_module/etc/zprofile
+        fi
+    done
+fi
+
 ## HISTORY
 
 HISTFILE=~/.zsh_history
@@ -32,37 +46,10 @@ zstyle ':completion:*' matcher-list ''
 autoload +X -U _default
 functions[_default]="setopt local_options magic_equal_subst; $functions[_default]"
 
-## ALIASES
-
-alias e=edit # ../prj/edit
-alias vim=nvim
-alias rust='evcxr -q' # Rust REPL
-alias h=history
-alias hd='hexdump -C'
-alias ls='eza -F'
-alias tf=terraform
-
-### Git
-
-alias g=git
-alias di='git di'
-alias show='git show'
-alias pull='git pull --prune'
-
-for s in br ci clone co flog glog glog4 push push-f st stash; do
-    alias $s="git $s"
-done
-
-for i in $(seq 10); do
-    alias glog$i="glog -$i"
-done
-
 if [[ "$TERM_PROGRAM" == vscode ]]; then
     # Prefix matches with `file:lineno:` so I can click to open.
     alias rg='rg --no-heading'
 fi
-
-alias yolo='ci -a --amend --no-edit --no-verify && push -f'
 
 ## FUNCTIONS
 
@@ -73,9 +60,6 @@ function // { "$@" }
 function c { cd "$@" && ls; }
 function cg { c $(git rev-parse --show-toplevel); }
 function mc { mkdir -p $1 && c $1; }
-
-function l { ls -hl --color=always "$@" | $PAGER }
-function la { ls -Ahl --color=always "$@" | $PAGER }
 
 ## PROFILES
 #

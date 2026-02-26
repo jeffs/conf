@@ -8,15 +8,16 @@ use std::{
 };
 
 fn path_join<P: AsRef<Path>, I: IntoIterator<Item = P>>(dirs: I) -> ffi::OsString {
-    dirs.into_iter()
-        .enumerate()
-        .fold(ffi::OsString::new(), |mut path, (index, dir)| {
-            if index > 0 {
-                path.push(":");
-            }
-            path.push(dir.as_ref());
-            path
-        })
+    let mut dirs = dirs.into_iter();
+    let path = dirs
+        .next()
+        .map(|p| p.as_ref().as_os_str().to_os_string())
+        .unwrap_or_default();
+    dirs.fold(path, |mut path, dir| {
+        path.push(":");
+        path.push(dir.as_ref());
+        path
+    })
 }
 
 fn main() {
@@ -40,8 +41,22 @@ fn main() {
         .map(PathBuf::as_path)
         .chain(sys_path.map(Path::new));
 
-    let err = process::Command::new(shell.as_deref().unwrap_or(ffi::OsStr::new("/bin/sh")))
-        .arg("--login")
+    let shell = shell.as_deref().unwrap_or(ffi::OsStr::new("/bin/sh"));
+    let mut command = process::Command::new(shell);
+
+    // Pass `--login` to the subshell, unless it looks like Zsh on macOS. Apple
+    // craps up the system Zsh login shell confg so badly that you're better off
+    // skipping it. In particular, /`etc/zprofile` calls a `path_helper` thing
+    // that shuffles `PATH` basically at random.
+    if shell
+        .to_str()
+        .is_none_or(|s| s != "zsh" && !s.ends_with("/zsh"))
+        || env::consts::OS != "macos"
+    {
+        command.arg("--login");
+    }
+
+    let err = command
         .envs([
             ("EDITOR", "hx"),
             ("LESS", "-FRX -j5"),

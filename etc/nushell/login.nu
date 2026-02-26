@@ -20,7 +20,3 @@ load-env {
 # TODO: Move this to jeff-login, which will need to parse the JSON.
 /opt/homebrew/bin/fnm env --json | from json | load-env
 $env.PATH ++= [($env.FNM_MULTISHELL_PATH | path join 'bin')]
-
-if $nu.is-interactive {
-  source 'ls-colors.nu'
-}
