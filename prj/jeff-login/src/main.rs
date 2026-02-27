@@ -122,6 +122,8 @@ fn main() {
 
     // Env vars whose values are relative to your home directory.
     let home_env = [
+        ("EDITOR", ".cargo/bin/hx"),
+        ("VISUAL", ".cargo/bin/hx"),
         ("XDG_CONFIG_HOME", ".config"),
         ("FZF_DEFAULT_OPTS_FILE", "conf/etc/fzf"),
         ("RIPGREP_CONFIG_PATH", "conf/etc/ripgreprc"),
@@ -140,7 +142,6 @@ fn main() {
 
     // Env vars whose values are static strings.
     let static_env = [
-        ("EDITOR", "hx"),
         ("LESS", "-FRX -j5"),
         ("MANPAGER", "col -b | bat -pl man"),
         ("HOMEBREW_NO_ENV_HINTS", "true"),

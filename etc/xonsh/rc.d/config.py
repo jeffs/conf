@@ -3,6 +3,7 @@ from typing import cast
 
 def setup():
     from pathlib import Path
+    import os
     import tempfile
 
     from xonsh.built_ins import XSH
@@ -17,13 +18,18 @@ def setup():
         import sys
 
         try:
-            env_json = Path("~/conf/var/env.json").expanduser().read_text()
-            env.update(json.loads(env_json))
+            env_json = json.loads(Path("~/conf/var/env.json").expanduser().read_text())
+            env.update(env_json)
+            os.environ.update(
+                {
+                    k: (v if isinstance(v, str) else ":".join(v))
+                    for k, v in env_json.items()
+                }
+            )
         except Exception as e:
             print(f"error: env: {e}", file=sys.stderr)
 
     if env.get("XONSH_INTERACTIVE"):
-        import os
         import subprocess
 
         path_jj = Path("~/.cargo/bin/jj").expanduser()
@@ -74,20 +80,6 @@ def setup():
             if output.returncode == 0:
                 return output.stdout.rstrip()
 
-        # File manager; see:
-        #
-        # - <https://yazi-rs.github.io/features>.
-        # - <https://yazi-rs.github.io/docs/quick-start>
-        # def --env y [...args] {
-        # let tmp = (mktemp -t "yazi-cwd.XXXXXX")
-        # yazi ...$args --cwd-file $tmp
-        # let cwd = (open $tmp)
-        # if $cwd != "" and $cwd != $env.PWD {
-        # cd $cwd
-        # }
-        # rm -fp $tmp
-        # }
-
         def alias_y(args):
             with tempfile.NamedTemporaryFile(prefix="yazi-cwd") as tmp:
                 subprocess.run([path_yazi, "--cwd-file", tmp.name])
@@ -106,6 +98,7 @@ def setup():
         aliases["mc"] = alias_mc
         aliases["y"] = alias_y
 
+        env["SHELL_TYPE"] = "prompt_toolkit"
         env["TITLE"] = "{cwd}"
         cast(dict, env["PROMPT_FIELDS"])["curr_branch"] = curr_branch
         env["XONSH_SHOW_TRACEBACK"] = False
