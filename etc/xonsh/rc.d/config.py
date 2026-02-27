@@ -66,6 +66,10 @@ def setup():
             if output.returncode == 0:
                 return output.stdout.rstrip()
 
+        # Fun fact: `...` doesn't work as an alias, because it's valid Python.
+        for i in range(1, 10):
+            XSH.aliases["." * i] = f"cd {'/'.join(['..'] * i)}"
+
         XSH.aliases["c"] = "cd"
         XSH.aliases["f"] = alias_f
         XSH.aliases["mc"] = alias_mc
