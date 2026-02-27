@@ -1,47 +1,53 @@
 def setup():
+    from pathlib import Path
+    import json
+    import subprocess
+    import sys
 
     from xonsh.built_ins import XSH
 
     if XSH.env.get("XONSH_INTERACTIVE"):
         XSH.aliases["c"] = "cd"
 
-    if "JEFF_LOGIN_DONE" in XSH.env:
-        return
+        XSH.env["PROMPT"] = (
+            "{YELLOW}{env_name}"
+            "{RESET}{BOLD_BLUE} {cwd}{branch_color}{curr_branch: {}}"
+            "{RESET} {RED}{last_return_code_if_nonzero:[{BOLD_INTENSE_RED}{}{RED}] }"
+            "{RESET}{BOLD_BLUE}{prompt_end}"
+            "{RESET} "
+        )
 
-    from pathlib import Path
-    import json
-    import subprocess
-    import sys
+        jj = Path("~/.cargo/bin/jj").expanduser()
 
-    XSH.env["JEFF_LOGIN_DONE"] = True
-    XSH.env["TITLE"] = "{cwd}"
+        def curr_branch():
+            command = [
+                jj,
+                "log",
+                "-r",
+                "heads(::@ & bookmarks())",
+                "--no-graph",
+                "-T",
+                "bookmarks ++ ' '",
+            ]
+            try:
+                output = subprocess.run(command, capture_output=True, text=True)
+            except Exception as e:
+                print(e)
+                return None
+            if output.returncode == 0:
+                return output.stdout.rstrip()
 
-    try:
-        XSH.env.update(json.loads(Path("~/conf/var/env.json").expanduser().read_text()))
-    except Exception as e:
-        print(f"error: env: {e}", file=sys.stderr)
+        XSH.env["TITLE"] = "{cwd}"
+        XSH.env["PROMPT_FIELDS"]["curr_branch"] = curr_branch
 
-    jj = Path("~/.cargo/bin/jj").expanduser()
+    if "JEFF_LOGIN_DONE" not in XSH.env:
+        XSH.env["JEFF_LOGIN_DONE"] = True
 
-    def curr_branch():
-        command = [
-            jj,
-            "log",
-            "-r",
-            "heads(::@ & bookmarks())",
-            "--no-graph",
-            "-T",
-            "bookmarks ++ ' '",
-        ]
         try:
-            output = subprocess.run(command, capture_output=True, text=True)
+            env_json = Path("~/conf/var/env.json").expanduser().read_text()
+            XSH.env.update(json.loads(env_json))
         except Exception as e:
-            print(e)
-            return None
-        if output.returncode == 0:
-            return output.stdout.rstrip()
-
-    XSH.env["PROMPT_FIELDS"]["curr_branch"] = curr_branch
+            print(f"error: env: {e}", file=sys.stderr)
 
 
 setup()
