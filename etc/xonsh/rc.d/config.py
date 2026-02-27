@@ -110,6 +110,20 @@ def setup():
             "{RESET} "
         )
 
+        # Color styles are from pygments:
+        #
+        # ```py
+        # import pygments.styles
+        # sorted(pygments.styles.get_all_styles())
+        # ```
+        env["XONSH_COLOR_STYLE"] = "one-dark"
+        style_overrides = env["XONSH_STYLE_OVERRIDES"]
+        style_overrides["completion-menu"] = "bg:ansiblack ansiwhite"
+        style_overrides["completion-menu.completion"] = "bg:ansiblack ansiwhite"
+        style_overrides["completion-menu.completion.current"] = (
+            "bg:ansibrightblack ansiwhite"
+        )
+
 
 setup()
 del setup
