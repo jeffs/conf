@@ -199,7 +199,11 @@ fn update_one(repo: &Repo, dry_run: bool) -> Outcome {
 
     // Sync trunk + rebase (fork-rebase), or advance working copy (others)
     match &repo.kind {
-        RepoKind::ForkRebase { upstream_ref, .. } => {
+        RepoKind::ForkRebase {
+            upstream_ref,
+            bookmarks,
+            ..
+        } => {
             if upstream_ref.is_branch() {
                 if !sync_trunk(repo, upstream_ref, dry_run) {
                     return Outcome::Failed("sync trunk failed".into());
@@ -208,6 +212,12 @@ fn update_one(repo: &Repo, dry_run: bool) -> Outcome {
             let outcome = rebase_one(repo, dry_run);
             if !matches!(outcome, Outcome::Ok) {
                 return outcome;
+            }
+            if bookmarks.contains(&"custom".to_string()) {
+                let r = jj::new_at(&repo.path, "custom", dry_run);
+                if !r.success {
+                    return Outcome::Failed("jj new failed".into());
+                }
             }
         }
         RepoKind::ForkTrack { upstream_ref, .. } => {

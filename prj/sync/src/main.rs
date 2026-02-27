@@ -29,7 +29,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Cmd {
-    /// Show state of all repos (default)
+    /// Show state of all repos
     Status,
     /// Fetch from remotes
     Fetch,
@@ -39,7 +39,7 @@ enum Cmd {
     Build,
     /// Push fork bookmarks to origin
     Push,
-    /// fetch → rebase → build → push
+    /// fetch → rebase → build → push (default)
     Update,
     /// Clone repos that don't exist locally
     Clone,
@@ -85,12 +85,12 @@ fn main() {
     };
 
     let op = match cli.command {
-        None | Some(Cmd::Status) => ops::Op::Status,
+        None | Some(Cmd::Update) => ops::Op::Update,
+        Some(Cmd::Status) => ops::Op::Status,
         Some(Cmd::Fetch) => ops::Op::Fetch,
         Some(Cmd::Rebase) => ops::Op::Rebase,
         Some(Cmd::Build) => ops::Op::Build,
         Some(Cmd::Push) => ops::Op::Push,
-        Some(Cmd::Update) => ops::Op::Update,
         Some(Cmd::Clone) => ops::Op::Clone,
     };
 
