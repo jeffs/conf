@@ -1,8 +1,9 @@
-from typing import cast
+import json
 
 
 def setup():
     from pathlib import Path
+    from typing import cast
     import os
     import tempfile
 
@@ -14,7 +15,6 @@ def setup():
     if "JEFF_LOGIN_DONE" not in env:
         env["JEFF_LOGIN_DONE"] = True
 
-        import json
         import sys
 
         try:
@@ -31,6 +31,7 @@ def setup():
 
     if env.get("XONSH_INTERACTIVE"):
         import subprocess
+        import webbrowser
 
         path_jj = Path("~/.cargo/bin/jj").expanduser()
         path_jump = Path("~/conf/prj/target/release/jump").expanduser()
@@ -56,11 +57,13 @@ def setup():
                     text=True,
                     env={k: v for k, v in env.items() if type(v) is str},
                 )
-                print(output)
             except Exception as e:
-                return (None, str(e), 1)
-            if output.returncode == 0:
-                return mc(output.stdout)
+                return None, str(e), 1
+            if output.returncode != 0:
+                return output.stdout, output.stderr, output.returncode
+            if output.stdout.startswith("http:") or output.stdout.startswith("https:"):
+                return 0 if webbrowser.open(output.stdout) else 1
+            return mc(output.stdout)
 
         def curr_branch():
             """TODO: Move to Rust"""
@@ -76,7 +79,7 @@ def setup():
             try:
                 output = subprocess.run(command, capture_output=True, text=True)
             except Exception as e:
-                return (None, str(e), 1)
+                return None, str(e), 1
             if output.returncode == 0:
                 return output.stdout.rstrip()
 
@@ -101,7 +104,7 @@ def setup():
         prompt_fields = cast(dict, env["PROMPT_FIELDS"])
         prompt_fields["curr_branch"] = curr_branch
         env_name = prompt_fields["env_name"]
-        prompt_fields["env_name"] = lambda: (s := env_name()) and s or None
+        prompt_fields["env_name"] = lambda: s if (s := env_name()) else None
 
         env["SHELL_TYPE"] = "prompt_toolkit"
         env["TITLE"] = "{cwd}"
@@ -114,6 +117,10 @@ def setup():
             "{BOLD_BLUE}{prompt_end} "
             "{RESET}"
         )
+
+        # There's an actual kill ring. After ctrl+y, use alt+y to rotate.
+        env["XONSH_COPY_ON_DELETE"] = True  # ctrl+k: yes, keep it on the kill ring
+        env["XONSH_USE_SYSTEM_CLIPBOARD"] = False  # ctrk+y: no, don't hide the ring
 
         # Color styles are from pygments:
         #
