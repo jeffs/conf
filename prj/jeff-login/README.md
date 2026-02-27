@@ -1,6 +1,8 @@
 # Environment file generator
 
-I use multiple shells, and want them all to be able to load settings from a common source; so, I declare them in Rust, then serialize them to JSON (for Nushell) and POSIX (for Bash, Zsh, et al).
+I use multiple shells, and want them all to be able to load settings from a
+common source; so, I declare them in Rust, then serialize them to JSON (for
+Nushell and Xonsh) and POSIX (for Bash, Zsh, et al).
 
 # Notes
 

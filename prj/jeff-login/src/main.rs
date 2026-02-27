@@ -163,13 +163,14 @@ fn main() {
     let var_dir = home.join("conf/var");
     fs::create_dir_all(&var_dir).map_err(|e| panic!("{}: {e}", var_dir.display()));
 
-    // Save JSON for Nushell.
+    // Save JSON for Nushell and Xonsh.
     //
-    // JSON doesn't really support non-UTF-8 encodings. This JSON serialization
-    // is mainly for Nushell, which panics if any inherited environment variable
-    // contains non-UTF characters, anyway: It has no equivalent of Rust
-    // [`std::env::var_os`], or Python `os.environb`. I'm increasingly tempted
-    // to switch to Xonsh.
+    // JSON doesn't really support non-UTF-8 encodings. Nushell panics if any
+    // inherited environment variable contains non-UTF characters, anyway: It
+    // has no equivalent of Rust [`std::env::var_os`]. Python has `os.environb`,
+    // but Xonsh doesn't seem to use it. (Xonsh also doesn't crash if vars have
+    // non-Unicode values; it presents them as strings containing `\u` escape
+    // sequences.)
     let json_file = var_dir.join("env.json");
     let env_strings = env.clone().filter_map(|(k, v)| {
         let Some(v) = v.to_str() else {
