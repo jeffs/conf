@@ -98,16 +98,21 @@ def setup():
         aliases["mc"] = alias_mc
         aliases["y"] = alias_y
 
+        prompt_fields = cast(dict, env["PROMPT_FIELDS"])
+        prompt_fields["curr_branch"] = curr_branch
+        env_name = prompt_fields["env_name"]
+        prompt_fields["env_name"] = lambda: (s := env_name()) and s or None
+
         env["SHELL_TYPE"] = "prompt_toolkit"
         env["TITLE"] = "{cwd}"
-        cast(dict, env["PROMPT_FIELDS"])["curr_branch"] = curr_branch
         env["XONSH_SHOW_TRACEBACK"] = False
         env["PROMPT"] = (
-            "{YELLOW}{env_name}"
-            "{RESET}{BOLD_BLUE} {cwd}{branch_color}{curr_branch: {}}"
-            "{RESET} {RED}{last_return_code_if_nonzero:[{BOLD_INTENSE_RED}{}{RED}] }"
-            "{RESET}{BOLD_BLUE}{prompt_end}"
-            "{RESET} "
+            "{YELLOW}{env_name:{} }"
+            "{BOLD_BLUE}{cwd} "
+            "{branch_color}{curr_branch:{} }"
+            "{RED}{last_return_code_if_nonzero:[{BOLD_INTENSE_RED}{}{RED}] }"
+            "{BOLD_BLUE}{prompt_end} "
+            "{RESET}"
         )
 
         # Color styles are from pygments:
