@@ -9,8 +9,6 @@ if $env.JEFF_DID_LOGIN? == null {
   }
 
   # FNM is a version manager for Node.js.
-  #
-  # TODO: Move this to jeff-login, which will need to parse the JSON.
   /opt/homebrew/bin/fnm env --json | from json | load-env
-  $env.PATH ++= [($env.FNM_MULTISHELL_PATH | path join 'bin')]
+  $env.PATH = $env.PATH | prepend $env.FNM_MULTISHELL_PATH
 }

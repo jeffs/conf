@@ -5,7 +5,7 @@ if [[ ! -v JEFF_LOGIN_DONE ]]; then
         source ~/conf/var/env.sh
     fi
 
-    # Prepends to PATH. TODO: Let Rust handle that.
+    # FNM is a version manager for Node.js.
     eval "$(fnm env --shell zsh)"
 
     for conf_module in ~/git/conf-*(N); do
