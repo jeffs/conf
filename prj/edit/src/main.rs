@@ -3,8 +3,8 @@
 
 use std::{
     env, ffi, fs, io,
-    os::unix::ffi::OsStrExt,
-    process::{Command, ExitCode, exit},
+    os::unix::{ffi::OsStrExt, process::CommandExt},
+    process::{Command, ExitCode},
 };
 
 fn main() -> io::Result<ExitCode> {
@@ -17,8 +17,6 @@ fn main() -> io::Result<ExitCode> {
             s
         }
     });
-    match Command::new("hx").args(args).status()?.code() {
-        Some(code) => exit(code),
-        None => Ok(ExitCode::FAILURE),
-    }
+    let err = Command::new("hx").args(args).exec();
+    panic!("{err}");
 }

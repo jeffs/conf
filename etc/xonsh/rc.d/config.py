@@ -68,7 +68,9 @@ def setup():
 
         # Fun fact: `...` doesn't work as an alias, because it's valid Python.
         for i in range(1, 10):
-            XSH.aliases["." * i] = f"cd {'/'.join(['..'] * i)}"
+            XSH.aliases["." * (i + 1)] = f"cd {'/'.join(['..'] * i)}"
+
+        del XSH.aliases["ls"]
 
         XSH.aliases["c"] = "cd"
         XSH.aliases["f"] = alias_f
