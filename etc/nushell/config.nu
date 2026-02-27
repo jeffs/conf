@@ -28,7 +28,7 @@
 #    differently in the top level login shell than in subshells. Doing login
 #    initialization in `config.nu` directly wouldn't help us for noninteractive
 #    login shells, so we keep that logic in `login.nu`.
-if $env.JEFF_DID_LOGIN? == null {
+if $env.JEFF_LOGIN_DONE? == null {
   source ~/conf/etc/nushell/login.nu
 
   load-env {

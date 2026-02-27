@@ -1,5 +1,4 @@
-// Symlink so I can switch between cargo and brew installed versions.
-default_shell "/Users/jeff/usr/bin/nu"
+default_shell "/opt/homebrew/bin/xonsh"
 
 // This would let me use Alt+Super+drag to move WezTerm, but I'd lose some
 // niceties like hover effects.

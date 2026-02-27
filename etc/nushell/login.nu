@@ -1,8 +1,8 @@
 # Bail early on recursive login shells. `config-nu` also sources this file,
 # which Nushell then sources again *after* `config.nu`, so this check saves us
 # from redefining the environment in interactive login shells.
-if $env.JEFF_DID_LOGIN? == null {
-  $env.JEFF_DID_LOGIN = 1
+if $env.JEFF_LOGIN_DONE? == null {
+  $env.JEFF_LOGIN_DONE = 1
 
   if ('~/conf/var/env.json' | path exists) {
     open ~/conf/var/env.json | load-env
