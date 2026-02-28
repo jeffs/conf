@@ -1,4 +1,5 @@
 {
-  "venvPath": "/Users/jeff/.local/pipx/venvs",
-  "venv": "xonsh"
+  "extraPaths": ["./xonsh/modules"],
+  "venv": "xonsh",
+  "venvPath": "../../.local/pipx/venvs"
 }

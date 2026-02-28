@@ -5,6 +5,7 @@ def setup():
     from pathlib import Path
     from typing import cast
     import os
+    import sys
     import tempfile
 
     from xonsh.built_ins import XSH
@@ -14,8 +15,6 @@ def setup():
 
     if "JEFF_LOGIN_DONE" not in env:
         env["JEFF_LOGIN_DONE"] = True
-
-        import sys
 
         try:
             env_json = json.loads(Path("~/conf/var/env.json").expanduser().read_text())
@@ -29,9 +28,24 @@ def setup():
         except Exception as e:
             print(f"error: env: {e}", file=sys.stderr)
 
+    sys.path.insert(0, str(Path("~/conf/etc/xonsh/modules").expanduser()))
+
+    import jeff
+
     if env.get("XONSH_INTERACTIVE"):
         import subprocess
         import webbrowser
+        from pygments import highlight
+        from pygments.lexers import PythonLexer
+        from pygments.formatters import TerminalTrueColorFormatter
+
+        # To list available values:
+        #
+        # ```py
+        # import pygments.styles
+        # sorted(pygments.styles.get_all_styles())
+        # ```
+        COLOR_STYLE = "one-dark"
 
         path_jj = Path("~/.cargo/bin/jj").expanduser()
         path_jump = Path("~/conf/prj/target/release/jump").expanduser()
@@ -83,12 +97,22 @@ def setup():
             if output.returncode == 0:
                 return output.stdout.rstrip()
 
-        def alias_y(args):
+        def alias_y():
             with tempfile.NamedTemporaryFile(prefix="yazi-cwd") as tmp:
                 subprocess.run([path_yazi, "--cwd-file", tmp.name])
                 s = Path(tmp.name).read_text()
             if s:
                 os.chdir(s)
+
+        def alias_ls(args):
+            """TODO: Parse flags"""
+            df = jeff.ls(*args)
+            hl = highlight(
+                repr(df),
+                PythonLexer(),
+                TerminalTrueColorFormatter(style=COLOR_STYLE),
+            )
+            return hl
 
         # Fun fact: `...` doesn't work as an alias, because it's valid Python.
         for i in range(1, 10):
@@ -122,14 +146,8 @@ def setup():
         env["XONSH_COPY_ON_DELETE"] = True  # ctrl+k: yes, keep it on the kill ring
         env["XONSH_USE_SYSTEM_CLIPBOARD"] = False  # ctrk+y: no, don't hide the ring
 
-        # Color styles are from pygments:
-        #
-        # ```py
-        # import pygments.styles
-        # sorted(pygments.styles.get_all_styles())
-        # ```
-        env["XONSH_COLOR_STYLE"] = "one-dark"
-        style_overrides = env["XONSH_STYLE_OVERRIDES"]
+        env["XONSH_COLOR_STYLE"] = COLOR_STYLE
+        style_overrides = cast(dict[str, str], env["XONSH_STYLE_OVERRIDES"])
         style_overrides["completion-menu"] = "bg:ansiblack ansiwhite"
         style_overrides["completion-menu.completion"] = "bg:ansiblack ansiwhite"
         style_overrides["completion-menu.completion.current"] = (
