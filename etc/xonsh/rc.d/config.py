@@ -95,7 +95,7 @@ def setup():
             except Exception as e:
                 return None, str(e), 1
             if output.returncode == 0:
-                return output.stdout.rstrip()
+                return output.stdout.rstrip() or None
 
         def alias_y():
             with tempfile.NamedTemporaryFile(prefix="yazi-cwd") as tmp:
@@ -128,7 +128,7 @@ def setup():
         prompt_fields = cast(dict, env["PROMPT_FIELDS"])
         prompt_fields["curr_branch"] = curr_branch
         env_name = prompt_fields["env_name"]
-        prompt_fields["env_name"] = lambda: s if (s := env_name()) else None
+        prompt_fields["env_name"] = lambda: s if (s := env_name().rstrip()) else None
 
         env["SHELL_TYPE"] = "prompt_toolkit"
         env["TITLE"] = "{cwd}"
