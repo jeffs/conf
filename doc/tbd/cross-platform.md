@@ -12,7 +12,8 @@ aren't addressed by the platform TOML or the script rewrite.
 ## Prerequisites
 
 - `conf-platform` crate exists and is integrated (see `platform-crate.md`).
-- Install scripts are Python, not zsh/nu (see `script-migration.md`).
+- Scripts replaced by Rust (see `script-migration.md`).
+- Rust `init` binary handles all bootstrap (see `script-migration.md`).
 - Obsolete tools purged (Cursor, Poetry, Nushell configs).
 
 ## Rust API changes in `~/conf/prj/`
@@ -122,7 +123,7 @@ scrollback_editor "/Users/jeff/conf/src/edit.zsh"
 
 These can't easily read TOML at parse time. Options:
 - Use `~` expansion (Zellij may support it).
-- Template the file from `install-dotfiles` using platform config values.
+- Template the file from `init` using platform config values.
 - Use environment variables if Zellij supports `$SHELL` or similar.
 
 ### `etc/claude/lsp.json`
@@ -139,7 +140,7 @@ platform-appropriate locations, or read the platform TOML from Lua
 ### `etc/xonsh/rc.d/config.py`
 
 Replace hardcoded `/opt/homebrew/bin/yazi` with a `conf_platform.tool()`
-call once PyO3 bindings exist.
+call once PyO3 bindings exist (non-blocking; this is a leaf dependency).
 
 ### `etc/nushell/login.nu`
 
@@ -163,21 +164,44 @@ $env:LESS = "-FRX -j5"
 $env:PATH = "C:\Users\jeff\conf\bin;C:\Users\jeff\.cargo\bin;..."
 ```
 
-The format is selected by `platform.shell.env_format`. Xonsh on Windows
-continues to read `env.json` directly via `rc.d/config.py`.
+The format is selected by `platform.shell.env_format`. Xonsh on all
+platforms reads `env.json` directly via `rc.d/config.py`.
+
+## Bootstrap on a fresh machine
+
+The only prerequisite is the compiled Rust `init` binary. No Python,
+no shell scripts, no package manager preinstalled. The `init` binary:
+
+1. Loads the platform TOML (bundled or from the repo).
+2. Installs the platform package manager if needed (Homebrew on macOS).
+3. Installs packages from the declarative list.
+4. Installs the Rust toolchain.
+5. Builds and installs workspace tools.
+6. Creates the symlink/dotfile layout.
+7. Installs `uv` (just another tool).
+8. `uv python install` + `uv tool install xonsh[full]`.
+9. Generates `env.json` / `env.sh` / `env.ps1`.
+
+The `uv` installer method varies by platform:
+- macOS/Linux: download script via HTTP (Rust `ureq` or `reqwest`)
+- Windows: download script via HTTP, or `winget install astral-sh.uv`
+
+See `script-migration.md` for the full `init` design.
 
 ## Install procedure differences
 
-These are handled by the Python install scripts (see `script-migration.md`)
-but noted here for completeness:
+These are handled by the Rust `init` binary with platform branching:
 
 | Tool | macOS | Windows |
 |------|-------|---------|
+| Package manager | Homebrew (install script) | choco or winget (preinstalled or manual) |
+| Packages | `brew install` | `choco install` or `winget install` |
+| System updates | `softwareupdate --list` | `winget upgrade --all` |
+| uv | Download install script | Download install script or `winget` |
+| Python | `uv python install` | Same |
+| Xonsh | `uv tool install xonsh[full]` | Same |
 | AWS CLI v2 | `installer -pkg` | MSI installer or `msiexec` |
 | AWS Session Manager | macOS `.pkg` | Windows `.exe` installer |
-| Homebrew packages | `brew install` | `choco install` or `winget install` |
-| System updates | `softwareupdate --list` | `winget upgrade --all` |
-| Xonsh | `uv tool install xonsh[full]` | Same (Python is cross-platform) |
 | Helix | `cargo install` + `xcrun -f lldb-dap` | `cargo install` + skip `xcrun` |
 | Neovim | `brew install neovim` | `choco install neovim` |
 
@@ -194,8 +218,8 @@ macOS config locations vs Windows equivalents:
 | Git | `~/.gitconfig` | `~/.gitconfig` (same) |
 | Bat | `~/.config/bat/` | `%APPDATA%/bat/` |
 
-The platform crate's `paths.config_home` drives these. The Python
-`install-dotfiles` script maps each app's config to the right location.
+The platform crate's `paths.config_home` drives these. The Rust `init`
+binary maps each app's config to the right location.
 
 ## Phased rollout
 
@@ -212,35 +236,39 @@ Changes that don't require the platform crate:
 After this phase, all Rust code compiles on Windows (though it won't
 have correct paths yet).
 
-### Phase 2: Platform crate integration (one weekend)
+### Phase 2: Platform crate and `init` binary (one weekend)
 
 1. Build `conf-platform` crate with TOML loading.
-2. Integrate into `jeff-login` (PATH, env vars, shell output).
-3. Integrate into `jeff-alias` (tool paths).
-4. Integrate into `upgrade` (task commands).
-5. Integrate into `sync` (shell invocation).
-6. Write `macos.toml` with current hardcoded values.
-7. Write `windows.toml` with best-guess values.
+2. Build the Rust `init` binary with core bootstrap logic.
+3. Integrate `conf-platform` into `jeff-login` (PATH, env vars, shell output).
+4. Integrate into `jeff-alias` (tool paths).
+5. Integrate into `upgrade` (task commands).
+6. Integrate into `sync` (shell invocation).
+7. Write `macos.toml` with current hardcoded values.
+8. Write `windows.toml` with best-guess values.
 
-### Phase 3: PyO3 bindings and config migration (one weekend)
+### Phase 3: Config migration and env generation (one weekend)
 
-1. Add PyO3 feature to `conf-platform`.
-2. Migrate `rc.d/config.py` to use platform crate.
-3. Migrate `install-dotfiles` (now Python) to use platform crate.
-4. Template or fix `zellij/config.kdl`, `claude/lsp.json`.
+1. Add `env.ps1` output to `jeff-login`.
+2. Template or fix `zellij/config.kdl`, `claude/lsp.json`.
+3. Migrate `etc/xonsh/rc.d/config.py` hardcoded paths (can use PyO3
+   bindings if built, or just read the TOML directly from Python).
+4. Fix `etc/pythonrc.py` Ghostscript path.
 
 ### Phase 4: Windows testing and polish (one weekend)
 
 1. Set up a Windows dev environment.
 2. Run `cargo build` on the workspace — fix any remaining issues.
-3. Write `windows.toml` with tested values.
-4. Run `install-dotfiles` on Windows — fix symlink layout.
-5. Test Xonsh startup with `env.json`.
-6. Write a `site/` TOML for the Windows machine if needed.
+3. Run `init` on Windows — verify full bootstrap sequence.
+4. Write `windows.toml` with tested values.
+5. Test symlink layout on Windows (may need developer mode for symlinks,
+   or fall back to junctions/copies).
+6. Test Xonsh startup with `env.json`.
+7. Write a `site/` TOML for the Windows machine if needed.
 
 ## macOS-only tools (no Windows port needed)
 
-- `watch-windows.zsh` (macOS debugging tool)
+- `watch-windows.zsh` → Rust (macOS debugging tool, `lsappinfo`)
 - `app/on-file-click.app` (Automator workflow)
 - `app/` directory generally
 - `itco-edit` (iTerm2 coprocess — works anywhere, but only useful on macOS)

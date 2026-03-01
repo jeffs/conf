@@ -3,8 +3,9 @@
 ## Goal
 
 A Rust crate in the `~/conf/prj/` workspace that reads platform-specific
-and site-specific TOML configuration, exposing it to both Rust CLI tools
-(as a library) and Python/Xonsh scripts (via PyO3).
+and site-specific TOML configuration, exposing it to all Rust tools in the
+workspace. Optional PyO3 bindings provide convenience access from
+Python/Xonsh, but are not foundational — the system works without them.
 
 ## Config file layout
 
@@ -22,7 +23,7 @@ The platform crate:
 1. Detects the current platform (`cfg!(target_os)`).
 2. Loads the matching `platform/<os>.toml`.
 3. Loads `site/<hostname>.toml` if it exists, merging it on top.
-4. Exposes the merged config via a typed Rust API and a PyO3 module.
+4. Exposes the merged config via a typed Rust API.
 
 Host-specific TOML overrides any key from the platform TOML. This lets a
 machine with an unusual Homebrew prefix or a non-standard editor path
@@ -74,6 +75,7 @@ LESS = "-FRX -j5"
 MANPAGER = "col -b | bat -pl man"
 HOMEBREW_NO_ENV_HINTS = "true"
 RUSTC_WRAPPER = "/opt/homebrew/bin/sccache"
+UV_PYTHON = "3.13"
 
 [tools]
 # Explicit paths for tools that aren't reliably on PATH.
@@ -110,6 +112,7 @@ command = ["winget", "upgrade", "--all"]
 [env]
 EDITOR = ".cargo/bin/hx.exe"
 VISUAL = ".cargo/bin/hx.exe"
+UV_PYTHON = "3.13"
 
 [tools]
 # On Windows, most tools are expected to be on PATH.
@@ -179,9 +182,11 @@ impl Platform {
 }
 ```
 
-## PyO3 bindings
+## Optional PyO3 bindings
 
-Expose `Platform` as a Python class:
+Behind a `pyo3` feature flag, expose `Platform` as a Python class for
+use from Xonsh and `rc.d/config.py`. These are convenience bindings,
+not foundational — the system works entirely in Rust without them.
 
 ```python
 from conf_platform import Platform
@@ -190,17 +195,21 @@ p = Platform.load("~/conf/etc")
 p.paths.config_home       # Path("/Users/jeff/Library/Application Support")
 p.paths.pkg_prefix        # Path("/opt/homebrew")
 p.package_manager.name    # "brew"
-p.package_manager.install # ["brew", "install"]
 p.tool("fzf")             # Path("/opt/homebrew/bin/fzf")
-p.env["EDITOR"]           # ".cargo/bin/hx"
 p.resolve("conf/bin")     # Path("/Users/jeff/conf/bin")
-p.shell.env_format        # "posix"
 ```
 
-This lets Xonsh startup (`rc.d/config.py`) and Python install scripts use
-the same config the Rust tools use.
+Installed into the Xonsh venv via `xpip install conf-platform` (or
+`maturin develop`). If Xonsh is dropped, these bindings are simply
+not built.
 
 ## Integration points
+
+### init (Rust binary)
+The `init` binary is the primary consumer. It loads the platform config
+to determine: package manager commands, system PATH entries, tool paths,
+symlink targets, and environment variables for `env.json`/`env.sh`/`env.ps1`
+generation. See `script-migration.md`.
 
 ### jeff-login
 Currently hardcodes PATH entries, environment variables, and shell script
@@ -209,6 +218,9 @@ generation. All of these move to the platform TOML. `jeff-login` becomes:
 2. Build PATH from `platform.paths.system_paths` + user paths.
 3. Write `env.json` from `platform.env` + computed values.
 4. Write `env.sh` or `env.ps1` based on `platform.shell.env_format`.
+
+`env.json` is always generated (Xonsh reads it via `rc.d/config.py`).
+The shell-format output is for non-Xonsh shells (zsh login, PowerShell).
 
 ### jeff-alias
 Hardcodes `/opt/homebrew/bin/{fzf,glow}`. Replace with
@@ -225,17 +237,16 @@ read prefix dirs from a config key.
 ### sync
 `sh -c` invocation uses `platform.shell.invoke`.
 
-### install-dotfiles (Python)
-Reads `platform.paths.config_home` to know where to symlink configs.
-
 ### Xonsh config (rc.d/config.py)
-Replaces hardcoded `/opt/homebrew/bin/yazi` with `platform.tool("yazi")`.
+Replaces hardcoded `/opt/homebrew/bin/yazi` with `platform.tool("yazi")`
+once PyO3 bindings are available. Not a blocker for anything else.
 
 ## Crate metadata
 
 - Name: `conf-platform`
 - Location: `~/conf/prj/conf-platform/`
-- Dependencies: `serde`, `toml`, `dirs` (for home dir), `pyo3` (optional feature)
+- Dependencies: `serde`, `toml`, `dirs` (for home dir)
+- Optional: `pyo3` (behind `pyo3` feature flag)
 - Workspace member in `~/conf/prj/Cargo.toml`
 
 ## Open questions
@@ -244,10 +255,10 @@ Replaces hardcoded `/opt/homebrew/bin/yazi` with `platform.tool("yazi")`.
   (a `[packages]` table), or should that live in a separate
   `packages.toml`? The former is simpler; the latter separates "what
   to install" from "how the platform works."
-- Should `env_format` support multiple outputs simultaneously (e.g.,
-  `jeff-login` generating both `env.sh` and `env.json`)? Probably yes;
-  `env_format` might better be called `shell_format` and only govern
-  the shell-specific output.
+- `env_format` governs the shell-specific output format (`env.sh` or
+  `env.ps1`). `env.json` is always generated (Xonsh reads it). Should
+  `jeff-login` generate both shell formats, or just the one matching
+  the current platform?
 - How to handle tools that aren't installed yet at config-load time?
   `platform.tool()` should probably return `Option` and let the caller
   decide whether to fail or skip.
