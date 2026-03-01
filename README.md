@@ -1,5 +1,16 @@
 # Environment configuration for macOS
 
+In theory:
+
+1. Clone this repo to `~/conf`.
+2. Install toolchain
+2. Clone custom repos and forks:
+   ```zsh
+
+   ```
+
+3. Install Homebrew.
+
 ## To Do
 * Automatically configure Notion not to steal [Cmd+Shift+K][1].
 * Enable reversal of `conf/bin/init.zsh` and `conf/bin/install-*.zsh`.

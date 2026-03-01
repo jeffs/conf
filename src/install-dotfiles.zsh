@@ -38,8 +38,14 @@ ln -s ~/conf/etc/zshrc .zshrc
 #
 # ln -s ~/conf/etc/claude/CLAUDE.md ~/.claude/CLAUDE.md
 
-# TODO: These paths are specific to macOS. On Linux et al, the path should be
-#  $XDG_CONFIG, defaulting to ~/.config.
+# TODO
+#
+# These paths are specific to macOS. On Linux et al, the path should be
+# `$XDG_CONFIG_HOME`, defaulting to `~/.config`. `../etc/wezterm/wezterm.lua`
+# does set that variable, and most tools respect it. The right thing
+# to do is probably use `~/.config` universally, and put symlinks in
+# `~/Library/Application Support`; or, to give up on XDG, and use the default
+# path for each tool/OS combination.
 readonly config_home='Library/Application Support'
 
 mkdir -p "$config_home/rustfmt"
