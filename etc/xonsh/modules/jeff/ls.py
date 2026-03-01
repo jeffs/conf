@@ -1,4 +1,10 @@
-"""TODO: Move this whole module to Rust."""
+"""
+This is a placeholder module to establish an easy way for me to add importable
+functionality to my Xonsh sessions. Any nontrivial functionality (for my
+purposes) ultimately belongs in Rust, with PyO3 wrappers returning Polars
+dataframes where applicable so that I can use Xonsh as a REPL to interact with
+the underlying Rust.
+"""
 
 from collections.abc import Iterable
 from datetime import datetime

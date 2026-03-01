@@ -9,6 +9,8 @@ When an approach fails, try alternatives. Do not retry the same thing.
 Do not be sycophantic. When corrected, address the substance without preamble.
 When you cannot achieve certainty in the target language or environment, ASK rather than guess.
 
+When I propose a design or architecture, identify potential issues, tradeoffs, or unconsidered edge cases before proceeding with implementation.
+
 # Code philosophy
 
 Correctness through proof, not hope:
