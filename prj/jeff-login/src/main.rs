@@ -27,7 +27,7 @@ fn paths_to_json(paths: &[&Path]) -> Vec<serde_json::Value> {
 fn write_json<'a>(
     env: impl IntoIterator<Item = (&'a String, &'a String)>,
     path: &[&Path],
-    jump_prefixes: &[&Path],
+    jump_dirs: &[&Path],
     dest: &Path,
 ) -> io::Result<()> {
     let mut map = env
@@ -36,8 +36,8 @@ fn write_json<'a>(
         .collect::<serde_json::Map<_, _>>();
     map.insert("PATH".into(), serde_json::Value::Array(paths_to_json(path)));
     map.insert(
-        "JUMP_PREFIXES".into(),
-        serde_json::Value::Array(paths_to_json(jump_prefixes)),
+        "JUMP_DIRS".into(),
+        serde_json::Value::Array(paths_to_json(jump_dirs)),
     );
     let mut json = serde_json::to_string_pretty(&map)
         .unwrap_or_else(|e| unreachable!("serde_json::Map is serializable: {e}"));
@@ -68,7 +68,7 @@ fn write_sh<'a>(
     dest: &Path,
     env: impl IntoIterator<Item = (&'a String, &'a String)>,
     path: &[&Path],
-    jump_prefixes: &[&Path],
+    jump_dirs: &[&Path],
 ) -> Result<(), Box<dyn Error>> {
     let mut out = b"# This file is generated. See ~/conf/prj/jeff-login.\n\n".to_vec();
     for (key, value) in env {
@@ -77,8 +77,8 @@ fn write_sh<'a>(
     write_sh_var(&mut out, ffi::OsStr::new("PATH"), &env::join_paths(path)?);
     write_sh_var(
         &mut out,
-        ffi::OsStr::new("JUMP_PREFIXES"),
-        &env::join_paths(jump_prefixes)?,
+        ffi::OsStr::new("JUMP_DIRS"),
+        &env::join_paths(jump_dirs)?,
     );
     Ok(fs::write(dest, out)?)
 }
@@ -92,9 +92,9 @@ fn main() {
     let conf = home.join("conf");
     let platform = platform::Platform::load(&conf).expect("loading platform config");
     let path = platform.full_path();
-    let jump_prefixes: Vec<&Path> = platform
+    let jump_dirs: Vec<&Path> = platform
         .paths
-        .jump_prefixes
+        .jump_dirs
         .iter()
         .map(PathBuf::as_path)
         .collect();
@@ -105,11 +105,11 @@ fn main() {
 
     // Save JSON for Nushell and Xonsh.
     let json = var.join("env.json");
-    write_json(&platform.env, &path, &jump_prefixes, &json)
+    write_json(&platform.env, &path, &jump_dirs, &json)
         .unwrap_or_else(|e| panic!("{}: {e}", json.display()));
 
     // Save exports for POSIX shells.
     let sh = var.join("env.sh");
-    write_sh(&sh, &platform.env, &path, &jump_prefixes)
+    write_sh(&sh, &platform.env, &path, &jump_dirs)
         .unwrap_or_else(|e| panic!("{}: {e}", sh.display()));
 }

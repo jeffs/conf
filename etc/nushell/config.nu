@@ -23,7 +23,7 @@
 # is necessary even for non-login shells so that Nu handles variables exported
 # from arbitrary ancestor processes.
   $env.ENV_CONVERSIONS = $env.ENV_CONVERSIONS | merge {
-  JUMP_PREFIXES: {
+  JUMP_DIRS: {
     from_string: { |s| $s | split row (char esep) }
     to_string: { |v| $v | str join (char esep) } }
 }

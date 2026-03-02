@@ -31,8 +31,6 @@ def setup():
     aliases = cast(dict[str, object], XSH.aliases)
     env = cast(dict[str, object], XSH.env)
 
-    XSH.env.register("JUMP_PREFIXES", type="env_path")
-
     if "JEFF_LOGIN_DONE" not in env:
         env["JEFF_LOGIN_DONE"] = True
 

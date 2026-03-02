@@ -13,7 +13,7 @@ pub use expansion::{Expand, Target};
 pub type Result<T> = std::result::Result<T, Error>;
 
 fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
-    let mut prefixes: Vec<PathBuf> = env::var_os("JUMP_PREFIXES")
+    let mut dirs: Vec<PathBuf> = env::var_os("JUMP_DIRS")
         .map(|s| {
             env::split_paths(&s)
                 .filter(|p| p != Path::new(""))
@@ -21,13 +21,13 @@ fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
         })
         .unwrap_or_default();
 
-    if prefixes.is_empty() {
+    if dirs.is_empty() {
         let config_home =
             env::var_os("XDG_CONFIG_HOME").map_or_else(|| home.join(".config"), PathBuf::from);
-        prefixes.push(config_home.join("jump"));
+        dirs.push(config_home.join("jump"));
     }
 
-    let paths: Vec<_> = prefixes.iter().map(|p| p.join("targets.yaml")).collect();
+    let paths: Vec<_> = dirs.iter().map(|p| p.join("targets.yaml")).collect();
     let mut db = Database::new();
     for path in &paths {
         db.read_file(path)?;
@@ -43,10 +43,10 @@ pub struct App {
 }
 
 impl App {
-    /// Returns an app that reads from all `PREFIX/targets.yaml` files,
-    /// where `PREFIX` is each path in the `JUMP_PREFIXES` environment
-    /// variable. If `JUMP_PREFIXES` is empty or unset, reads from
-    /// `$XDG_CONFIG_HOME/jump/targets.yaml` (defaulting to `~/.config/jump`).
+    /// Returns an app that reads from all `DIR/targets.yaml` files, where `DIR`
+    /// is each path in the `JUMP_DIRS` environment variable. If `JUMP_DIRS`
+    /// is empty or unset, reads from `$XDG_CONFIG_HOME/jump/targets.yaml`
+    /// (defaulting to `~/.config/jump`).
     ///
     /// # Panics
     ///

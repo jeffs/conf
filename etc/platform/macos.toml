@@ -12,8 +12,8 @@ home_paths = [
     "go/bin",
 ]
 
-# JUMP_PREFIXES directories relative to $HOME.
-jump_prefixes = ["conf/etc/jump"]
+# JUMP_DIRS directories relative to $HOME.
+jump_dirs = ["conf/etc/jump"]
 
 # Absolute PATH entries.
 system_paths = [
