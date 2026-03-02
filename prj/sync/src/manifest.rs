@@ -134,11 +134,9 @@ impl From<toml::de::Error> for ManifestError {
     }
 }
 
-fn expand_tilde(s: &str) -> PathBuf {
+pub fn expand_tilde(s: &str) -> PathBuf {
     if let Some(rest) = s.strip_prefix("~/") {
-        #[allow(deprecated)]
-        let home = std::env::home_dir().expect("HOME not set");
-        home.join(rest)
+        std::env::home_dir().expect("HOME not set").join(rest)
     } else {
         PathBuf::from(s)
     }

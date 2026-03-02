@@ -192,7 +192,6 @@ impl Platform {
     /// Returns an error if the platform TOML cannot be read or parsed, or if
     /// the home directory cannot be determined.
     pub fn load(conf_root: &Path) -> Result<Self, Error> {
-        #[allow(deprecated)]
         let home = std::env::home_dir().ok_or(Error::NoHomeDir)?;
 
         let toml_name = platform_toml_name()?;

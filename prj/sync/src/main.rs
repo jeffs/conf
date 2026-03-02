@@ -3,7 +3,6 @@ mod manifest;
 mod ops;
 mod output;
 
-use std::path::PathBuf;
 use std::process;
 
 use clap::{Parser, Subcommand};
@@ -45,20 +44,10 @@ enum Cmd {
     Clone,
 }
 
-fn expand_tilde(s: &str) -> PathBuf {
-    if let Some(rest) = s.strip_prefix("~/") {
-        #[allow(deprecated)]
-        let home = std::env::home_dir().expect("HOME not set");
-        home.join(rest)
-    } else {
-        PathBuf::from(s)
-    }
-}
-
 fn main() {
     let cli = Cli::parse();
 
-    let manifest_path = expand_tilde(&cli.manifest);
+    let manifest_path = manifest::expand_tilde(&cli.manifest);
     let repos = match manifest::load(&manifest_path) {
         Ok(repos) => repos,
         Err(e) => {
