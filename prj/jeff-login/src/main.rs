@@ -2,6 +2,7 @@
 
 use std::{ffi, fs, io, path::Path};
 
+/// TODO: Replace with [`std::env::join_paths`].
 fn path_join(dirs: &[&Path]) -> ffi::OsString {
     let mut dirs = dirs.iter();
     let Some(first) = dirs.next() else {
@@ -84,10 +85,10 @@ fn main() {
     let home = std::env::home_dir().expect("home dir");
     let conf_root = home.join("conf");
 
-    let platform =
-        platform::Platform::load(&conf_root).unwrap_or_else(|e| panic!("platform config: {e}"));
+    let platform = platform::Platform::load(&conf_root).expect("platform config: {e}");
     let path = platform.full_path();
 
+    // Make sure the destination directory exists.
     let var_dir = conf_root.join("var");
     fs::create_dir_all(&var_dir).unwrap_or_else(|e| panic!("{}: {e}", var_dir.display()));
 

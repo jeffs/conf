@@ -81,8 +81,8 @@ mod tests {
 
     #[test]
     fn overlay_adds_new_keys() {
-        let mut base: Table = toml::from_str(r#"a = 1"#).unwrap();
-        let overlay: Table = toml::from_str(r#"b = 2"#).unwrap();
+        let mut base: Table = toml::from_str("a = 1").unwrap();
+        let overlay: Table = toml::from_str("b = 2").unwrap();
         deep_merge(&mut base, overlay);
         assert_eq!(base["a"].as_integer().unwrap(), 1);
         assert_eq!(base["b"].as_integer().unwrap(), 2);
