@@ -204,10 +204,8 @@ fn update_one(repo: &Repo, dry_run: bool) -> Outcome {
             bookmarks,
             ..
         } => {
-            if upstream_ref.is_branch() {
-                if !sync_trunk(repo, upstream_ref, dry_run) {
-                    return Outcome::Failed("sync trunk failed".into());
-                }
+            if upstream_ref.is_branch() && !sync_trunk(repo, upstream_ref, dry_run) {
+                return Outcome::Failed("sync trunk failed".into());
             }
             let outcome = rebase_one(repo, dry_run);
             if !matches!(outcome, Outcome::Ok) {

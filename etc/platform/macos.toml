@@ -1,0 +1,66 @@
+[paths]
+# Relative paths resolve against $HOME.
+config_home = "Library/Application Support"
+pkg_prefix = "/opt/homebrew"
+
+# PATH entries relative to $HOME, prepended before system_paths.
+home_paths = [
+    "usr/bin",
+    "conf/bin",
+    ".local/bin",
+    ".cargo/bin",
+    "go/bin",
+]
+
+# Absolute PATH entries.
+system_paths = [
+    "/usr/local/go/bin",
+    "/opt/homebrew/bin",
+    "/opt/homebrew/opt/sqlite/bin",
+    "/usr/local/bin",
+    "/usr/bin",
+    "/bin",
+    "/usr/sbin",
+    "/sbin",
+    "/Library/Developer/CommandLineTools/usr/bin",
+]
+
+[shell]
+invoke = ["sh", "-c"]
+env_format = "posix"
+
+[package_manager]
+name = "brew"
+install = ["brew", "install"]
+upgrade = ["brew", "upgrade", "--quiet"]
+
+[system_update]
+command = ["softwareupdate", "--list"]
+
+# Environment variables.
+# Values starting with ~/ or exactly ~ are expanded against $HOME.
+# Everything else is a literal string.
+[env]
+EDITOR = "~/.cargo/bin/hx"
+VISUAL = "~/.cargo/bin/hx"
+XDG_CONFIG_HOME = "~/.config"
+FZF_DEFAULT_OPTS_FILE = "~/conf/etc/fzf"
+RIPGREP_CONFIG_PATH = "~/conf/etc/ripgreprc"
+COPILOT_CUSTOM_INSTRUCTIONS_DIRS = "~/conf/etc/copilot/instructions.md"
+JUMP_PREFIXES = "~/conf/etc/jump"
+HELIX_RUNTIME = "~/usr/src/helix/runtime"
+JUMP_HOME = "~"
+LESS = "-FRX -j5"
+MANPAGER = "col -b | bat -pl man"
+HOMEBREW_NO_ENV_HINTS = "true"
+RUSTC_WRAPPER = "/opt/homebrew/bin/sccache"
+ENABLE_LSP_TOOL = "1"
+ENABLE_LSP_TOOLS = "1"
+GRIT_TRUNKS = "dev,main,master,trunk"
+UV_PYTHON = "3.13"
+
+# Explicit tool paths. Omit to rely on PATH lookup.
+[tools]
+fzf = "/opt/homebrew/bin/fzf"
+glow = "/opt/homebrew/bin/glow"
+yazi = "/opt/homebrew/bin/yazi"
