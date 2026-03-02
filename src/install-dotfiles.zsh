@@ -16,20 +16,20 @@ for f in .config/nvim .gitconfig .tmux.conf .zprofile .zshrc; do
     fi
 done
 
-mkdir -p .config
-mkdir -p .claude
-ln -s ~/conf/etc/claude/agents .claude/agents
-ln -s ~/conf/etc/claude/skills .claude/skills
-ln -s ~/conf/src/claude-notify.sh .claude/claude-notify.sh
-ln -s ~/conf/etc/claude/settings.json .claude/settings.json
-ln -s ~/conf/etc/gitconfig .gitconfig
-ln -s ~/conf/etc/jjconfig.toml .config/jj/config.toml
-ln -s ~/conf/etc/nvim .config
-ln -s ~/conf/etc/tmux.conf .tmux.conf
+mkdir -p ~/.config
+mkdir -p ~/.claude
+
+ln -s ~/conf/etc/claude/settings.json ~/.claude/settings.json
+ln -s ~/conf/etc/claude/skills ~/.claude/skills
+ln -s ~/conf/etc/gitconfig ~/.gitconfig
+ln -s ~/conf/etc/jjconfig.toml ~/.config/jj/config.toml
+ln -s ~/conf/etc/nvim ~/.config
+ln -s ~/conf/etc/sqliterc ~/.sqliterc
+ln -s ~/conf/etc/tmux.conf ~/.tmux.conf
 ln -s ~/conf/etc/xonsh ~/.config
-ln -s ~/conf/etc/zellij .config
-ln -s ~/conf/etc/zprofile .zprofile
-ln -s ~/conf/etc/zshrc .zshrc
+ln -s ~/conf/etc/zellij ~/.config
+ln -s ~/conf/etc/zprofile ~/.zprofile
+ln -s ~/conf/etc/zshrc ~/.zshrc
 
 # Symlinking CLAUDE.md is fine on a machine that requires no further
 # user-level config. However, on a machine that wants to augment it at all,
