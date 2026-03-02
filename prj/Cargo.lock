@@ -498,6 +498,7 @@ version = "0.1.0"
 name = "jeff-login"
 version = "0.1.0"
 dependencies = [
+ "platform",
  "serde_json",
 ]
 
