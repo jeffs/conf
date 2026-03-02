@@ -13,7 +13,7 @@ Xonsh is dropped later, nothing else breaks.
 
 ## Purge list
 
-Delete outright:
+Already deleted:
 
 | File | Reason |
 |------|--------|
@@ -23,13 +23,12 @@ Delete outright:
 | `prj/cl/cl.zsh` | Unused; Cursor dependency removed |
 | `prj/cl/src/lib.rs` reference to `/usr/local/bin/cursor` | Dead code |
 | `app/cl.app/`, `app/cl.command`, `app/cy.command` | Unused Cursor launchers |
-| `etc/nushell/` | Migrating away from Nushell |
 | `src/coverage.zsh` | Trivial wrapper; run `cargo tarpaulin` directly |
 | `src/dig-dirt.zsh` | Trivial wrapper |
 | `src/pycharm.zsh` | Trivial `open -a` wrapper |
 | `src/pydeps.zsh` | One-line alias; put in Xonsh config |
 
-Also audit `doc/tbd/nushell.md` — may be obsolete.
+`etc/nushell/` is kept for now.
 
 ## The `init` binary
 
@@ -114,7 +113,7 @@ scripts. This list lives in the platform TOML or a separate
 
 ## Migration order
 
-1. Purge dead files (no dependencies, safe to delete now).
+1. ~~Purge dead files (no dependencies, safe to delete now).~~ Done.
 2. Build the shared platform crate (see `platform-crate.md`).
 3. Build the `init` binary with core bootstrap logic: package manager,
    Rust toolchain, workspace builds, symlink layout.
