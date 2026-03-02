@@ -33,19 +33,17 @@ does the actual venv creation/management.
 
 - **`uv run <command>`** — runs inside the project's venv without activation.
   This sidesteps the whole problem.
-- **`vox activate .venv`** — if you already created a venv with `uv venv`, you
-  can point Vox at it.
 - For `uv pip install` targeting xonsh's own environment, you may need
-  `--python` to point at the right interpreter.
+  `--python` to point at the right interpreter (`sys.executable`).
 
 ## Quick reference
 
-| Operation | Works in xonsh? |
-|---|---|
-| `uv venv` (create) | Yes |
-| `source .venv/bin/activate` | No |
-| `uv run <cmd>` | Yes |
-| `vox activate .venv` | Yes (with xontrib-vox) |
+| Operation                   | Works in xonsh?        |
+| --------------------------- | ---------------------- |
+| `uv venv` (create)          | Yes                    |
+| `source .venv/bin/activate` | No                     |
+| `uv run <cmd>`              | Yes                    |
+| `vox activate .venv`        | Yes (with xontrib-vox) |
 
 The safest pattern is: create venvs however you like (`uv venv`,
 `python -m venv`, etc.), but activate them through **Vox** or skip activation
