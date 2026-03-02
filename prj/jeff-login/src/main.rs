@@ -1,6 +1,11 @@
 //! Login shell launcher. See [`main`] for notes.
 
-use std::{env, error::Error, ffi, fs, io, path::{Path, PathBuf}};
+use std::{
+    env,
+    error::Error,
+    ffi, fs, io,
+    path::{Path, PathBuf},
+};
 
 /// Writes the specified environment to a JSON object in the specified file.
 ///

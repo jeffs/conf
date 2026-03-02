@@ -203,11 +203,7 @@ impl Platform {
     }
 
     /// Load from explicit file paths (useful for testing).
-    fn load_from(
-        platform_path: &Path,
-        site_path: &Path,
-        home: &Path,
-    ) -> Result<Self, Error> {
+    fn load_from(platform_path: &Path, site_path: &Path, home: &Path) -> Result<Self, Error> {
         let platform_str = fs::read_to_string(platform_path)?;
         let mut table: toml::Table = toml::from_str(&platform_str)?;
 
@@ -228,12 +224,7 @@ impl Platform {
             home.join(&raw.paths.config_home)
         };
 
-        let home_paths = raw
-            .paths
-            .home_paths
-            .iter()
-            .map(|p| home.join(p))
-            .collect();
+        let home_paths = raw.paths.home_paths.iter().map(|p| home.join(p)).collect();
 
         let jump_prefixes = raw
             .paths
@@ -330,7 +321,10 @@ mod tests {
 
         let p = Platform::load_from(&platform_path, &site_path, &home).unwrap();
 
-        assert_eq!(p.paths.config_home, home.join("Library/Application Support"));
+        assert_eq!(
+            p.paths.config_home,
+            home.join("Library/Application Support")
+        );
         assert_eq!(p.paths.pkg_prefix, PathBuf::from("/opt/homebrew"));
         assert!(!p.paths.home_paths.is_empty());
         assert!(!p.paths.system_paths.is_empty());
@@ -434,10 +428,7 @@ mod tests {
         let home = fake_home();
 
         let p = Platform::load_from(&platform_path, &site_path, &home).unwrap();
-        assert_eq!(
-            p.tool("fzf").unwrap(),
-            Path::new("/opt/homebrew/bin/fzf")
-        );
+        assert_eq!(p.tool("fzf").unwrap(), Path::new("/opt/homebrew/bin/fzf"));
         assert!(p.tool("nonexistent").is_none());
     }
 }

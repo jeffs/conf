@@ -14,7 +14,11 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
     let mut prefixes: Vec<PathBuf> = env::var_os("JUMP_PREFIXES")
-        .map(|s| env::split_paths(&s).filter(|p| p != Path::new("")).collect())
+        .map(|s| {
+            env::split_paths(&s)
+                .filter(|p| p != Path::new(""))
+                .collect()
+        })
         .unwrap_or_default();
 
     if prefixes.is_empty() {

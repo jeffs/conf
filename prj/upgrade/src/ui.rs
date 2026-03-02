@@ -17,9 +17,7 @@ pub fn render(frame: &mut Frame, tasks: &[Task]) {
 }
 
 fn render_tasks(frame: &mut Frame, area: Rect, tasks: &[Task]) {
-    let block = Block::default()
-        .title("Tasks")
-        .borders(Borders::ALL);
+    let block = Block::default().title("Tasks").borders(Borders::ALL);
 
     let inner = block.inner(area);
     frame.render_widget(block, area);
@@ -76,7 +74,9 @@ fn render_task(frame: &mut Frame, area: Rect, task: &Task) {
     let style = match &task.state {
         State::Completed => Style::default().fg(Color::Green),
         State::Failed(_) => Style::default().fg(Color::Red),
-        State::Running => Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD),
+        State::Running => Style::default()
+            .fg(Color::Yellow)
+            .add_modifier(Modifier::BOLD),
         _ => Style::default().fg(Color::DarkGray),
     };
 
@@ -94,7 +94,10 @@ fn render_task(frame: &mut Frame, area: Rect, task: &Task) {
     }
 
     if let State::Failed(ref msg) = task.state {
-        lines.push(Line::styled(format!("  error: {msg}"), Style::default().fg(Color::Red)));
+        lines.push(Line::styled(
+            format!("  error: {msg}"),
+            Style::default().fg(Color::Red),
+        ));
     }
 
     let paragraph = Paragraph::new(lines);
@@ -102,8 +105,14 @@ fn render_task(frame: &mut Frame, area: Rect, task: &Task) {
 }
 
 fn render_status_bar(frame: &mut Frame, area: Rect, tasks: &[Task]) {
-    let completed = tasks.iter().filter(|t| matches!(t.state, State::Completed)).count();
-    let failed = tasks.iter().filter(|t| matches!(t.state, State::Failed(_))).count();
+    let completed = tasks
+        .iter()
+        .filter(|t| matches!(t.state, State::Completed))
+        .count();
+    let failed = tasks
+        .iter()
+        .filter(|t| matches!(t.state, State::Failed(_)))
+        .count();
     let total = tasks.len();
 
     let status = if failed > 0 {

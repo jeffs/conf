@@ -39,7 +39,10 @@ impl State {
 
 #[derive(Clone, Debug)]
 pub enum Command {
-    Shell { program: &'static str, args: &'static [&'static str] },
+    Shell {
+        program: &'static str,
+        args: &'static [&'static str],
+    },
     CargoCrates,
 }
 

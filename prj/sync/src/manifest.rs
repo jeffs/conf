@@ -164,9 +164,8 @@ pub fn load(path: &Path) -> Result<Vec<Repo>, ManifestError> {
                         "{name}: `bookmarks` requires `upstream_ref`"
                     ))
                 })?;
-                let upstream_ref = UpstreamRef::parse(&raw_ref).map_err(|e| {
-                    ManifestError::Validation(format!("{name}: {e}"))
-                })?;
+                let upstream_ref = UpstreamRef::parse(&raw_ref)
+                    .map_err(|e| ManifestError::Validation(format!("{name}: {e}")))?;
                 if bookmarks.is_empty() {
                     return Err(ManifestError::Validation(format!(
                         "{name}: `bookmarks` must not be empty"
@@ -180,13 +179,10 @@ pub fn load(path: &Path) -> Result<Vec<Repo>, ManifestError> {
             }
             (Some(upstream), None) => {
                 let raw_ref = raw.upstream_ref.clone().ok_or_else(|| {
-                    ManifestError::Validation(format!(
-                        "{name}: `upstream` requires `upstream_ref`"
-                    ))
+                    ManifestError::Validation(format!("{name}: `upstream` requires `upstream_ref`"))
                 })?;
-                let upstream_ref = UpstreamRef::parse(&raw_ref).map_err(|e| {
-                    ManifestError::Validation(format!("{name}: {e}"))
-                })?;
+                let upstream_ref = UpstreamRef::parse(&raw_ref)
+                    .map_err(|e| ManifestError::Validation(format!("{name}: {e}")))?;
                 RepoKind::ForkTrack {
                     upstream: upstream.clone(),
                     upstream_ref,

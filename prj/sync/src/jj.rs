@@ -85,15 +85,7 @@ pub fn bookmark_set(cwd: &Path, bookmark: &str, revision: &str, dry_run: bool) -
 
 pub fn rebase(cwd: &Path, bookmark: &str, dest: &str, dry_run: bool) -> RunResult {
     run(
-        &[
-            "jj",
-            "rebase",
-            "-b",
-            bookmark,
-            "-d",
-            dest,
-            "--skip-emptied",
-        ],
+        &["jj", "rebase", "-b", bookmark, "-d", dest, "--skip-emptied"],
         cwd,
         dry_run,
     )
@@ -156,11 +148,7 @@ pub fn clone(cwd: &Path, url: &str, dest: &Path, dry_run: bool) -> RunResult {
 }
 
 pub fn remote_add(cwd: &Path, name: &str, url: &str, dry_run: bool) -> RunResult {
-    run(
-        &["jj", "git", "remote", "add", name, url],
-        cwd,
-        dry_run,
-    )
+    run(&["jj", "git", "remote", "add", name, url], cwd, dry_run)
 }
 
 pub fn build(cwd: &Path, cmd_str: &str, dry_run: bool) -> RunResult {

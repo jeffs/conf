@@ -12,11 +12,7 @@ pub enum Event {
     Failed(String, String),
 }
 
-pub async fn run_task(
-    id: &'static str,
-    command: Command,
-    tx: mpsc::UnboundedSender<Event>,
-) {
+pub async fn run_task(id: &'static str, command: Command, tx: mpsc::UnboundedSender<Event>) {
     let result = match command {
         Command::Shell { program, args } => run_shell(id, program, args, tx.clone()).await,
         Command::CargoCrates => run_cargo_crates(id, tx.clone()).await,

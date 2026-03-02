@@ -102,10 +102,7 @@ impl App {
         let ready: Vec<_> = self
             .tasks
             .iter()
-            .filter(|t| {
-                matches!(t.state, State::Blocked)
-                    && t.depends_on == Some(completed_id)
-            })
+            .filter(|t| matches!(t.state, State::Blocked) && t.depends_on == Some(completed_id))
             .map(|t| (t.id, t.command.clone()))
             .collect();
 
