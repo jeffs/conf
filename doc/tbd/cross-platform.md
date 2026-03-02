@@ -11,7 +11,8 @@ aren't addressed by the platform TOML or the script rewrite.
 
 ## Prerequisites
 
-- `conf-platform` crate exists and is integrated (see `platform-crate.md`).
+- ~~`platform` crate exists and is integrated (see `platform-crate.md`).~~ Done.
+- ~~`jeff-login` migrated to platform crate.~~ Done.
 - Scripts replaced by Rust (see `script-migration.md`).
 - Rust `init` binary handles all bootstrap (see `script-migration.md`).
 - Obsolete tools purged (Cursor, Poetry, Nushell configs).
@@ -238,13 +239,13 @@ have correct paths yet).
 
 ### Phase 2: Platform crate and `init` binary (one weekend)
 
-1. Build `conf-platform` crate with TOML loading.
+1. ~~Build `platform` crate with TOML loading.~~ Done.
 2. Build the Rust `init` binary with core bootstrap logic.
-3. Integrate `conf-platform` into `jeff-login` (PATH, env vars, shell output).
+3. ~~Integrate `platform` into `jeff-login` (PATH, env vars, shell output).~~ Done.
 4. Integrate into `jeff-alias` (tool paths).
 5. Integrate into `upgrade` (task commands).
 6. Integrate into `sync` (shell invocation).
-7. Write `macos.toml` with current hardcoded values.
+7. ~~Write `macos.toml` with current hardcoded values.~~ Done.
 8. Write `windows.toml` with best-guess values.
 
 ### Phase 3: Config migration and env generation (one weekend)

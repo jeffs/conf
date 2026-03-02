@@ -33,7 +33,7 @@ Already deleted:
 ## The `init` binary
 
 A Rust binary in the workspace that replaces `src/init.zsh` as the
-top-level bootstrap entry point. It uses the `conf-platform` crate to
+top-level bootstrap entry point. It uses the `platform` crate to
 read platform/site TOML for all paths and commands.
 
 `init` is idempotent: running it on a fully set-up machine either no-ops
@@ -114,7 +114,8 @@ scripts. This list lives in the platform TOML or a separate
 ## Migration order
 
 1. ~~Purge dead files (no dependencies, safe to delete now).~~ Done.
-2. Build the shared platform crate (see `platform-crate.md`).
+2. ~~Build the shared platform crate (see `platform-crate.md`).~~ Done.
+   ~~Migrate `jeff-login` to use it.~~ Done.
 3. Build the `init` binary with core bootstrap logic: package manager,
    Rust toolchain, workspace builds, symlink layout.
 4. Add `uv` / Python / Xonsh installation as a step in `init`.
