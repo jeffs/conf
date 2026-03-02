@@ -13,13 +13,9 @@ pub use expansion::{Expand, Target};
 pub type Result<T> = std::result::Result<T, Error>;
 
 fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
-    let mut prefixes = env::var("JUMP_PREFIXES")
-        .map(|s| s.split(':').map(str::to_owned).collect::<Vec<_>>())
-        .unwrap_or_default()
-        .into_iter()
-        .filter(|s| !s.is_empty())
-        .map(PathBuf::from)
-        .collect::<Vec<_>>();
+    let mut prefixes: Vec<PathBuf> = env::var_os("JUMP_PREFIXES")
+        .map(|s| env::split_paths(&s).filter(|p| p != Path::new("")).collect())
+        .unwrap_or_default();
 
     if prefixes.is_empty() {
         let config_home =

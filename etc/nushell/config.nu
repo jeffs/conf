@@ -19,11 +19,20 @@
 # [apparently](https://github.com/zellij-org/zellij/issues/2158) `sixel` in
 # Zellij
 
-# Source login script from interactive shells for two reason:
+# Export list-valued env vars as colon-separated strings for subprocesses. This
+# is necessary even for non-login shells so that Nu handles variables exported
+# from arbitrary ancestor processes.
+  $env.ENV_CONVERSIONS = $env.ENV_CONVERSIONS | merge {
+  JUMP_PREFIXES: {
+    from_string: { |s| $s | split row (char esep) }
+    to_string: { |v| $v | str join (char esep) } }
+}
+
+# Source login script from interactive shells for two reasons:
 #
 # 1. Zellij `default_shell` ignores arguments like `--login`. (We could work
 #    around this using a wrapper script, but this is just as easy.)
-# 2. Nushell sources `login.nu` *after* `config.nu`; so, by dfeault, anything
+# 2. Nushell sources `login.nu` *after* `config.nu`; so, by default, anything
 #    that needs a variable (such as an external command lookup via `PATH`) works
 #    differently in the top level login shell than in subshells. Doing login
 #    initialization in `config.nu` directly wouldn't help us for noninteractive

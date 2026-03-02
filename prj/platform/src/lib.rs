@@ -67,6 +67,7 @@ pub struct Paths {
     pub pkg_prefix: PathBuf,
     pub home_paths: Vec<PathBuf>,
     pub system_paths: Vec<PathBuf>,
+    pub jump_prefixes: Vec<PathBuf>,
 }
 
 #[derive(Debug)]
@@ -115,6 +116,8 @@ struct RawPaths {
     pkg_prefix: PathBuf,
     home_paths: Vec<String>,
     system_paths: Vec<PathBuf>,
+    #[serde(default)]
+    jump_prefixes: Vec<String>,
 }
 
 #[derive(Deserialize)]
@@ -232,6 +235,13 @@ impl Platform {
             .map(|p| home.join(p))
             .collect();
 
+        let jump_prefixes = raw
+            .paths
+            .jump_prefixes
+            .iter()
+            .map(|p| home.join(p))
+            .collect();
+
         let env = raw
             .env
             .into_iter()
@@ -251,6 +261,7 @@ impl Platform {
                 pkg_prefix: raw.paths.pkg_prefix,
                 home_paths,
                 system_paths: raw.paths.system_paths,
+                jump_prefixes,
             },
             shell: Shell {
                 invoke: raw.shell.invoke,

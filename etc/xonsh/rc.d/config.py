@@ -31,6 +31,8 @@ def setup():
     aliases = cast(dict[str, object], XSH.aliases)
     env = cast(dict[str, object], XSH.env)
 
+    XSH.env.register("JUMP_PREFIXES", type="env_path")
+
     if "JEFF_LOGIN_DONE" not in env:
         env["JEFF_LOGIN_DONE"] = True
 
@@ -39,7 +41,7 @@ def setup():
             env.update(env_json)
             os.environ.update(
                 {
-                    k: (v if isinstance(v, str) else ":".join(v))
+                    k: (v if isinstance(v, str) else os.pathsep.join(v))
                     for k, v in env_json.items()
                 }
             )
@@ -87,7 +89,6 @@ def setup():
                     [path_jump, *args],
                     capture_output=True,
                     text=True,
-                    env={k: v for k, v in env.items() if type(v) is str},
                 )
             except Exception as e:
                 return None, str(e), 1

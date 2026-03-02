@@ -12,6 +12,9 @@ home_paths = [
     "go/bin",
 ]
 
+# JUMP_PREFIXES directories relative to $HOME.
+jump_prefixes = ["conf/etc/jump"]
+
 # Absolute PATH entries.
 system_paths = [
     "/usr/local/go/bin",
@@ -47,7 +50,6 @@ XDG_CONFIG_HOME = "~/.config"
 FZF_DEFAULT_OPTS_FILE = "~/conf/etc/fzf"
 RIPGREP_CONFIG_PATH = "~/conf/etc/ripgreprc"
 COPILOT_CUSTOM_INSTRUCTIONS_DIRS = "~/conf/etc/copilot/instructions.md"
-JUMP_PREFIXES = "~/conf/etc/jump"
 HELIX_RUNTIME = "~/usr/src/helix/runtime"
 JUMP_HOME = "~"
 LESS = "-FRX -j5"
