@@ -1,4 +1,22 @@
+from collections.abc import Iterable
 import json
+
+
+def first[T](xs: Iterable[T]) -> T:
+    """
+    Return the first element of sequence `xs`.
+
+    Raises a `RuntimeError` if the sequence is empty.
+    """
+    try:
+        return next(iter(xs))
+    except StopIteration:
+        raise RuntimeError("first: expected `xs` to be nonempty")
+
+
+def get_first[T](xs: Iterable[T]) -> T | None:
+    """Return the first element of sequence `xs`, or `None` if `xs` is empty."""
+    return next(iter(xs), None)
 
 
 def setup():
