@@ -1,2 +1,8 @@
 [general]
+show_title = false
+
+# These settings aren't exposed in upstream Viddy. (They're supported by the
+# CLI, just not by config files.) See the adjacent `sync.toml` for forks.
 disable_auto_save = true
+no_title = true
+no_status = true
