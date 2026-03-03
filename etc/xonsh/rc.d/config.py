@@ -1,22 +1,5 @@
-from collections.abc import Iterable
+# JSON is so common that I leave it imported by default.
 import json
-
-
-def first[T](xs: Iterable[T]) -> T:
-    """
-    Return the first element of sequence `xs`.
-
-    Raises a `RuntimeError` if the sequence is empty.
-    """
-    try:
-        return next(iter(xs))
-    except StopIteration:
-        raise RuntimeError("first: expected `xs` to be nonempty")
-
-
-def get_first[T](xs: Iterable[T]) -> T | None:
-    """Return the first element of sequence `xs`, or `None` if `xs` is empty."""
-    return next(iter(xs), None)
 
 
 def setup():
@@ -48,14 +31,9 @@ def setup():
 
     sys.path.insert(0, str(Path("~/conf/etc/xonsh/modules").expanduser()))
 
-    import jeff
-
     if env.get("XONSH_INTERACTIVE"):
         import subprocess
         import webbrowser
-        from pygments import highlight
-        from pygments.lexers import PythonLexer
-        from pygments.formatters import TerminalTrueColorFormatter
 
         # To list available values:
         #
@@ -121,16 +99,6 @@ def setup():
             if s:
                 os.chdir(s)
 
-        def alias_ls(args):
-            """TODO: Parse flags"""
-            df = jeff.ls(*args)
-            hl = highlight(
-                repr(df),
-                PythonLexer(),
-                TerminalTrueColorFormatter(style=COLOR_STYLE),
-            )
-            return hl
-
         # Fun fact: `...` doesn't work as an alias, because it's valid Python.
         for i in range(1, 10):
             aliases["." * (i + 1)] = f"cd {'/'.join(['..'] * i)}"
@@ -173,4 +141,5 @@ def setup():
 
 
 setup()
+
 del setup
