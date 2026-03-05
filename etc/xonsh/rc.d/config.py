@@ -1,5 +1,6 @@
 # JSON is so common that I leave it imported by default.
 import json
+from pathlib import Path
 
 # Ditto Polars. This also saves from accidentally running `/usr/bin/pl`.
 import polars as pl
@@ -10,7 +11,6 @@ pl.Config.set_fmt_str_lengths(100)
 
 
 def setup():
-    from pathlib import Path
     from typing import cast
     import os
     import sys
