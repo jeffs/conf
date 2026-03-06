@@ -1,1 +1,5 @@
-\pset linestyle unicode + border 2
+\pset linestyle unicode
+\pset border 2
+
+-- dracula
+\setenv PAGER 'pspg --style=24'
