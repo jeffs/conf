@@ -108,8 +108,9 @@ def setup():
 
         # Fun fact: `...` doesn't work as an alias, because it's valid Python.
         for i in range(1, 10):
-            aliases["." * (i + 1)] = f"cd {'/'.join(['..'] * i)}"  # .., as in parent
-            aliases["u" * (i + 1)] = f"cd {'/'.join(['..'] * i)}"  # uu, as in up up
+            command = f"cd {'/'.join(['..'] * i)}"
+            aliases["." * (i + 1)] = command  # .., as in parent
+            aliases["u" * i] = command  # u, as in up
 
         del aliases["ls"]
 
