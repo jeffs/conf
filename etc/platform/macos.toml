@@ -26,6 +26,7 @@ system_paths = [
     "/usr/sbin",
     "/sbin",
     "/Library/Developer/CommandLineTools/usr/bin",
+    "/Applications/Postgres.app/Contents/Versions/latest/bin",
 ]
 
 [shell]
