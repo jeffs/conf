@@ -1,0 +1,21 @@
+# Put config like this in .sqls/config.yml in your project directory.
+# Then, in .helix/languages.toml:
+#
+#   [language-server.sqls]
+#   command = "sqls"
+#   args = ["-config", ".sqls/config.yml"]
+#
+# The args are relative to Helix's working directory.
+
+connections:
+  - driver: sqlite3
+    dataSourceName: /path/to/some.sqlite
+  - alias: local
+    driver: postgresql
+    proto: tcp
+    user: jeff
+    host: 127.0.0.1
+    port: 5432
+    dbName: jeff
+    sslMode: disable
+
