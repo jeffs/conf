@@ -7,6 +7,7 @@
 
 # These may be at different paths on different machines.
 $JUMP_HOME/git/brash: brash
+$JUMP_HOME/git/data: [d, data]
 $JUMP_HOME/git/journey: [j, journey]
 $JUMP_HOME/git/wasm: wasm
 $JUMP_HOME/usr/src/helix: [hx, helix]
