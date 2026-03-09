@@ -36,6 +36,9 @@ def setup():
         except Exception as e:
             print(f"error: env: {e}", file=sys.stderr)
 
+    # `history transfer` has a known bug.
+    # env["XONSH_HISTORY_BACKEND"] = "sqlite"
+
     sys.path.insert(0, str(Path("~/conf/etc/xonsh/modules").expanduser()))
 
     if env.get("XONSH_INTERACTIVE"):
