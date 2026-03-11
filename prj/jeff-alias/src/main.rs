@@ -135,6 +135,7 @@ fn main() {
         "jnm" => Exe::Jj.exec_with(["new", "--message"], args),
 
         "l" => Exe::Eza.exec_with(["-l"], args),
+        "la" => Exe::Eza.exec_with(["-la"], args),
 
         "tree" => Exe::Eza.exec_with(["-T", "--group-directories-first"], args),
         "t" => Exe::Eza.exec_with(["-T", "--group-directories-first", "--git-ignore"], args),
