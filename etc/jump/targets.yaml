@@ -4,6 +4,7 @@
 ~/conf: [c, conf]
 ~/file: [f, file]
 ~/pkg: pkg
+~/var/empty: [e, empty]
 
 # These may be at different paths on different machines.
 $JUMP_HOME/git/brash: brash
