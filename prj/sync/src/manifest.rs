@@ -63,12 +63,14 @@ impl UpstreamRef {
     }
 
     /// The fully qualified ref for use in jj revsets (e.g. `main@upstream`).
+    #[must_use]
     pub fn qualified(&self) -> String {
         format!("{}@{}", self.name, self.remote)
     }
 
     /// Whether this ref is a remote branch (can be synced/pushed as a bookmark).
     /// Tags (`@git`) cannot.
+    #[must_use]
     pub fn is_branch(&self) -> bool {
         self.remote != "git"
     }
@@ -134,6 +136,10 @@ impl From<toml::de::Error> for ManifestError {
     }
 }
 
+/// # Panics
+///
+/// Will panic if the caller's home directory cannot be determined.
+#[must_use]
 pub fn expand_tilde(s: &str) -> PathBuf {
     if let Some(rest) = s.strip_prefix("~/") {
         std::env::home_dir().expect("HOME not set").join(rest)
@@ -142,7 +148,11 @@ pub fn expand_tilde(s: &str) -> PathBuf {
     }
 }
 
-/// Load and validate the manifest from a TOML file.
+/// Loads and validates the manifest from a TOML file.
+///
+/// # Errors
+///
+/// Returns an error if the manifest cannot be read, parsed, and validated.
 pub fn load(path: &Path) -> Result<Vec<Repo>, ManifestError> {
     let text = fs::read_to_string(path)?;
     let manifest: Manifest = toml::from_str(&text)?;

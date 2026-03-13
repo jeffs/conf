@@ -52,7 +52,7 @@ impl IntoLocation for PathBuf {
 #[derive(Debug)]
 pub enum ErrorKind {
     Io(io::Error),
-    Yaml(serde_saphyr::Error),
+    Yaml(Box<serde_saphyr::Error>),
 }
 
 impl fmt::Display for ErrorKind {
@@ -82,7 +82,7 @@ impl Error {
     }
 
     #[must_use]
-    pub fn yaml(file: PathBuf, cause: serde_saphyr::Error) -> Self {
+    pub fn yaml(file: PathBuf, cause: Box<serde_saphyr::Error>) -> Self {
         Self::new(file, ErrorKind::Yaml(cause))
     }
 }
@@ -121,7 +121,7 @@ impl Database {
         let contents = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;
 
         let yaml: HashMap<String, Keys> =
-            serde_saphyr::from_str(&contents).map_err(|e| Error::yaml(path.into(), e))?;
+            serde_saphyr::from_str(&contents).map_err(|e| Error::yaml(path.into(), Box::new(e)))?;
 
         for (value, keys) in yaml {
             match keys {

@@ -4,6 +4,7 @@ use std::process::Command;
 use crate::output;
 
 /// Result of running a jj (or shell) command.
+#[must_use]
 pub struct RunResult {
     pub success: bool,
     pub stdout: String,

@@ -1,48 +1,7 @@
-mod jj;
-mod manifest;
-mod ops;
-mod output;
-
 use std::process;
 
-use clap::{Parser, Subcommand};
-
-#[derive(Parser)]
-#[command(name = "sync", about = "Source-installed package manager")]
-struct Cli {
-    /// Manifest path
-    #[arg(short, long, default_value = "~/conf/etc/sync.toml")]
-    manifest: String,
-
-    /// Operate on specific repo(s) (repeatable)
-    #[arg(short, long = "repo")]
-    repo: Vec<String>,
-
-    /// Print commands without executing
-    #[arg(short = 'n', long)]
-    dry_run: bool,
-
-    #[command(subcommand)]
-    command: Option<Cmd>,
-}
-
-#[derive(Subcommand)]
-enum Cmd {
-    /// Show state of all repos
-    Status,
-    /// Fetch from remotes
-    Fetch,
-    /// Rebase fork bookmarks onto upstream
-    Rebase,
-    /// Build and install
-    Build,
-    /// Push fork bookmarks to origin
-    Push,
-    /// fetch → rebase → build → push (default)
-    Update,
-    /// Clone repos that don't exist locally
-    Clone,
-}
+use clap::Parser;
+use sync::{Cli, Cmd, manifest, ops};
 
 fn main() {
     let cli = Cli::parse();
