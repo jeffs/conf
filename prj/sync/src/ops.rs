@@ -284,6 +284,7 @@ pub enum Op {
 }
 
 /// Run an operation across all repos, collecting results.
+#[must_use]
 pub fn run(op: Op, repos: &[Repo], dry_run: bool) -> bool {
     let mut results: Vec<(String, Outcome)> = Vec::new();
 
