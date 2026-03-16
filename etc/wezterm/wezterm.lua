@@ -155,15 +155,7 @@ config.hyperlink_rules = require 'hyperlink_rules'
 --    window_background_opacity = 0.9,
 --  }
 -- 
--- One problem with using a colocated `local.lua` is that `jj rebase` deletes
--- it. This is obviously a bug in jj, but nobody seems to have filed it yet, and
--- I can't be bothered right now. Or maybe the jj maintainers don't think it's
--- a bug, which would be on-brand for Google. In the meantime, I keep a copy at
--- ~/var/bak, and cp it whenever jj blows it away.
---
--- TODO: Automate the cp if the backup exists but local.lua does not. A symlink
---  won't work, because WezTerm doesn't watch the linked file.
-local local_config = wezterm.home_dir .. '/conf/etc/wezterm/local.lua'
+local local_config = wezterm.home_dir .. '/conf/var/wezterm/local.lua'
 if if_readable(local_config) then
   local ok, overrides = pcall(dofile, local_config)
   if ok and type(overrides) == 'table' then
