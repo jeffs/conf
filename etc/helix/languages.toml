@@ -131,14 +131,14 @@ name = "typescript"
 roots = ["deno.json", "deno.jsonc", "package.json"]
 file-types = ["ts", "tsx"]
 auto-format = true
-language-servers = ["deno-lsp"]
+language-servers = ["deno-lsp", "emmet-ls"]
 
 [[language]]
 name = "javascript"
 roots = ["deno.json", "deno.jsonc", "package.json"]
 file-types = ["js", "jsx"]
 auto-format = true
-language-servers = ["deno-lsp"]
+language-servers = ["deno-lsp", "emmet-ls"]
 
 [language-server.deno-lsp]
 command = "deno"
