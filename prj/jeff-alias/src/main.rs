@@ -129,6 +129,7 @@ fn main() {
         "jgf" => Exe::Jj.exec_with(["git", "fetch"], args),
         "jgi" => Exe::Jj.exec_with(["git", "init"], args),
         "jgp" => Exe::Jj.exec_with(["git", "push"], args),
+        "jgpad" => Exe::Jj.exec_with(["git", "push", "--all", "--deleted"], args),
         "jl" => Exe::Jj.exec_with(["log"], args),
         "jlr" => Exe::Jj.exec_with(["log", "--revisions"], args),
         "jn" => Exe::Jj.exec_with(["new"], args),
