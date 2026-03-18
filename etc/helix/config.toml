@@ -70,6 +70,10 @@ select = 'underline'
 
 [keys.insert]
 C-e = ['normal_mode']
+
+# `emmet-ls` steals tab and can't be rebound.
+C-f = 'smart_tab'
+
 C-t = ['normal_mode', ':write']
 C-space = 'completion'
 
