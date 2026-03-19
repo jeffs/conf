@@ -1,17 +1,38 @@
-# JSON is so common that I leave it imported by default.
-import json
-from pathlib import Path
+from xonsh.built_ins import XSH
 
-# Ditto Polars. This also saves from accidentally running `/usr/bin/pl`.
-import polars as pl
+if XSH.env and XSH.env.get("XONSH_INTERACTIVE"):
+    # Importe these into every interactive shell.
+    from pathlib import Path
+    from subprocess import call, run
+    import json
 
-# Polars is an avid truncater of strings, even when the terminal would handily
-# accommodate wider tables.
-pl.Config.set_fmt_str_lengths(100)
+    # This import also saves from accidentally running `/usr/bin/pl`.
+    import polars as pl
+
+    # AFAICS, Pyright hints cannot be suppressed per line. (`# pyright:
+    # ignore[reportUnusedImport]` would suppress a warning or error, but not
+    # hints.) Ruff is also displeased by unused imports, but can be silenced
+    # using `# noqa: F401`.
+    #
+    # Every time I write more than ~100 lines of Python, I'm reminded why I
+    # prefer Rust.
+    def ignore_unused(*_):
+        pass
+
+    ignore_unused(Path, call, json, run)
+    del ignore_unused
+
+    # Polars is an avid truncater of strings, even when the terminal would handily
+    # accommodate wider tables.
+    pl.Config.set_fmt_str_lengths(100)
+
+del XSH
 
 
 def setup():
+    from pathlib import Path
     from typing import cast
+    import json
     import os
     import sys
     import tempfile
@@ -153,5 +174,4 @@ def setup():
 
 
 setup()
-
 del setup
