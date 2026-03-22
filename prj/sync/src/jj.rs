@@ -37,6 +37,7 @@ fn exec(cmd: &[&str], cwd: &Path) -> RunResult {
     let result = Command::new(cmd[0])
         .args(&cmd[1..])
         .current_dir(cwd)
+        .env_remove("CARGO_MANIFEST_DIR")
         .output();
 
     match result {
