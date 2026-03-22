@@ -78,23 +78,28 @@ def setup():
         path_jump = Path("~/conf/prj/target/release/jump").expanduser()
         path_yazi = Path("/opt/homebrew/bin/yazi")
 
+        def capture_text(command, args=()):
+            try:
+                output = subprocess.run(
+                    [*command, *args],
+                    capture_output=True,
+                    text=True,
+                )
+            except Exception as e:
+                return None, str(e), 1
+            return output.stdout, output.stderr, output.returncode
+
         def mc(arg):
             dir = Path(arg).expanduser()
             dir.mkdir(parents=True, exist_ok=True)
             os.chdir(dir)
 
         def alias_cg():
-            try:
-                output = subprocess.run(
-                    ["git", "rev-parse", "--show-toplevel"],
-                    capture_output=True,
-                    text=True,
-                )
-            except Exception as e:
-                return None, str(e), 1
-            if output.returncode != 0:
-                return output.stdout, output.stderr, output.returncode
-            os.chdir(Path(output.stdout.rstrip()))
+            match capture_text(["git", "rev-parse", "--show-toplevel"]):
+                case [stdout, _, 0]:
+                    os.chdir(Path(stdout.rstrip()))
+                case other:
+                    return other
 
         def alias_mc(args):
             try:
@@ -104,19 +109,15 @@ def setup():
             return mc(arg)
 
         def alias_f(args):
-            try:
-                output = subprocess.run(
-                    [path_jump, *args],
-                    capture_output=True,
-                    text=True,
-                )
-            except Exception as e:
-                return None, str(e), 1
-            if output.returncode != 0:
-                return output.stdout, output.stderr, output.returncode
-            if output.stdout.startswith("http:") or output.stdout.startswith("https:"):
-                return 0 if webbrowser.open(output.stdout) else 1
-            return mc(output.stdout)
+            match capture_text([path_jump], args):
+                case [stdout, _, 0] if stdout.startswith("http:") or stdout.startswith(
+                    "https:"
+                ):
+                    return 0 if webbrowser.open(stdout) else 1
+                case [stdout, _, 0]:
+                    os.chdir(Path(stdout.rstrip()))
+                case other:
+                    return other
 
         def curr_branch():
             """TODO: Move to Rust"""
@@ -129,12 +130,9 @@ def setup():
                 "-T",
                 "bookmarks ++ ' '",
             ]
-            try:
-                output = subprocess.run(command, capture_output=True, text=True)
-            except Exception as e:
-                return None, str(e), 1
-            if output.returncode == 0:
-                return output.stdout.rstrip() or None
+            match capture_text(command):
+                case [stdout, _, 0]:
+                    return stdout.rstrip() or None
 
         def alias_y():
             with tempfile.NamedTemporaryFile(prefix="yazi-cwd") as tmp:
