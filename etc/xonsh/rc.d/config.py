@@ -83,6 +83,19 @@ def setup():
             dir.mkdir(parents=True, exist_ok=True)
             os.chdir(dir)
 
+        def alias_cg():
+            try:
+                output = subprocess.run(
+                    ["git", "rev-parse", "--show-toplevel"],
+                    capture_output=True,
+                    text=True,
+                )
+            except Exception as e:
+                return None, str(e), 1
+            if output.returncode != 0:
+                return output.stdout, output.stderr, output.returncode
+            os.chdir(Path(output.stdout.rstrip()))
+
         def alias_mc(args):
             try:
                 [arg] = args
@@ -139,6 +152,7 @@ def setup():
         del aliases["ls"]
 
         aliases["c"] = "cd"
+        aliases["cg"] = alias_cg
         aliases["f"] = alias_f
         aliases["mc"] = alias_mc
         aliases["y"] = alias_y
