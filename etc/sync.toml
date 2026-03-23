@@ -70,8 +70,3 @@ build = ["cargo install --path crates/days", "cargo install --path crates/lev"]
 [repos.ralph]
 clone = "git@github.com:jeffs/ralph.git"
 build = ["cargo install --path ."]
-
-[repos.conf]
-clone = "git@github.com:jeffs/conf.git"
-path = "~/conf"
-build = ["cargo install --path prj/edit", "cargo install --path prj/jump"]
