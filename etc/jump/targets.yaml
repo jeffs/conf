@@ -1,4 +1,4 @@
-~/file/log/%Y/%m/%d: [cl, l]
+~/file/log/%Y/%m/%d: [l, log]
 ~/file/log/%Y/%m: month
 
 ~/conf: [c, conf]
