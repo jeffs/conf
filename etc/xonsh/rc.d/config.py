@@ -115,7 +115,7 @@ def setup():
                 ):
                     return 0 if webbrowser.open(stdout) else 1
                 case [stdout, _, 0]:
-                    os.chdir(Path(stdout.rstrip()))
+                    mc(Path(stdout.rstrip()))
                 case other:
                     return other
 
