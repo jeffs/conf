@@ -1,13 +1,11 @@
 from xonsh.built_ins import XSH
 
 if XSH.env and XSH.env.get("XONSH_INTERACTIVE"):
-    # Importe these into every interactive shell.
+    # Import a few items into every interactive shell, for convenience. Guess
+    # that makes them import-ant.
     from pathlib import Path
     from subprocess import call, run
     import json
-
-    # This import also saves from accidentally running `/usr/bin/pl`.
-    import polars as pl
 
     # AFAICS, Pyright hints cannot be suppressed per line. (`# pyright:
     # ignore[reportUnusedImport]` would suppress a warning or error, but not
@@ -21,10 +19,6 @@ if XSH.env and XSH.env.get("XONSH_INTERACTIVE"):
 
     ignore_unused(Path, call, json, run)
     del ignore_unused
-
-    # Polars is an avid truncater of strings, even when the terminal would handily
-    # accommodate wider tables.
-    pl.Config.set_fmt_str_lengths(100)
 
 del XSH
 
