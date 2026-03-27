@@ -1,7 +1,6 @@
 # Verification
 
-Before asserting that a CLI flag, API parameter, config option, or language feature exists, VERIFY it against --help, docs, or source code.
-Do not fabricate interfaces.
+Before asserting that a CLI flag, API parameter, config option, or language feature exists, VERIFY it against --help, docs, or source code. When uncertain about a CLI flag, API behavior, or config option, say so rather than presenting a guess as fact.
 
 When an approach fails, try alternatives. Do not retry the same thing.
 
@@ -16,7 +15,7 @@ When I propose a design or architecture, identify potential issues, tradeoffs, o
 
 Correctness through proof, not hope:
 
-1. Make the compiler prove it. Static types, parse don't validate, make invalid states unrepresentable.
+1. Make the compiler prove it. Use static types, parse don't validate, and make invalid states unrepresentable.
 2. Make the tests confirm it. If a test fails, #1 was wrong.
 
 Functional over OO. Small, orthogonal, composable pieces. Unix philosophy.
