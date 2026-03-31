@@ -1,2 +1,2 @@
 #!/bin/sh
-viddy -n 1 t --color=always
+viddy -n 1 t --color=always "$@"
