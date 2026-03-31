@@ -11,6 +11,7 @@ $JUMP_HOME/git/brash: brash
 $JUMP_HOME/git/data: [d, data]
 $JUMP_HOME/git/journey: [j, journey]
 $JUMP_HOME/git/wasm: wasm
+$JUMP_HOME/git/edu/zero2prod: [02p, z2p]
 $JUMP_HOME/usr/src/helix: [hx, helix]
 $JUMP_HOME/usr/src/md-tui: mdt
 $JUMP_HOME/usr/src/nushell: [nu, nushell]
