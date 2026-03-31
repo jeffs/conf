@@ -99,6 +99,7 @@ right = ':buffer-next'
 #
 # Print the current line's git blame information to the statusline.
 space.B = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
+space.E = 'file_explorer_in_current_buffer_directory'
 space.L = ":sh git log %{buffer_name}"
 
 [keys.normal.C-f]
