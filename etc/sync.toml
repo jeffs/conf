@@ -10,7 +10,6 @@ upstream = "https://github.com/helix-editor/helix"
 bookmarks = ["custom"]
 upstream_ref = "master"
 build = ["cargo install --path helix-term"]
-post_build = ["hx --grammar fetch", "hx --grammar build"]
 
 [repos.md-tui]
 clone = "git@github.com:jeffs/md-tui.git"
