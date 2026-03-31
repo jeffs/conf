@@ -101,15 +101,21 @@ fn main() {
         std::process::exit(1)
     };
 
+    let fe_args = [
+        "--bind=enter:become(hx {})",
+        "--preview=bat -p --color=always {}",
+    ];
+
+    let t_args = ["--git-ignore", "-T", "--group-directories-first"];
+
     let err = match name {
         "e" => Exe::Edit.exec(args),
-        "ef" => Exe::Fzf.exec_with(["--bind=enter:become(hx {})"], args),
-        "fz" => Exe::Fzf.exec_with(["--preview=bat -p --color=always {}"], args),
+        "fe" => Exe::Fzf.exec_with(fe_args, args),
+        "fz" => Exe::Fzf.exec_with(&fe_args[1..], args),
 
         "glow" => Exe::Glow.exec_with(["--pager", "--width", &tput_cols().to_string()], args),
         "mat" => Exe::Bat.exec_with(["-pl", "man"], args),
 
-        // TODO: Default to pedantic, but allow override in `Cargo.toml`.
         "clippy" => Exe::Cargo.exec_with(["clippy", "--all-targets", "--workspace"], args),
         "rust" => Exe::Evcxr.exec(args),
 
@@ -138,8 +144,7 @@ fn main() {
         "l" => Exe::Eza.exec_with(["-l"], args),
         "la" => Exe::Eza.exec_with(["-la"], args),
 
-        "tree" => Exe::Eza.exec_with(["-T", "--group-directories-first"], args),
-        "t" => Exe::Eza.exec_with(["-T", "--group-directories-first", "--git-ignore"], args),
+        "t" => Exe::Eza.exec_with(t_args, args),
         "t1" => Exe::Eza.exec_with(t_depth(1), args),
         "t2" => Exe::Eza.exec_with(t_depth(2), args),
         "t3" => Exe::Eza.exec_with(t_depth(3), args),
@@ -149,6 +154,7 @@ fn main() {
         "t7" => Exe::Eza.exec_with(t_depth(7), args),
         "t8" => Exe::Eza.exec_with(t_depth(8), args),
         "t9" => Exe::Eza.exec_with(t_depth(9), args),
+        "tree" => Exe::Eza.exec_with(&t_args[1..], args),
 
         _ => {
             eprintln!("error: {name}: bad alias");
