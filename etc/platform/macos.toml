@@ -60,6 +60,7 @@ RUSTC_WRAPPER = "/opt/homebrew/bin/sccache"
 ENABLE_LSP_TOOL = "1"
 ENABLE_LSP_TOOLS = "1"
 GRIT_TRUNKS = "dev,main,master,trunk"
+SQLX_OFFLINE = "true"
 
 # Xonsh is on 3.13, so sticking with it eases interop.
 # That said, `python3 --version` on my MacBook is 3.14.
