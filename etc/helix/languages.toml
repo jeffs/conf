@@ -99,9 +99,6 @@ language-servers = ["vscode-html-language-server", "emmet-ls"]
 [language-server.move-analyzer]
 command = "move-analyzer"
 
-[language-server.rust-analyzer.environment]
-SQLX_OFFLINE = "true"
-
 [language-server.rust-analyzer.config.rust-analyzer]
 check = { command = "clippy", args = ["--all-targets", "--workspace"] }
 
@@ -155,6 +152,10 @@ args = ["--stdio"]
 [language-server.ruff]
 command = "ruff"
 args = ["server"]
+
+[[language]]
+name = "ron"
+formatter = { command = "bracket-fmt" }
 
 [[language]]
 name = "python"
