@@ -23,6 +23,7 @@ ln -s ~/conf/etc/claude/settings.json ~/.claude/settings.json
 ln -s ~/conf/etc/claude/skills ~/.claude/skills
 ln -s ~/conf/etc/gitconfig ~/.gitconfig
 ln -s ~/conf/etc/jjconfig.toml ~/.config/jj/config.toml
+ln -s ~/conf/etc/npmrc ~/.npmrc
 ln -s ~/conf/etc/nvim ~/.config
 ln -s ~/conf/etc/sqliterc ~/.sqliterc
 ln -s ~/conf/etc/tmux.conf ~/.tmux.conf
