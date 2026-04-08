@@ -1,9 +1,11 @@
 //! # Notes
 //!
-//! Reads config from `~/.config/jump/targets.yaml` (where `~/.config` may be
-//! overriden via `$XDG_CONFIG_HOME`). The `targets.yaml` file uses a simple
-//! YAML subset with blank lines, comments (`#`), and mappings from target
-//! values (paths, URLs) to lists of short names: `~/conf: [c, conf]`.
+//! Reads `targets.yaml` from each directory in `$JUMP_DIRS` (colon-separated).
+//! If `$JUMP_DIRS` is empty or unset, falls back to
+//! `$XDG_CONFIG_HOME/jump/targets.yaml` (defaulting to `~/.config/jump`).
+//!
+//! Each `targets.yaml` is a YAML mapping from target values (paths, URLs) to
+//! short names or lists of names: `~/conf: [c, conf]`.
 //!
 //! # TODO
 //!
