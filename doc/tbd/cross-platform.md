@@ -138,11 +138,6 @@ Already has fallback logic for Zellij path. Extend to check
 platform-appropriate locations, or read the platform TOML from Lua
 (wezterm has `wezterm.read_dir` and `io.open`).
 
-### `etc/xonsh/rc.d/config.py`
-
-Replace hardcoded `/opt/homebrew/bin/yazi` with a `conf_platform.tool()`
-call once PyO3 bindings exist (non-blocking; this is a leaf dependency).
-
 ### `etc/nushell/login.nu`
 
 Delete along with Nushell migration.
