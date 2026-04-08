@@ -2,10 +2,10 @@
 
 ## Toolchain
 
-| Component | Current Version | Purpose |
-|-----------|----------------|---------|
-| [PyO3](https://pyo3.rs/) | 0.28.0 | Rust <-> Python bindings |
-| [maturin](https://www.maturin.rs/) | 1.12.4 | Build, develop, publish |
+| Component                          | Current Version | Purpose                  |
+| ---------------------------------- | --------------- | ------------------------ |
+| [PyO3](https://pyo3.rs/)           | 0.28.0          | Rust <-> Python bindings |
+| [maturin](https://www.maturin.rs/) | 1.12.4          | Build, develop, publish  |
 
 Minimum Rust: **1.83**. Python: **3.7+**.
 
