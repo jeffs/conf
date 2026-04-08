@@ -29,7 +29,6 @@ def setup():
     import json
     import os
     import sys
-    import tempfile
 
     from xonsh.built_ins import XSH
 
@@ -70,7 +69,6 @@ def setup():
 
         path_jj = Path("~/.cargo/bin/jj").expanduser()
         path_jump = Path("~/conf/prj/target/release/jump").expanduser()
-        path_yazi = Path("/opt/homebrew/bin/yazi")
 
         def capture_text(command, args=()):
             try:
@@ -128,13 +126,6 @@ def setup():
                 case [stdout, _, 0]:
                     return stdout.rstrip() or None
 
-        def alias_y():
-            with tempfile.NamedTemporaryFile(prefix="yazi-cwd") as tmp:
-                subprocess.run([path_yazi, "--cwd-file", tmp.name])
-                s = Path(tmp.name).read_text()
-            if s:
-                os.chdir(s)
-
         # Fun fact: `...` doesn't work as an alias, because it's valid Python.
         for i in range(1, 10):
             command = f"cd {'/'.join(['..'] * i)}"
@@ -147,7 +138,6 @@ def setup():
         aliases["cg"] = alias_cg
         aliases["f"] = alias_f
         aliases["mc"] = alias_mc
-        aliases["y"] = alias_y
 
         prompt_fields = cast(dict, env["PROMPT_FIELDS"])
         prompt_fields["curr_branch"] = curr_branch

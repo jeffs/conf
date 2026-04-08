@@ -69,4 +69,3 @@ GRIT_TRUNKS = "dev,main,master,trunk"
 [tools]
 fzf = "/opt/homebrew/bin/fzf"
 glow = "/opt/homebrew/bin/glow"
-yazi = "/opt/homebrew/bin/yazi"

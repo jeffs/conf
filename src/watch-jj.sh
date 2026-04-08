@@ -2,7 +2,6 @@
 
 viddy -n 1 "
   2>&1 jj diff --summary | 2>&1 pathtree --color=always
-  echo
   2>&1 jj --color=always
 "
 
