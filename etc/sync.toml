@@ -60,6 +60,13 @@ build = []
 # clone = "https://github.com/astral-sh/uv"
 # build = ["cargo install --path crates/uv"]
 
+[repos.asciiquarium]
+clone = "git@github.com:jeffs/asciiquarium.git"
+upstream = "https://github.com/cmatsuoka/asciiquarium"
+bookmarks = ["custom"]
+upstream_ref = "master"
+build = ["cargo install --path ."]
+
 # De novo
 
 [repos.rust-kart]
