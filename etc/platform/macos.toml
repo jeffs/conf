@@ -59,6 +59,9 @@ HOMEBREW_NO_ENV_HINTS = "true"
 RUSTC_WRAPPER = "/opt/homebrew/bin/sccache"
 GRIT_TRUNKS = "dev,main,master,trunk"
 
+# Whether my fork of sl(1) should die on interrupt (ctrl+c).
+SL_ESCAPABLE = "1"
+
 # Claude Code — https://code.claude.com/docs/en/env-vars.md
 # Disable automatic "upgrades," which sometimes remove features.
 DISABLE_AUTOUPDATER = "1"
