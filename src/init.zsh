@@ -12,7 +12,7 @@
 
 # Technically, you don't need fd or rg; but you'll want them.
 brew install nu zellij # Later, you can switch to `~/usr/src` forks.
-cargo binstall --strategies crate-meta-data fd-find jj-cli ripgrep
+cargo binstall --strategies crate-meta-data fd-find git-delta jj-cli ripgrep
 
 # --------------------
 # INSTALL MY OWN STUFF

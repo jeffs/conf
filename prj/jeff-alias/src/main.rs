@@ -138,7 +138,10 @@ fn main() {
         "jgpad" => Exe::Jj.exec_with(["git", "push", "--all", "--deleted"], args),
         "jl" => Exe::Jj.exec_with(["log"], args),
         "jlr" => Exe::Jj.exec_with(["log", "--revisions"], args),
-        "jn" => Exe::Jj.exec_with(["new"], args),
+        // I often fetch, log, then run `jn main`. The log may or may not
+        // require me to hit `q` to dismiss the pager, depending on log length
+        // and terminal size; so, I sometimes enter `qjn` by mistake.
+        "jn" | "qjn" => Exe::Jj.exec_with(["new"], args),
         "jnm" => Exe::Jj.exec_with(["new", "--message"], args),
 
         "l" => Exe::Eza.exec_with(["-l"], args),

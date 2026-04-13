@@ -19,6 +19,7 @@
 [core]
 	excludesfile   = ~/conf/etc/gitexcludes
 	attributesfile = ~/conf/etc/gitattributes
+	pager = delta
 [diff]
 	# https://github.blog/2016-06-13-git-2-9-has-been-released/#beautiful-diffs
 	compactionHeuristic = true
@@ -58,5 +59,12 @@
 #
 # * <https://stackoverflow.com/a/76114722/3116635>.
 # * <https://graphite.dev/guides/git-config-insteadof>
+[delta]
+	navigate = true
+	dark = true
+[interactive]
+	diffFilter = delta --color-only
+[merge]
+	conflictStyle = zdiff3
 [url "git@github.com:"]
 	insteadOf = "gh:"
