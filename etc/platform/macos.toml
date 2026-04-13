@@ -59,12 +59,8 @@ HOMEBREW_NO_ENV_HINTS = "true"
 RUSTC_WRAPPER = "/opt/homebrew/bin/sccache"
 GRIT_TRUNKS = "dev,main,master,trunk"
 
-# Claude Code
-# - There's some confusion online about whehter ENABLE_LSP_TOOLS should be plural
-# - Disable automatic "upgrades," which sometimes remove features. (Bye bye, buddy.)
-# from automatically "upgrading" itself.
-ENABLE_LSP_TOOL = "1"
-ENABLE_LSP_TOOLS = "1"
+# Claude Code — https://code.claude.com/docs/en/env-vars.md
+# Disable automatic "upgrades," which sometimes remove features.
 DISABLE_AUTOUPDATER = "1"
 
 # Xonsh is on 3.13, so sticking with it eases interop.
