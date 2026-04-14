@@ -65,6 +65,8 @@ SL_ESCAPABLE = "1"
 # Claude Code — https://code.claude.com/docs/en/env-vars.md
 # Disable automatic "upgrades," which sometimes remove features.
 DISABLE_AUTOUPDATER = "1"
+# Stop warning (!) that Gmail and Google Calendar MCP servers "need" auth.
+ENABLE_CLAUDEAI_MCP_SERVERS = 'false'
 
 # Xonsh is on 3.13, so sticking with it eases interop.
 # That said, `python3 --version` on my MacBook is 3.14.
