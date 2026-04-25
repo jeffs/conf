@@ -46,9 +46,8 @@ language-servers = []
 [language.auto-pairs]
 '(' = ')'
 '{' = '}'
-'[' = ']'
+"'" = "'"
 '"' = '"'
-'<' = '>'
 
 [[language]]
 name = "move"
@@ -160,7 +159,7 @@ formatter = { command = "bracket-fmt" }
 [[language]]
 name = "python"
 language-servers = [
-  { name = "pyright", except-features = ["format", "diagnostics"] },
+  { name = "pyright", except-features = ["format"] },
   "ruff",
 ]
 auto-format = true
