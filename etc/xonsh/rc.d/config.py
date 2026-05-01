@@ -28,6 +28,7 @@ def setup():
     from typing import cast
     import json
     import os
+    import subprocess
     import sys
 
     from xonsh.built_ins import XSH
@@ -49,6 +50,24 @@ def setup():
             )
         except Exception as e:
             print(f"error: env: {e}", file=sys.stderr)
+
+        # FNM is a version manager for Node.js.
+        try:
+            fnm_env = json.loads(
+                subprocess.run(
+                    ["/opt/homebrew/bin/fnm", "env", "--json"],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                ).stdout
+            )
+            env.update(fnm_env)
+            os.environ.update(fnm_env)
+            fnm_bin = f"{fnm_env['FNM_MULTISHELL_PATH']}/bin"
+            cast(list, env["PATH"]).insert(0, fnm_bin)
+            os.environ["PATH"] = os.pathsep.join([fnm_bin, os.environ["PATH"]])
+        except Exception as e:
+            print(f"error: fnm: {e}", file=sys.stderr)
 
     # `history transfer` has a known bug.
     # env["XONSH_HISTORY_BACKEND"] = "sqlite"
