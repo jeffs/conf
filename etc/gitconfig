@@ -31,6 +31,8 @@
 	cmd = difft --display=side-by-side $LOCAL $REMOTE
 [grep]
 	extendRegexp = true
+[init]
+	defaultBranch = main
 [pager]
 	difftool = true
 [pull]
@@ -41,8 +43,15 @@
 [user]
 	name  = Jeff Schwab
 	email = jeff@unbuggy.com
-[init]
-	defaultBranch = main
+
+
+[delta]
+	navigate = true
+	dark = true
+[interactive]
+	diffFilter = delta --color-only
+[merge]
+	conflictStyle = zdiff3
 
 # Munge URLs automatically to save typing.
 #
@@ -59,12 +68,6 @@
 #
 # * <https://stackoverflow.com/a/76114722/3116635>.
 # * <https://graphite.dev/guides/git-config-insteadof>
-[delta]
-	navigate = true
-	dark = true
-[interactive]
-	diffFilter = delta --color-only
-[merge]
-	conflictStyle = zdiff3
 [url "git@github.com:"]
 	insteadOf = "gh:"
+
