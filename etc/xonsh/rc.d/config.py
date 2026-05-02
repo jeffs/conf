@@ -119,6 +119,41 @@ def setup():
                 return None, f"mc: {e}", 2
             return mc(arg)
 
+        def alias_ec(args):
+            """empty claude"""
+
+            # The emptiness checks here are quick and dirty, subject to race
+            # conditions. Even if Unix provided a directory equivalent of
+            # /dev/null, we couldn't guarantee that Claude had no memory of it.
+
+            # The empty directory should be empty.
+            empty_display = "~/var/empty"
+            empty_path = Path(empty_display).expanduser()
+            try:
+                stowaway = next(empty_path.iterdir())
+                return None, f"ec: {empty_display} isn't empty: {stowaway}", 1
+            except FileNotFoundError:
+                empty_path.mkdir(parents=True)
+            except StopIteration:
+                pass
+
+            # Claude Code should have no memories of the empty directory.
+            memories = (
+                Path("~/.claude/projects").expanduser()
+                / str(empty_path).replace("/", "-")
+                / "memory"
+            )
+            try:
+                memory = next(memories.iterdir())
+                return None, f"ec: empty project has memory: {memory}", 1
+            except FileNotFoundError, StopIteration:
+                pass
+
+            return subprocess.run(
+                [Path("~/.local/bin/claude").expanduser(), *args],
+                cwd=empty_path,
+            ).returncode
+
         def alias_f(args):
             match capture_text([path_jump], args):
                 case [stdout, _, 0] if stdout.startswith("http:") or stdout.startswith(
@@ -155,6 +190,7 @@ def setup():
 
         aliases["c"] = "cd"
         aliases["cg"] = alias_cg
+        aliases["ec"] = alias_ec
         aliases["f"] = alias_f
         aliases["mc"] = alias_mc
 
