@@ -122,6 +122,22 @@ fn main() {
         "di" => Exe::Jj.exec_with(["diff"], args),
         "st" => Exe::Jj.exec_with(["status"], args),
 
+        // TODO: Define once character per action or flag (b for bookmark, r to
+        //  mean `-r`, etc.), and disregard order of the letters in `argv[0]`,
+        //  as well as the order of args whose meanings are apparent; and while
+        //  you're at it, making frequent args (such as `-r`) optional. For
+        //  example, if @ is `wyrtkpsp`, the following should all be equivalent:
+        //
+        //  - `jdm 'Add a comment'`
+        //  - `jdm 'Add a comment' wyrtkpsp`
+        //  - `jdm wyrtkpsp 'Add a comment'`
+        //
+        // Given the complexity of proliferation of `jj` aliases, as well
+        // as the sibling `../../jbct` project that exists entirely for one
+        // multi-step operation that doesn't lend itself to an alias, `jj`
+        // functionality would probably be better served by tar-like "keys" than
+        // by POSIX/GNU-style "options" (even though the latter are dominant in
+        // the modern world).
         "jb" => Exe::Jj.exec_with(["bookmark"], args),
         "jbc" => Exe::Jj.exec_with(["bookmark", "create"], args),
         "jbd" => Exe::Jj.exec_with(["bookmark", "delete"], args),
