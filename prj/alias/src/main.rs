@@ -117,6 +117,7 @@ fn main() {
         "mat" => Exe::Bat.exec_with(["-pl", "man"], args),
 
         "clippy" => Exe::Cargo.exec_with(["clippy", "--all-targets", "--workspace"], args),
+        "nt" => Exe::Cargo.exec_with(["nextest", "run"], args),
         "rust" => Exe::Evcxr.exec(args),
 
         "di" => Exe::Jj.exec_with(["diff"], args),
