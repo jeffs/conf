@@ -25,6 +25,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "alias"
+version = "0.1.0"
+
+[[package]]
 name = "allocator-api2"
 version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -522,18 +526,6 @@ name = "jbct"
 version = "0.1.0"
 
 [[package]]
-name = "jeff-alias"
-version = "0.1.0"
-
-[[package]]
-name = "jeff-login"
-version = "0.1.0"
-dependencies = [
- "platform",
- "serde_json",
-]
-
-[[package]]
 name = "js-sys"
 version = "0.3.91"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -595,6 +587,14 @@ checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 [[package]]
 name = "log-profile"
 version = "0.1.0"
+
+[[package]]
+name = "login"
+version = "0.1.0"
+dependencies = [
+ "platform",
+ "serde_json",
+]
 
 [[package]]
 name = "lru"

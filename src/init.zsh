@@ -25,7 +25,7 @@ cargo install --path ~/conf/prj/upgrade
 
 # Symlinked from `~/conf/bin`.
 (cd ~/conf/prj/edit && cargo build --release)
-(cd ~/conf/prj/jeff-alias && cargo build --release)
+(cd ~/conf/prj/alias && cargo build --release)
 
 # My fork of Helix, and more of my own tools.
 (cd ~/conf/prj/sync && cargo run -- -r helix -r rust-kart)
@@ -35,7 +35,7 @@ cargo install --path ~/conf/prj/upgrade
 # ---------------
 
 # Generate `~/conf/var/env.{json,sh}` for login shells.
-(cd ~/conf/prj/jeff-login && cargo run)
+(cd ~/conf/prj/login && cargo run)
 
 # Symlink `~/conf/etc` items, mostly into `~/.config`.
 ~/conf/src/install-dotfiles.zsh

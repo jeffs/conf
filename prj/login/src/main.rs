@@ -70,7 +70,7 @@ fn write_sh<'a>(
     path: &[&Path],
     jump_dirs: &[&Path],
 ) -> Result<(), Box<dyn Error>> {
-    let mut out = b"# This file is generated. See ~/conf/prj/jeff-login.\n\n".to_vec();
+    let mut out = b"# This file is generated. See ~/conf/prj/login.\n\n".to_vec();
     for (key, value) in env {
         write_sh_var(&mut out, key.as_ref(), value.as_ref());
     }

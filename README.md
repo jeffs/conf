@@ -18,8 +18,8 @@ Next, run programs to generate shell config and install some things from source:
 
 ```sh
 cd ~/conf/prj
-cargo run -p jeff-login # Maps etc/platform/macos.toml to var/env.{json,sh}
-cargo run -p sync       # Installs stuff from my source, per etc/sync.toml
+cargo run -p login  # Maps etc/platform/macos.toml to var/env.{json,sh}
+cargo run -p sync   # Installs stuff from my source, per etc/sync.toml
 ````
 
 Now, cross your fingers, and hold them that way for an amount of time proportionate to how much you care about this working on the first try. Once you uncross them, start a fresh shell in a new terminal window.
