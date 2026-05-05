@@ -128,7 +128,7 @@ def --wrapped lg [...rest, --all (-a)] {
 #
 # Named `f` as in `follow`, instead of `j` for `jump`, because `j` is for `jj`.
 def --env f [target] {
-  let found = if ($target == 'cy' or $target == 'y') {
+  let found = if ($target == 'y') {
     # TODO: Move this to Rust, so it can (for example) be called from Helix.
     (date now) - 1day | format date '~/file/log/%Y/%m/%d' | path expand
   } else {
