@@ -26,6 +26,7 @@ del XSH
 def setup():
     from pathlib import Path
     from typing import cast
+    import datetime as dt
     import json
     import os
     import subprocess
@@ -155,6 +156,14 @@ def setup():
             ).returncode
 
         def alias_f(args):
+            args = tuple(args)
+
+            # Jump doesn't yet support date arithmetic, so do it here instead.
+            if args == ("y",):
+                yesterday = dt.datetime.now() - dt.timedelta(days=1)
+                target = Path.home() / "file/log" / yesterday.strftime("%Y/%m/%d")
+                return mc(target)
+
             match capture_text([path_jump], args):
                 case [stdout, _, 0] if stdout.startswith("http:") or stdout.startswith(
                     "https:"
