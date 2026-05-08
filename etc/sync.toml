@@ -46,6 +46,13 @@ bookmarks = ["custom"]
 upstream_ref = "main"
 build = []
 
+[repos.typify]
+clone = "git@github.com:jeffs/typify.git"
+upstream = "https://github.com/oxidecomputer/typify"
+bookmarks = ["custom"]
+upstream_ref = "main"
+build = []
+
 # Fork-track: upstream, no custom bookmarks
 
 # [repos.crush]
