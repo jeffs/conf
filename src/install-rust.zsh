@@ -2,7 +2,9 @@
 #
 # Install the [Rust]( https://www.rust-lang.org/ ) toolchain.
 
-brew install openssl pkg-config
+# Installating sccache from source would be slow. See:
+# <https://github.com/mozilla/sccache?tab=readme-ov-file#via-cargo>
+brew install openssl pkg-config sccache
 
 curl -fsSLo /tmp/rustup.sh https://sh.rustup.rs/
 sh /tmp/rustup.sh -q -y --no-modify-path
@@ -12,10 +14,7 @@ rm /tmp/rustup.sh
 cargo install -F fix cargo-audit
 cargo install cargo-watch
 
-# Installation from source is slow. See also:
-# <https://github.com/mozilla/sccache?tab=readme-ov-file#via-cargo>
-brew install sccache
-
-# Without the rust-analyzer component, Helix can't find rust-analyzer.
+# You may also have to run this command in projects where you want the LSP
+# server to run, so that rustup installs RA for the correct Rust version; but
+# this at least prepares a baseline for `cargo new` projects.
 rustup component add rust-analyzer
-rustup +nightly component add rust-analyzer
