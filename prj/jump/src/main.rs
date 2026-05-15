@@ -25,8 +25,6 @@ enum ArgError {
     Extra(String),
     /// An unrecognized flag was specified.
     Flag(String),
-    /// No target was specified.
-    Missing,
 }
 
 enum Error {
@@ -53,7 +51,6 @@ impl fmt::Display for ArgError {
         match self {
             Self::Extra(s) => write!(f, "{s} is an unexpected argument"),
             Self::Flag(s) => write!(f, "{s} is not a recognized flag"),
-            Self::Missing => "expected target".fmt(f),
         }
     }
 }
@@ -68,7 +65,7 @@ impl fmt::Display for Error {
 }
 
 struct Args {
-    target: String,
+    target: Option<String>,
 }
 
 fn parse_args() -> Result<Args, ArgError> {
@@ -82,7 +79,6 @@ fn parse_args() -> Result<Args, ArgError> {
         }
         target = Some(arg);
     }
-    let target = target.ok_or(ArgError::Missing)?;
     Ok(Args { target })
 }
 
@@ -94,7 +90,11 @@ fn main_imp() -> Result<(), Error> {
     let args = parse_args()?;
     let app = jump::App::from_env()?;
     let stdout = io::stdout();
-    match app.resolve(&args.target)? {
+    let resolved = match args.target {
+        Some(target) => app.resolve(&target)?,
+        None => app.resolve_default()?,
+    };
+    match resolved {
         jump::Target::Path(path) => write(&stdout, path.as_os_str().as_bytes()),
         jump::Target::String(s) => write(&stdout, s.as_bytes()),
     }

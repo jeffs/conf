@@ -5,10 +5,14 @@ use crate::{db, expansion};
 
 #[derive(Debug)]
 pub enum Error {
+    /// A config file could not be parsed.
+    Config(PathBuf, Box<serde_saphyr::Error>),
     /// An error ocurred loading a database.
     Database(db::Error),
     /// An error occurred expanding a path.
     Expansion(expansion::Error),
+    /// No target was specified, and no default found.
+    Missing,
     /// No target was found for the argument.
     Target {
         name: String,
@@ -33,10 +37,12 @@ impl From<expansion::Error> for Error {
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
+            Self::Config(p, e) => write!(f, "{}: {e}", p.display()),
             Self::Database(e) => e.fmt(f),
             Self::Expansion(e) => e.fmt(f),
+            Self::Missing => "no default target is configured".fmt(f),
             Self::Target { name, searched } => {
-                write!(f, "{name}: Target not found; searched:")?;
+                write!(f, "{name}: target not found; searched:")?;
                 for path in searched {
                     write!(f, "\n  {}", path.display())?;
                 }

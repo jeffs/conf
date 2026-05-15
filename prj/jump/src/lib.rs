@@ -1,3 +1,4 @@
+mod config;
 mod error;
 mod expansion;
 
@@ -10,9 +11,11 @@ pub use db::Database;
 pub use error::Error;
 pub use expansion::{Expand, Target};
 
+use crate::config::Config;
+
 pub type Result<T> = std::result::Result<T, Error>;
 
-fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
+fn dirs_from_env(home: &Path) -> Vec<PathBuf> {
     let mut dirs: Vec<PathBuf> = env::var_os("JUMP_DIRS")
         .map(|s| {
             env::split_paths(&s)
@@ -27,6 +30,13 @@ fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
         dirs.push(config_home.join("jump"));
     }
 
+    dirs
+}
+
+/// Returns the accumulated database, and a list of paths loaded (for use in
+/// error messages).
+fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
+    let dirs = dirs_from_env(home);
     let paths: Vec<_> = dirs.iter().map(|p| p.join("targets.yaml")).collect();
     let mut db = Database::new();
     for path in &paths {
@@ -95,5 +105,14 @@ impl App {
                 .ok_or(err)
         })?;
         Ok(Expand::with_home(&self.home).target(value)?)
+    }
+
+    /// # Errors
+    ///
+    /// Returns [`Err`] if the default target cannot be found or resolved.
+    pub fn resolve_default(&self) -> Result<Target> {
+        let config = Config::from_dirs(&dirs_from_env(&self.home))?;
+        let target = config.default_target.ok_or(Error::Missing)?;
+        self.resolve(&target)
     }
 }
