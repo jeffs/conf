@@ -61,6 +61,9 @@ HOMEBREW_NO_ENV_HINTS = "true"
 RUSTC_WRAPPER = "/opt/homebrew/bin/sccache"
 GRIT_TRUNKS = "dev,main,master,trunk"
 
+# They've started pulling this "What's next: [ads]" crap on every single `docker
+# compose up`. Not a one time thing on install: Every. Single. Run.
+DOCKER_CLI_HINTS = "false"
 
 # Whether my fork of sl(1) should die on interrupt (ctrl+c).
 SL_ESCAPABLE = "1"

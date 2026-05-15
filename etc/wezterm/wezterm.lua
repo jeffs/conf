@@ -57,7 +57,7 @@ config.color_scheme = 'Belge (terminal.sexy)'
 config.font = wezterm.font 'VictorMono Nerd Font'
 -- config.font = wezterm.font 'Maple Mono NF CN'
 
-config.font_size = 15
+config.font_size = 14
 config.initial_cols = 160
 config.initial_rows = 36
 
