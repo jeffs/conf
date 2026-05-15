@@ -9,8 +9,22 @@ file-types = [
   { glob = ".zprofile" },
   { glob = ".zsh{env,login,rc}" },
 ]
-formatter = { command = "shfmt" }
 rulers = [81]
+
+# Helix has no builtin Zsh support, so we treat it like Bash for syntax
+# highlighting purposes. But Bash-specific tooling chokes on Zsh: viz., both
+# bash-language-server (which Helix uses by default) and `shfmt` (even with
+# `--language-dialect zsh`).
+language-servers = []
+# formatter = { command = "shfmt" }
+
+[[language]]
+name = "clojure"
+file-types = [
+  "clj",  # Actually Clojure.
+  "carp", # Carp in disguise.
+]
+formatter = { command = "cljfmt" }
 
 [[language]]
 name = "yaml"
