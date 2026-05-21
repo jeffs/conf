@@ -4,6 +4,7 @@
 ~/file: [f, file]
 ~/file/log/%Y/%m/%d: [l, log]
 ~/file/log/%Y/%m: month
+~/git/play/play: [p, play]
 ~/usr/src/rust-kart: rk
 ~/var/empty: [e, empty]
 
