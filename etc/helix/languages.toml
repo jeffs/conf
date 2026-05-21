@@ -19,6 +19,14 @@ language-servers = []
 # formatter = { command = "shfmt" }
 
 [[language]]
+name = "c"
+indent = { tab-width = 4, unit = "    " }
+
+[[language]]
+name = "cpp"
+indent = { tab-width = 4, unit = "    " }
+
+[[language]]
 name = "clojure"
 file-types = [
   "clj",  # Actually Clojure.
@@ -60,8 +68,11 @@ language-servers = []
 [language.auto-pairs]
 '(' = ')'
 '{' = '}'
-"'" = "'"
-'"' = '"'
+
+# Quotes are a pain because you can't tab past them. Ditto backticks.
+# 
+# "'" = "'"
+# '"' = '"'
 
 [[language]]
 name = "move"
@@ -76,6 +87,7 @@ language-servers = ["scls", "rust-analyzer"]
 # The Rust LSP has some magic whereby it knows to match `<` for generics, but
 # not when preceded by whitespace (as in a `<=` comparison). Setting auto-pairs
 # breaks that magic.
+# 
 # auto-pairs = { '(' = ')', '{' = '}', '[' = ']', '"' = '"', '<' = '>' }
 
 [language-server.sqls]
