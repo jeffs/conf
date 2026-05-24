@@ -15,7 +15,7 @@ home_paths = [
 ]
 
 # JUMP_DIRS directories relative to $HOME.
-jump_dirs = ["conf/etc/jump"]
+jump_dirs = ["conf/etc"]
 
 # Absolute PATH entries.
 system_paths = [

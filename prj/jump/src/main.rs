@@ -1,11 +1,11 @@
 //! # Notes
 //!
-//! Reads `targets.yaml` from each directory in `$JUMP_DIRS` (colon-separated).
-//! If `$JUMP_DIRS` is empty or unset, falls back to
-//! `$XDG_CONFIG_HOME/jump/targets.yaml` (defaulting to `~/.config/jump`).
+//! Reads `jump.yaml` from each directory in `$JUMP_DIRS` (colon-separated).
+//! If `$JUMP_DIRS` is empty or unset, falls back to `$XDG_CONFIG_HOME`
+//! (defaulting to `~/.config`).
 //!
-//! Each `targets.yaml` is a YAML mapping from target values (paths, URLs) to
-//! short names or lists of names: `~/conf: [c, conf]`.
+//! Each `jump.yaml` maps target values (paths, URLs) to short names or lists,
+//! like `~/conf: conf` or `~/conf: [c, conf]`.
 //!
 //! # TODO
 //!
@@ -90,11 +90,7 @@ fn main_imp() -> Result<(), Error> {
     let args = parse_args()?;
     let app = jump::App::from_env()?;
     let stdout = io::stdout();
-    let resolved = match args.target {
-        Some(target) => app.resolve(&target)?,
-        None => app.resolve_default()?,
-    };
-    match resolved {
+    match app.resolve(&args.target.unwrap_or_default())? {
         jump::Target::Path(path) => write(&stdout, path.as_os_str().as_bytes()),
         jump::Target::String(s) => write(&stdout, s.as_bytes()),
     }

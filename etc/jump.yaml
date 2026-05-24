@@ -1,7 +1,7 @@
 # These live at the same path (modulo `$HOME`) on every macOS device.
 ~/conf: [c, conf]
 ~/conf/prj: prj
-~/file: [f, file]
+~/file: ['', f, file] # '' makes this the default target
 ~/file/log/%Y/%m/%d: [l, log]
 ~/file/log/%Y/%m: month
 ~/git/play/play: [p, play]
