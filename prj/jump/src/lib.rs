@@ -1,4 +1,3 @@
-mod config;
 mod error;
 mod expansion;
 
@@ -11,33 +10,29 @@ pub use db::Database;
 pub use error::Error;
 pub use expansion::{Expand, Target};
 
-use crate::config::Config;
-
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// Returns `$XDG_CONFIG_HOME` if set, and `~/.config` otherwise.
+fn config_home(home: &Path) -> PathBuf {
+    env::var_os("XDG_CONFIG_HOME").map_or_else(|| home.join(".config"), PathBuf::from)
+}
+
 fn dirs_from_env(home: &Path) -> Vec<PathBuf> {
-    let mut dirs: Vec<PathBuf> = env::var_os("JUMP_DIRS")
-        .map(|s| {
-            env::split_paths(&s)
-                .filter(|p| p != Path::new(""))
-                .collect()
-        })
-        .unwrap_or_default();
-
-    if dirs.is_empty() {
-        let config_home =
-            env::var_os("XDG_CONFIG_HOME").map_or_else(|| home.join(".config"), PathBuf::from);
-        dirs.push(config_home.join("jump"));
+    let string = env::var_os("JUMP_DIRS").unwrap_or_default();
+    let paths = env::split_paths(&string)
+        .filter(|p| p != Path::new(""))
+        .collect::<Vec<_>>();
+    if paths.is_empty() {
+        return vec![config_home(home)];
     }
-
-    dirs
+    paths
 }
 
 /// Returns the accumulated database, and a list of paths loaded (for use in
 /// error messages).
 fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
     let dirs = dirs_from_env(home);
-    let paths: Vec<_> = dirs.iter().map(|p| p.join("targets.yaml")).collect();
+    let paths = dirs.iter().map(|p| p.join("jump.yaml")).collect::<Vec<_>>();
     let mut db = Database::new();
     for path in &paths {
         db.read_file(path)?;
@@ -53,10 +48,10 @@ pub struct App {
 }
 
 impl App {
-    /// Returns an app that reads from all `DIR/targets.yaml` files, where `DIR`
-    /// is each path in the `JUMP_DIRS` environment variable. If `JUMP_DIRS`
-    /// is empty or unset, reads from `$XDG_CONFIG_HOME/jump/targets.yaml`
-    /// (defaulting to `~/.config/jump`).
+    /// Returns an app that reads from all `DIR/jump.yaml` files, where `DIR`
+    /// is each path in the `JUMP_DIRS` environment variable. If `JUMP_DIRS` is
+    /// empty or unset, reads from `$XDG_CONFIG_HOME/jump.yaml` (defaulting to
+    /// `~/.config/jump.yaml`).
     ///
     /// # Panics
     ///
@@ -105,14 +100,5 @@ impl App {
                 .ok_or(err)
         })?;
         Ok(Expand::with_home(&self.home).target(value)?)
-    }
-
-    /// # Errors
-    ///
-    /// Returns [`Err`] if the default target cannot be found or resolved.
-    pub fn resolve_default(&self) -> Result<Target> {
-        let config = Config::from_dirs(&dirs_from_env(&self.home))?;
-        let target = config.default_target.ok_or(Error::Missing)?;
-        self.resolve(&target)
     }
 }
