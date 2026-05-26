@@ -1,7 +1,7 @@
 use std::process;
 
 use clap::Parser;
-use sync::{Cli, Cmd, manifest, ops};
+use rebase::{Cli, Cmd, manifest, ops};
 
 fn main() {
     let cli = Cli::parse();

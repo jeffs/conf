@@ -28,7 +28,7 @@ cargo install --path ~/conf/prj/upgrade
 (cd ~/conf/prj/alias && cargo build --release)
 
 # My fork of Helix, and more of my own tools.
-(cd ~/conf/prj/sync && cargo run -- -r helix -r rust-kart)
+(cd ~/conf/prj/rebase && cargo run -- -r helix -r rust-kart)
 
 # ---------------
 # CONFIGURE STUFF
