@@ -5,7 +5,7 @@
 # - [ ] Upgrade apps from installers: Docker, Firefox, Slack, Steam
 # - [ ] Update Docker images
 # - [ ] Build `on-file-click.app`
-# - [ ] Consolidate with `cargo run -p sync`
+# - [ ] Consolidate with `cargo run -p rebase`
 
 cd ~/conf/prj
 cargo run -p upgrade

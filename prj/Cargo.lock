@@ -756,6 +756,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "rebase"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "serde",
+ "toml",
+]
+
+[[package]]
 name = "redox_syscall"
 version = "0.5.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1023,15 +1032,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
-]
-
-[[package]]
-name = "sync"
-version = "0.1.0"
-dependencies = [
- "clap",
- "serde",
- "toml",
 ]
 
 [[package]]

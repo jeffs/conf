@@ -6,10 +6,10 @@ pub mod output;
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(name = "sync", about = "Source-installed package manager")]
+#[command(name = "rebase", about = "Source-installed package manager")]
 pub struct Cli {
     /// Manifest path
-    #[arg(short, long, default_value = "~/conf/etc/sync.toml")]
+    #[arg(short, long, default_value = "~/conf/etc/rebase.toml")]
     pub manifest: String,
 
     /// Operate on specific repo(s) (repeatable)

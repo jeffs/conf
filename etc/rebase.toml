@@ -1,4 +1,4 @@
-# Config for the `sync` utility; see `../prj/sync`.
+# Config for the `rebase` utility; see `../prj/rebase`.
 
 root = "~/usr/src"
 
