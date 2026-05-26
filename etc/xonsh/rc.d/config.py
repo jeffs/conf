@@ -203,6 +203,9 @@ def setup():
         )
 
         # There's an actual kill ring. After ctrl+y, use alt+y to rotate.
+        # If this isn't enough, also try SUBSEQUENCE_PATH_COMPLETION = False.
+        env["FUZZY_PATH_COMPLETION"] = False
+
         env["XONSH_COPY_ON_DELETE"] = True  # ctrl+k: yes, keep it on the kill ring
         env["XONSH_USE_SYSTEM_CLIPBOARD"] = False  # ctrk+y: no, don't hide the ring
 
