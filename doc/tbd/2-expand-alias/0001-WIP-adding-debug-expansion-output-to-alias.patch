@@ -1,0 +1,94 @@
+From 4b31626ad2b9936828c27bf49d381371b2ba1217 Mon Sep 17 00:00:00 2001
+From: Jeff Schwab <jeff@unbuggy.com>
+Date: Fri, 8 May 2026 08:50:07 -0400
+Subject: [PATCH] WIP adding debug (expansion) output to `alias`
+
+---
+ prj/alias/src/main.rs | 50 +++++++++++++++++++++++++++++++------------
+ 1 file changed, 36 insertions(+), 14 deletions(-)
+
+diff --git a/prj/alias/src/main.rs b/prj/alias/src/main.rs
+index e5b7142..f84fdba 100644
+--- a/prj/alias/src/main.rs
++++ b/prj/alias/src/main.rs
+@@ -38,6 +38,33 @@ fn t_depth(depth: u8) -> &'static [&'static str] {
+     }
+ }
+ 
++struct Call {
++    program: PathBuf,
++    args: Vec<ffi::OsString>,
++}
++
++#[expect(dead_code)]
++impl Call {
++    fn new(program: impl Into<PathBuf>) -> Self {
++        Self {
++            program: program.into(),
++            args: Vec::new(),
++        }
++    }
++
++    fn args<S, I: IntoIterator<Item = S>>(mut self, args: I) -> Self
++    where
++        ffi::OsString: From<S>,
++    {
++        self.args.extend(args.into_iter().map(ffi::OsString::from));
++        self
++    }
++
++    fn exec(self) -> io::Error {
++        Command::new(&self.program).args(&self.args).exec()
++    }
++}
++
+ /// Executable target file
+ #[derive(Clone, Copy)]
+ enum Exe {
+@@ -60,19 +87,9 @@ enum Exe {
+ }
+ 
+ impl Exe {
+-    fn exec<S: AsRef<ffi::OsStr>, I: IntoIterator<Item = S>>(self, args: I) -> io::Error {
+-        Command::new(self.path()).args(args).exec()
+-    }
+-
+-    fn exec_with(
+-        self,
+-        inserted_args: impl IntoIterator<Item = impl AsRef<ffi::OsStr>>,
+-        args: impl IntoIterator<Item = impl AsRef<ffi::OsStr>>,
+-    ) -> io::Error {
+-        Command::new(self.path())
+-            .args(inserted_args)
+-            .args(args)
+-            .exec()
++    #[expect(dead_code)]
++    fn into_call(self) -> Call {
++        Call::new(self.path())
+     }
+ 
+     fn path(self) -> PathBuf {
+@@ -87,6 +104,11 @@ impl Exe {
+             Exe::Jj => cargo_bin().join("jj"),
+         }
+     }
++
++    #[expect(dead_code)]
++    fn into_args(self) -> Vec<ffi::OsString> {
++        todo!()
++    }
+ }
+ 
+ fn main() {
+@@ -109,7 +131,7 @@ fn main() {
+     let t_args = ["--git-ignore", "-T", "--group-directories-first"];
+ 
+     let err = match name {
+-        "e" => Exe::Edit.exec(args),
++        "e" => Exe::Edit.into_call().args(args).exec(),
+         "fe" => Exe::Fzf.exec_with(fe_args, args),
+         "fz" => Exe::Fzf.exec_with(&fe_args[1..], args),
+ 
+-- 
+2.50.1 (Apple Git-155)
+
