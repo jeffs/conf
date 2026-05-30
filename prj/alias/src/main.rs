@@ -119,6 +119,7 @@ fn main() {
         "clippy" => Exe::Cargo.exec_with(["clippy", "--all-targets", "--workspace"], args),
         "nt" => Exe::Cargo.exec_with(["nextest", "run"], args),
         "rust" => Exe::Evcxr.exec(args),
+        "x" => Exe::Cargo.exec_with(["--quiet", "xtask"], args),
 
         "di" => Exe::Jj.exec_with(["diff"], args),
         "st" => Exe::Jj.exec_with(["status"], args),
