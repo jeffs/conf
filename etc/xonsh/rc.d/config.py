@@ -179,6 +179,7 @@ def setup():
 
         del aliases["ls"]
 
+        aliases["-"] = ("cd", "-")
         aliases["c"] = "cd"
         aliases["cg"] = alias_cg
         aliases["ec"] = alias_ec
