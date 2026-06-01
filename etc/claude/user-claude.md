@@ -29,5 +29,5 @@ Functional over OO. Small, orthogonal, composable pieces. Unix philosophy.
 
 Use `jj` (Jujutsu) instead of `git` when possible.
 Do not include "Generated with Claude Code" in commit or PR messages.
-NEVER use Bash for file reading, searching, or text processing. Use Read, Grep, Glob, Edit, or python3. This applies to all agents and subagents.
+NEVER use Bash for file reading or text processing. Use Read, Edit, or python3. This applies to all agents and subagents.
 The `var/` directory contains ephemeral data and is never committed.
