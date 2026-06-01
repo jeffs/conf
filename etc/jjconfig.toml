@@ -17,6 +17,9 @@ e = ["edit"]
 # Remote bookmarks applied directly to my changes.
 lb = ["log", "-r", "remote_bookmarks() & mine()", "--no-graph", "-T", "bookmark_list"]
 
+flog = ["log", "-r", "first_ancestors(@)", "--no-graph", "-T", "builtin_log_oneline"]
+glog = ["log", "-r", "first_ancestors(@)"]
+
 [colors]
 "diff token" = { underline = false }
 
@@ -44,5 +47,12 @@ import-tags = false
 [ui]
 pager = "delta"
 diff-formatter = ":git"
+
+# Meant to show whatever I'm actively working on, including branches.
 default-command = ["log", "-r", "fork_point(interesting())::interesting()"]
+
+# Works, but doesn't show the set of "active" branches; it's more like my old `git glog`.
+# default-command = ["log", "-r", "trunk()::first_ancestors(@)"]
+
+# An attempt to filter out "archived" bookmarks.
 # default-command = ["log", "-r", "@ | trunk() | bookmarks() ~ bookmarks(glob:ar/*)"]

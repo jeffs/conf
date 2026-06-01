@@ -24,5 +24,6 @@
     "clangd-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
-  "theme": "dark-daltonized"
+  "theme": "dark-daltonized",
+  "tui": "fullscreen"
 }
