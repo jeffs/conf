@@ -49,7 +49,9 @@ impl App {
         }
 
         terminal.draw(|frame| crate::ui::render(frame, &self.tasks))?;
-        wait_for_quit()?;
+        if self.any_failed() {
+            wait_for_quit()?;
+        }
         Ok(())
     }
 
@@ -113,6 +115,10 @@ impl App {
 
     fn all_done(&self) -> bool {
         self.tasks.iter().all(|t| t.state.is_done())
+    }
+
+    fn any_failed(&self) -> bool {
+        self.tasks.iter().any(|t| matches!(t.state, crate::task::State::Failed(_)))
     }
 }
 
