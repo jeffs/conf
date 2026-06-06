@@ -19,25 +19,35 @@ PATH = [
     "/Applications/Postgres.app/Contents/Versions/latest/bin",
 ]
 
-COPILOT_CUSTOM_INSTRUCTIONS_DIRS = "conf/etc/copilot/instructions.md"
-RIPGREP_CONFIG_PATH = "conf/etc/ripgreprc"
-
 EDITOR = ".cargo/bin/hx"
 VISUAL = ".cargo/bin/hx"
+
 # Apple defaults to some wacky config path. 
 XDG_CONFIG_HOME = ".config"
+
 FZF_DEFAULT_OPTS_FILE = "conf/etc/fzf"
 HELIX_RUNTIME = "usr/src/helix/runtime"
+RIPGREP_CONFIG_PATH = "conf/etc/ripgreprc"
+RUSTC_WRAPPER = "/opt/homebrew/bin/sccache"
 
 # TODO: In `../../prj/jump`, use ~ for JUMP_HOME by default.
 JUMP_DIRS = ["conf/etc"]
 JUMP_HOME = ""
 
-RUSTC_WRAPPER = "/opt/homebrew/bin/sccache"
+COPILOT_CUSTOM_INSTRUCTIONS_DIRS = "conf/etc/copilot/instructions.md"
 
 # https://github.com/carp-lang/Carp/blob/master/docs/Install.md
-CAML_LD_LIBRARY_PATH = [".opam/default/lib/stublibs"]
 CARP_DIR = "opt/Carp"
+
+OPAM_LAST_ENV = ".opam/.last-env/env-59859e1af3f4a8b66951d058ef115912-0"
+OPAM_SWITCH_PREFIX = ".opam/default"
+OCAMLTOP_INCLUDE_PATH = ".opam/default/lib/toplevel"
+OCAML_TOPLEVEL_PATH = ".opam/default/lib/toplevel"
+CAML_LD_LIBRARY_PATH = [
+    ".opam/default/lib/stublibs",
+    ".opam/default/lib/ocaml/stublibs",
+    ".opam/default/lib/ocaml"
+]
 
 [package_manager]
 name = "brew"
