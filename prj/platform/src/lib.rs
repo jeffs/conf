@@ -50,13 +50,19 @@ impl From<toml::de::Error> for Error {
 // Public types
 // ---------------------------------------------------------------------------
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum EnvValue {
+    String(String),
+    Bool(bool),
+}
+
 #[derive(Debug)]
 pub struct Platform {
     pub paths: Paths,
     pub shell: Shell,
     pub package_manager: PackageManager,
     pub system_update: SystemUpdate,
-    pub env: IndexMap<String, String>,
+    pub env: IndexMap<String, EnvValue>,
     pub tools: BTreeMap<String, PathBuf>,
 }
 
@@ -105,7 +111,7 @@ struct RawPlatform {
     package_manager: RawPackageManager,
     system_update: RawSystemUpdate,
     #[serde(default)]
-    env: IndexMap<String, String>,
+    env: IndexMap<String, toml::Value>,
     #[serde(default)]
     tools: BTreeMap<String, String>,
 }
@@ -230,7 +236,11 @@ impl Platform {
         let env = raw
             .env
             .into_iter()
-            .map(|(k, v)| (k, expand_tilde(&v, home)))
+            .map(|(k, v)| match v {
+                toml::Value::String(s) => (k, EnvValue::String(expand_tilde(&s, home))),
+                toml::Value::Boolean(b) => (k, EnvValue::Bool(b)),
+                other => (k, EnvValue::String(other.to_string())),
+            })
             .collect();
 
         let tools = raw
@@ -374,7 +384,7 @@ mod tests {
         let p = Platform::load_from(&platform_path, &tmp, &home).unwrap();
         assert_eq!(
             p.env.get("JUMP_HOME").unwrap(),
-            &format!("{}/home", home.display())
+            &EnvValue::String(format!("{}/home", home.display()))
         );
 
         // Other env vars should still be present from the base.

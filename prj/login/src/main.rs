@@ -7,6 +7,8 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use platform::EnvValue;
+
 /// Writes the specified environment to a JSON object in the specified file.
 ///
 /// The order of key/value entries is preserved only if [`serde_json`] has
@@ -25,14 +27,17 @@ fn paths_to_json(paths: &[&Path]) -> Vec<serde_json::Value> {
 }
 
 fn write_json<'a>(
-    env: impl IntoIterator<Item = (&'a String, &'a String)>,
+    env: impl IntoIterator<Item = (&'a String, &'a EnvValue)>,
     path: &[&Path],
     jump_dirs: &[&Path],
     dest: &Path,
 ) -> io::Result<()> {
     let mut map = env
         .into_iter()
-        .map(|(k, v)| (k.clone(), serde_json::Value::String(v.clone())))
+        .map(|(k, v)| match v {
+            EnvValue::String(s) => (k.clone(), serde_json::Value::String(s.clone())),
+            EnvValue::Bool(b) => (k.clone(), serde_json::Value::Bool(*b)),
+        })
         .collect::<serde_json::Map<_, _>>();
     map.insert("PATH".into(), serde_json::Value::Array(paths_to_json(path)));
     map.insert(
@@ -66,13 +71,19 @@ fn write_sh_var(out: &mut Vec<u8>, key: &ffi::OsStr, value: &ffi::OsStr) {
 /// Writes the specified environment to a POSIX shell script.
 fn write_sh<'a>(
     dest: &Path,
-    env: impl IntoIterator<Item = (&'a String, &'a String)>,
+    env: impl IntoIterator<Item = (&'a String, &'a EnvValue)>,
     path: &[&Path],
     jump_dirs: &[&Path],
 ) -> Result<(), Box<dyn Error>> {
     let mut out = b"# This file is generated. See ~/conf/prj/login.\n\n".to_vec();
     for (key, value) in env {
-        write_sh_var(&mut out, key.as_ref(), value.as_ref());
+        match value {
+            EnvValue::String(s) => write_sh_var(&mut out, key.as_ref(), s.as_ref()),
+            EnvValue::Bool(b) => {
+                let s = if *b { "true" } else { "false" };
+                write_sh_var(&mut out, key.as_ref(), s.as_ref());
+            }
+        };
     }
     write_sh_var(&mut out, ffi::OsStr::new("PATH"), &env::join_paths(path)?);
     write_sh_var(
