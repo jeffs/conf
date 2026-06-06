@@ -1,6 +1,5 @@
 mod merge;
 
-use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::{fmt, fs, io};
 
@@ -56,36 +55,20 @@ pub enum EnvValue {
     Bool(bool),
 }
 
+/// A single value or a list of values under `[paths]`. Scalars stay scalars,
+/// arrays stay arrays — the distinction is preserved through to the output.
+#[derive(Debug, Clone)]
+pub enum PathEntry {
+    Single(PathBuf),
+    Multi(Vec<PathBuf>),
+}
+
 #[derive(Debug)]
 pub struct Platform {
-    pub paths: Paths,
-    pub shell: Shell,
+    pub path_env: IndexMap<String, PathEntry>,
     pub package_manager: PackageManager,
     pub system_update: SystemUpdate,
     pub env: IndexMap<String, EnvValue>,
-    pub tools: BTreeMap<String, PathBuf>,
-}
-
-#[derive(Debug)]
-pub struct Paths {
-    pub home: PathBuf,
-    pub config_home: PathBuf,
-    pub pkg_prefix: PathBuf,
-    pub home_paths: Vec<PathBuf>,
-    pub system_paths: Vec<PathBuf>,
-    pub jump_dirs: Vec<PathBuf>,
-}
-
-#[derive(Debug)]
-pub struct Shell {
-    pub invoke: Vec<String>,
-    pub env_format: EnvFormat,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum EnvFormat {
-    Posix,
-    PowerShell,
 }
 
 #[derive(Debug)]
@@ -106,38 +89,12 @@ pub struct SystemUpdate {
 
 #[derive(Deserialize)]
 struct RawPlatform {
-    paths: RawPaths,
-    shell: RawShell,
+    #[serde(default)]
+    paths: IndexMap<String, toml::Value>,
     package_manager: RawPackageManager,
     system_update: RawSystemUpdate,
     #[serde(default)]
     env: IndexMap<String, toml::Value>,
-    #[serde(default)]
-    tools: BTreeMap<String, String>,
-}
-
-#[derive(Deserialize)]
-struct RawPaths {
-    config_home: String,
-    pkg_prefix: PathBuf,
-    home_paths: Vec<String>,
-    system_paths: Vec<PathBuf>,
-    #[serde(default)]
-    jump_dirs: Vec<String>,
-}
-
-#[derive(Deserialize)]
-struct RawShell {
-    invoke: Vec<String>,
-    env_format: RawEnvFormat,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "snake_case")]
-enum RawEnvFormat {
-    Posix,
-    #[serde(rename = "powershell")]
-    PowerShell,
 }
 
 #[derive(Deserialize)]
@@ -166,10 +123,6 @@ fn expand_tilde(value: &str, home: &Path) -> String {
         return home.join(rest).display().to_string();
     }
     value.to_owned()
-}
-
-fn expand_tilde_path(value: &str, home: &Path) -> PathBuf {
-    PathBuf::from(expand_tilde(value, home))
 }
 
 fn platform_toml_name() -> Result<&'static str, Error> {
@@ -223,15 +176,30 @@ impl Platform {
     }
 
     fn resolve(raw: RawPlatform, home: &Path) -> Self {
-        let config_home = if raw.paths.config_home.starts_with('/') {
-            PathBuf::from(&raw.paths.config_home)
-        } else {
-            home.join(&raw.paths.config_home)
-        };
-
-        let home_paths = raw.paths.home_paths.iter().map(|p| home.join(p)).collect();
-
-        let jump_dirs = raw.paths.jump_dirs.iter().map(|p| home.join(p)).collect();
+        let path_env = raw
+            .paths
+            .into_iter()
+            .filter_map(|(key, value)| {
+                match value {
+                    toml::Value::Array(arr) => {
+                        let dirs: Vec<PathBuf> = arr
+                            .into_iter()
+                            .filter_map(|v| match v {
+                                toml::Value::String(s) => Some(home.join(&s)),
+                                _ => None,
+                            })
+                            .collect();
+                        if dirs.is_empty() {
+                            None
+                        } else {
+                            Some((key, PathEntry::Multi(dirs)))
+                        }
+                    }
+                    toml::Value::String(s) => Some((key, PathEntry::Single(home.join(&s)))),
+                    _ => None,
+                }
+            })
+            .collect();
 
         let env = raw
             .env
@@ -243,28 +211,8 @@ impl Platform {
             })
             .collect();
 
-        let tools = raw
-            .tools
-            .into_iter()
-            .map(|(k, v)| (k, expand_tilde_path(&v, home)))
-            .collect();
-
         Self {
-            paths: Paths {
-                home: home.to_owned(),
-                config_home,
-                pkg_prefix: raw.paths.pkg_prefix,
-                home_paths,
-                system_paths: raw.paths.system_paths,
-                jump_dirs,
-            },
-            shell: Shell {
-                invoke: raw.shell.invoke,
-                env_format: match raw.shell.env_format {
-                    RawEnvFormat::Posix => EnvFormat::Posix,
-                    RawEnvFormat::PowerShell => EnvFormat::PowerShell,
-                },
-            },
+            path_env,
             package_manager: PackageManager {
                 name: raw.package_manager.name,
                 install: raw.package_manager.install,
@@ -274,23 +222,7 @@ impl Platform {
                 command: raw.system_update.command,
             },
             env,
-            tools,
         }
-    }
-
-    /// Look up an explicit tool path from the `[tools]` table.
-    pub fn tool(&self, name: &str) -> Option<&Path> {
-        self.tools.get(name).map(PathBuf::as_path)
-    }
-
-    /// Return the full `PATH` list: `home_paths` followed by `system_paths`.
-    pub fn full_path(&self) -> Vec<&Path> {
-        self.paths
-            .home_paths
-            .iter()
-            .chain(&self.paths.system_paths)
-            .map(PathBuf::as_path)
-            .collect()
     }
 }
 
@@ -325,15 +257,9 @@ mod tests {
 
         let p = Platform::load_from(&platform_path, &site_path, &home).unwrap();
 
-        assert_eq!(
-            p.paths.config_home,
-            home.join("Library/Application Support")
-        );
-        assert_eq!(p.paths.pkg_prefix, PathBuf::from("/opt/homebrew"));
-        assert!(!p.paths.home_paths.is_empty());
-        assert!(!p.paths.system_paths.is_empty());
-        assert_eq!(p.shell.invoke, vec!["sh", "-c"]);
-        assert_eq!(p.shell.env_format, EnvFormat::Posix);
+        assert!(p.path_env.contains_key("PATH"));
+        assert!(p.path_env.contains_key("JUMP_DIRS"));
+        assert!(p.path_env.contains_key("CAML_LD_LIBRARY_PATH"));
         assert_eq!(p.package_manager.name, "brew");
         assert!(!p.package_manager.install.is_empty());
         assert!(!p.package_manager.upgrade.is_empty());
@@ -388,7 +314,7 @@ mod tests {
         );
 
         // Other env vars should still be present from the base.
-        assert!(p.env.contains_key("EDITOR"));
+        assert!(p.env.contains_key("LESS"));
 
         let _ = fs::remove_file(&tmp);
     }
@@ -403,36 +329,8 @@ mod tests {
         let p = Platform::load_from(&platform_path, &site_path, &home).unwrap();
 
         let keys: Vec<&str> = p.env.keys().map(String::as_str).collect();
-        // The first key in our macos.toml [env] section is EDITOR.
-        assert_eq!(keys[0], "EDITOR");
+        // The first key in our macos.toml [env] section is LESS.
+        assert_eq!(keys[0], "LESS");
     }
 
-    #[test]
-    fn full_path_order() {
-        let root = conf_root();
-        let platform_path = root.join("etc/platform/macos.toml");
-        let site_path = root.join("var/nonexistent-site.toml");
-        let home = fake_home();
-
-        let p = Platform::load_from(&platform_path, &site_path, &home).unwrap();
-        let path = p.full_path();
-
-        // Home paths come first (they are relative, resolved to $HOME).
-        assert!(path[0].starts_with(&home));
-        // System paths come after (they are absolute).
-        let last = path.last().unwrap();
-        assert!(last.is_absolute());
-    }
-
-    #[test]
-    fn tool_lookup() {
-        let root = conf_root();
-        let platform_path = root.join("etc/platform/macos.toml");
-        let site_path = root.join("var/nonexistent-site.toml");
-        let home = fake_home();
-
-        let p = Platform::load_from(&platform_path, &site_path, &home).unwrap();
-        assert_eq!(p.tool("fzf").unwrap(), Path::new("/opt/homebrew/bin/fzf"));
-        assert!(p.tool("nonexistent").is_none());
-    }
 }

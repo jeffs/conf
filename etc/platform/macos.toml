@@ -1,10 +1,5 @@
 [paths]
-# Relative paths resolve against $HOME.
-config_home = "Library/Application Support"
-pkg_prefix = "/opt/homebrew"
-
-# PATH entries relative to $HOME, prepended before system_paths.
-home_paths = [
+PATH = [
     "usr/bin",
     "conf/bin",
     ".local/bin",
@@ -12,13 +7,6 @@ home_paths = [
     "go/bin",
     ".ghcup/bin",
     ".cabal/bin",
-]
-
-# JUMP_DIRS directories relative to $HOME.
-jump_dirs = ["conf/etc"]
-
-# Absolute PATH entries.
-system_paths = [
     "/usr/local/go/bin",
     "/opt/homebrew/bin",
     "/opt/homebrew/opt/sqlite/bin",
@@ -31,9 +19,25 @@ system_paths = [
     "/Applications/Postgres.app/Contents/Versions/latest/bin",
 ]
 
-[shell]
-invoke = ["sh", "-c"]
-env_format = "posix"
+COPILOT_CUSTOM_INSTRUCTIONS_DIRS = "conf/etc/copilot/instructions.md"
+RIPGREP_CONFIG_PATH = "conf/etc/ripgreprc"
+
+EDITOR = ".cargo/bin/hx"
+VISUAL = ".cargo/bin/hx"
+# Apple defaults to some wacky config path. 
+XDG_CONFIG_HOME = ".config"
+FZF_DEFAULT_OPTS_FILE = "conf/etc/fzf"
+HELIX_RUNTIME = "usr/src/helix/runtime"
+
+# TODO: In `../../prj/jump`, use ~ for JUMP_HOME by default.
+JUMP_DIRS = ["conf/etc"]
+JUMP_HOME = ""
+
+RUSTC_WRAPPER = "/opt/homebrew/bin/sccache"
+
+# https://github.com/carp-lang/Carp/blob/master/docs/Install.md
+CAML_LD_LIBRARY_PATH = [".opam/default/lib/stublibs"]
+CARP_DIR = "opt/Carp"
 
 [package_manager]
 name = "brew"
@@ -47,18 +51,9 @@ command = ["softwareupdate", "--list"]
 # Values starting with ~/ or exactly ~ are expanded against $HOME.
 # Everything else is a literal string.
 [env]
-EDITOR = "~/.cargo/bin/hx"
-VISUAL = "~/.cargo/bin/hx"
-XDG_CONFIG_HOME = "~/.config"
-FZF_DEFAULT_OPTS_FILE = "~/conf/etc/fzf"
-RIPGREP_CONFIG_PATH = "~/conf/etc/ripgreprc"
-COPILOT_CUSTOM_INSTRUCTIONS_DIRS = "~/conf/etc/copilot/instructions.md"
-HELIX_RUNTIME = "~/usr/src/helix/runtime"
-JUMP_HOME = "~"
 LESS = "-FRX -j5"
 MANPAGER = "col -b | bat -pl man"
 HOMEBREW_NO_ENV_HINTS = true
-RUSTC_WRAPPER = "/opt/homebrew/bin/sccache"
 GRIT_TRUNKS = "dev,main,master,trunk"
 
 # They've started pulling this "What's next: [ads]" crap on every single `docker
@@ -82,11 +77,3 @@ OPENCODE_DISABLE_TERMINAL_TITLE = true
 # Xonsh is on 3.13, so sticking with it eases interop.
 # That said, `python3 --version` on my MacBook is 3.14.
 # UV_PYTHON = "3.13"
-
-# https://github.com/carp-lang/Carp/blob/master/docs/Install.md
-CARP_DIR = "~/opt/Carp"
-
-# Explicit tool paths. Omit to rely on PATH lookup.
-[tools]
-fzf = "/opt/homebrew/bin/fzf"
-glow = "/opt/homebrew/bin/glow"

@@ -1,19 +1,15 @@
 //! Login shell launcher. See [`main`] for notes.
 
-use std::{
-    env,
-    error::Error,
-    ffi, fs, io,
-    path::{Path, PathBuf},
-};
+use std::{env, error::Error, ffi, fs, io, path::{Path, PathBuf}};
 
-use platform::EnvValue;
+use indexmap::IndexMap;
+use platform::{EnvValue, PathEntry};
 
 /// Writes the specified environment to a JSON object in the specified file.
 ///
 /// The order of key/value entries is preserved only if [`serde_json`] has
 /// feature `preserve_order` enabled.
-fn paths_to_json(paths: &[&Path]) -> Vec<serde_json::Value> {
+fn paths_to_json(paths: &[PathBuf]) -> Vec<serde_json::Value> {
     paths
         .iter()
         .filter_map(|p| {
@@ -28,8 +24,7 @@ fn paths_to_json(paths: &[&Path]) -> Vec<serde_json::Value> {
 
 fn write_json<'a>(
     env: impl IntoIterator<Item = (&'a String, &'a EnvValue)>,
-    path: &[&Path],
-    jump_dirs: &[&Path],
+    path_env: &IndexMap<String, PathEntry>,
     dest: &Path,
 ) -> io::Result<()> {
     let mut map = env
@@ -39,11 +34,19 @@ fn write_json<'a>(
             EnvValue::Bool(b) => (k.clone(), serde_json::Value::Bool(*b)),
         })
         .collect::<serde_json::Map<_, _>>();
-    map.insert("PATH".into(), serde_json::Value::Array(paths_to_json(path)));
-    map.insert(
-        "JUMP_DIRS".into(),
-        serde_json::Value::Array(paths_to_json(jump_dirs)),
-    );
+    for (key, entry) in path_env {
+        let value = match entry {
+            PathEntry::Single(p) => {
+                let s = p.to_str().unwrap_or_else(|| {
+                    eprintln!("warning: skipping non-UTF-8 path item: {}", p.display());
+                    ""
+                });
+                serde_json::Value::String(s.to_owned())
+            }
+            PathEntry::Multi(dirs) => serde_json::Value::Array(paths_to_json(dirs)),
+        };
+        map.insert(key.clone(), value);
+    }
     let mut json = serde_json::to_string_pretty(&map)
         .unwrap_or_else(|e| unreachable!("serde_json::Map is serializable: {e}"));
     json.push('\n');
@@ -72,8 +75,7 @@ fn write_sh_var(out: &mut Vec<u8>, key: &ffi::OsStr, value: &ffi::OsStr) {
 fn write_sh<'a>(
     dest: &Path,
     env: impl IntoIterator<Item = (&'a String, &'a EnvValue)>,
-    path: &[&Path],
-    jump_dirs: &[&Path],
+    path_env: &IndexMap<String, PathEntry>,
 ) -> Result<(), Box<dyn Error>> {
     let mut out = b"# This file is generated. See ~/conf/prj/login.\n\n".to_vec();
     for (key, value) in env {
@@ -83,14 +85,15 @@ fn write_sh<'a>(
                 let s = if *b { "true" } else { "false" };
                 write_sh_var(&mut out, key.as_ref(), s.as_ref());
             }
-        };
+        }
     }
-    write_sh_var(&mut out, ffi::OsStr::new("PATH"), &env::join_paths(path)?);
-    write_sh_var(
-        &mut out,
-        ffi::OsStr::new("JUMP_DIRS"),
-        &env::join_paths(jump_dirs)?,
-    );
+    for (key, entry) in path_env {
+        let dirs: Vec<&Path> = match entry {
+            PathEntry::Single(p) => vec![p.as_path()],
+            PathEntry::Multi(dirs) => dirs.iter().map(PathBuf::as_path).collect(),
+        };
+        write_sh_var(&mut out, key.as_ref(), &env::join_paths(&dirs)?);
+    }
     Ok(fs::write(dest, out)?)
 }
 
@@ -102,13 +105,6 @@ fn main() {
     let home = std::env::home_dir().expect("home dir");
     let conf = home.join("conf");
     let platform = platform::Platform::load(&conf).expect("loading platform config");
-    let path = platform.full_path();
-    let jump_dirs: Vec<&Path> = platform
-        .paths
-        .jump_dirs
-        .iter()
-        .map(PathBuf::as_path)
-        .collect();
 
     // Make sure the destination directory exists.
     let var = conf.join("var");
@@ -116,11 +112,11 @@ fn main() {
 
     // Save JSON for Nushell and Xonsh.
     let json = var.join("env.json");
-    write_json(&platform.env, &path, &jump_dirs, &json)
+    write_json(&platform.env, &platform.path_env, &json)
         .unwrap_or_else(|e| panic!("{}: {e}", json.display()));
 
     // Save exports for POSIX shells.
     let sh = var.join("env.sh");
-    write_sh(&sh, &platform.env, &path, &jump_dirs)
+    write_sh(&sh, &platform.env, &platform.path_env)
         .unwrap_or_else(|e| panic!("{}: {e}", sh.display()));
 }

@@ -16,6 +16,13 @@ Don't save memories unless they're likely to be useful over the long term. Prote
 Don't fake neutrality to avoid commitment. If you change your mind, explain your reasoning. Don't cave merely to end conversation.
 When I express negative opinions, do not write them off as "burns" or "digs." Engage with the substance. I'm not always right, but I am always sincere.
 
+# Tools and workflow
+
+Use `jj` (Jujutsu) instead of `git` when possible.
+Do not include "Generated with Claude Code" in commit or PR messages.
+NEVER use Bash for file reading or text processing. Use Read, Edit, or python3. This applies to all agents and subagents.
+The `var/` directory contains ephemeral data and is never committed.
+
 # Code philosophy
 
 Correctness through proof, not hope:
@@ -25,9 +32,100 @@ Correctness through proof, not hope:
 
 Functional over OO. Small, orthogonal, composable pieces. Unix philosophy.
 
-# Tools and workflow
+## Don't use names as comments
 
-Use `jj` (Jujutsu) instead of `git` when possible.
-Do not include "Generated with Claude Code" in commit or PR messages.
-NEVER use Bash for file reading or text processing. Use Read, Edit, or python3. This applies to all agents and subagents.
-The `var/` directory contains ephemeral data and is never committed.
+Identifiers have the Single Responsibility of identifying. Explanations belong in comments or documentation.
+Variable types indicate structure, whereas names indicate role.
+
+### Good
+
+Types provide structure and safety, comments explain, and identifiers are names:
+
+```rust
+/// Proleptic Gregorian date. All fields are 1-based indexes; for example,
+/// Christmas of the year 2000 was `Date { year: 2000, month: 12, day: 25 }`.
+struct Date { year: u16, month: u8, day: u8 }
+
+/// Uniquely identifies a cat.
+struct CatId(u32);
+struct Cat { birthday: Date, kittens: Vec<CatId> }
+
+/// Returns the square root of `n`, or [`None`] if the root is not an integer.
+fn square_root(n: u32) -> Option<u32> { todo!() }
+```
+
+### Not as good
+
+Identifiers are overloaded to explain and name things. Verbose, and lacks structure.
+
+```rust
+struct Cat { birthday_iso8601: (u16, u8, u8), kitten_ids: Vec<u32> }
+fn square_root_if_integer_else_none(n: u32) -> Option<u32> { todo!() }
+```
+
+### Bad
+
+Insufficient structure or explanation.
+
+```rust
+struct Cat { birthday: (u16, u8, u8), kittens: Vec<u32> }
+fn square_root(n: u32) -> Option<u32> { todo!() }
+```
+
+## Don't use comments as structure
+
+Use language-level features such as functions and modules, not "sections" delimited by banner comments.
+
+### Good
+
+`armor.rs`:
+
+```rust
+pub struct Helmet { /* ... */ }  
+pub struct Vest { /* ... */ }  
+pub struct Leggings { /* ... */ }  
+```
+
+`weapons.rs`:
+
+```rust
+pub struct Axe { /* ... */ }
+pub struct Rifle { /* ... */ }
+pub struct Sword { /* ... */ }
+```
+
+### Not as good
+
+```rust
+mod armor {
+    pub struct Helmet { /* ... */ }  
+    pub struct Vest { /* ... */ }  
+    pub struct Leggings { /* ... */ }  
+}
+
+mod weapons {
+    pub struct Axe { /* ... */ }
+    pub struct Rifle { /* ... */ }
+    pub struct Sword { /* ... */ }
+}
+```
+
+### Bad
+
+```rust
+// -----
+// Armor
+// -----
+
+pub struct Helmet { /* ... */ }  
+pub struct Vest { /* ... */ }  
+pub struct Leggings { /* ... */ }  
+
+// -------
+// Weapons
+// -------
+
+ pub struct Axe { /* ... */ }
+ pub struct Rifle { /* ... */ }
+ pub struct Sword { /* ... */ }
+```
