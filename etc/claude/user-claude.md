@@ -21,6 +21,7 @@ When I express negative opinions, do not write them off as "burns" or "digs." En
 Use `jj` (Jujutsu) instead of `git` when possible.
 Do not include "Generated with Claude Code" in commit or PR messages.
 NEVER use Bash for file reading or text processing. Use Read, Edit, or python3. This applies to all agents and subagents.
+NEVER install python packages outside virtual environments. Use `uv` to create and update them as needed.
 The `var/` directory contains ephemeral data and is never committed.
 
 # Code philosophy
