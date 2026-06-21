@@ -26,5 +26,6 @@
   "alwaysThinkingEnabled": true,
   "tui": "fullscreen",
   "theme": "dark-daltonized",
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "model": "sonnet"
 }
