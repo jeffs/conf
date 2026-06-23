@@ -60,10 +60,17 @@ language-servers = ["deno-lsp"]
 name = "jsonc"
 indent = { tab-width = 4, unit = "  " }
 
+[language-server.harper-ls]
+command = "harper-ls"
+args = ["--stdio"]
+
+[language-server.harper-ls.config.harper-ls.linters]
+UseTitleCase = false
+
 [[language]]
 name = "markdown"
 soft-wrap.wrap-indicator = ""
-language-servers = []
+language-servers = ["harper-ls"]
 
 [language.auto-pairs]
 '(' = ')'

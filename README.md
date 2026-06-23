@@ -24,4 +24,4 @@ cargo run -p rebase # Installs stuff from my source, per etc/rebase.toml
 
 Now, cross your fingers, and hold them that way for an amount of time proportionate to how much you care about this working on the first try. Once you uncross them, start a fresh shell in a new terminal window.
 
-Finally, you may want to configure your terminal to start something other than its default shell. Startup files are included for Zsh, Nushell, and Xonsh. As of this writing, Xonsh is my daily driver.
+Finally, you may want to configure your terminal to start something other than its default shell. Start-up files are included for Zsh, Nushell, and Xonsh. As of this writing, Xonsh is my daily driver.
