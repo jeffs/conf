@@ -1,6 +1,7 @@
 # theme = 'ayu_dark'
 # theme = 'base16_default_dark'
-theme = 'jeffs_base16_terminal'
+# theme = 'jeffs_base16_terminal' # The base16 themes
+theme = 'term16_dark'
 # theme = 'aurara'
 
 editor.true-color = true

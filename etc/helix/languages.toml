@@ -70,7 +70,9 @@ UseTitleCase = false
 [[language]]
 name = "markdown"
 soft-wrap.wrap-indicator = ""
-language-servers = ["harper-ls"]
+
+# Harper is extremely opinionated.
+# language-servers = ["harper-ls"]
 
 [language.auto-pairs]
 '(' = ')'

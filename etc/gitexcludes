@@ -46,6 +46,17 @@ target/
 # NPM package cache
 node_modules
 
+# Yarn (a JS package manager) mixes versioned and unversioned files in the
+# `.yarn` directory. The exact specification of what you're supposed to ignore
+# varies according to whether you're using "Berry" and/or "Zero-Install".
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
 # Variable data, as described in the Filesystem Hierarchy Standard:
 # https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 var/
