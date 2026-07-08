@@ -140,6 +140,12 @@ fn main() {
         // functionality would probably be better served by tar-like "keys" than
         // by POSIX/GNU-style "options" (even though the latter are dominant in
         // the modern world).
+        //
+        // By default, JJ won't move bookmarks on commit, because it doesn't
+        // actually know which branch you're "on." Run `jj config set --repo
+        // experimental-advance-branches.enabled-branches '["main"]'` to make it
+        // move all bookmarks currently on the parent commit (`@-`).
+        "ci" => Exe::Jj.exec_with(["commit"], args),
         "jb" => Exe::Jj.exec_with(["bookmark"], args),
         "jbc" => Exe::Jj.exec_with(["bookmark", "create"], args),
         "jbd" => Exe::Jj.exec_with(["bookmark", "delete"], args),
