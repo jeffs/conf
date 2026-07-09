@@ -14,6 +14,7 @@
 //!   + Path: `j log<Tab>` => `jump /Users/jeff/log/2025/03/27`
 //! - [ ] Parameters; e.g., `jump linear TIK-42` or `jump github my-repo#42`
 //! - [ ] Relative date expansion; e.g, yesterday (syntax TBD)
+//! - [ ] Recognize unambiguous prefixes; e.g., `c|co|con|conf` for `conf`
 
 use std::io::Write;
 use std::os::unix::ffi::OsStrExt;
