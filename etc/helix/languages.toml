@@ -160,10 +160,18 @@ group = "crate"
 command = "simple-completion-language-server"
 
 # https://docs.deno.com/runtime/getting_started/setup_your_environment/
+#
+# Note that tsx and jsx are distinct languages in Helix (they use different
+# tree-sitter grammars), so each needs its own override.
 [[language]]
 name = "typescript"
 roots = ["deno.json", "deno.jsonc", "package.json"]
-file-types = ["ts", "tsx"]
+auto-format = true
+language-servers = ["deno-lsp"]
+
+[[language]]
+name = "tsx"
+roots = ["deno.json", "deno.jsonc", "package.json"]
 auto-format = true
 
 # Add emmet-ls if you want it for TSX.
@@ -172,7 +180,12 @@ language-servers = ["deno-lsp"]
 [[language]]
 name = "javascript"
 roots = ["deno.json", "deno.jsonc", "package.json"]
-file-types = ["js", "jsx"]
+auto-format = true
+language-servers = ["deno-lsp"]
+
+[[language]]
+name = "jsx"
+roots = ["deno.json", "deno.jsonc", "package.json"]
 auto-format = true
 
 # Add emmet-ls if you want it for JSX.
