@@ -77,3 +77,8 @@ var/
 .codeium/
 .sourcegraph/
 .ai/
+
+# `ln -s . @` in Next.js projects so I can use `gF` to open CSS file imports.
+# Note that I can the LS already supports `gd` on ordinary (non-CSS) imports
+# already works correctly, and recognizes `@` as the project root.
+@

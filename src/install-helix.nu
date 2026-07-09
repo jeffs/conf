@@ -18,7 +18,7 @@ npm i -g vscode-langservers-extracted
 cargo install taplo-cli
 
 # Clone or update the Helix fork.
-let helix_dir = $"($env.HOME)/pkg/helix"
+let helix_dir = $"($env.HOME)/usr/src/helix"
 if ($helix_dir | path exists) {
     print "Updating Helix fork..."
     git -C $helix_dir pull --ff-only
