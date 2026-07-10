@@ -9,6 +9,7 @@ PATH = [
     ".cabal/bin",
     "/usr/local/go/bin",
     "/opt/homebrew/bin",
+    "/opt/homebrew/sbin",
     "/opt/homebrew/opt/sqlite/bin",
     "/usr/local/bin",
     "/usr/bin",
