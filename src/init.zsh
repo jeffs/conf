@@ -35,7 +35,7 @@ cargo install --path ~/conf/prj/upgrade
 # ---------------
 
 # Generate `~/conf/var/env.{json,sh}` for login shells.
-(cd ~/conf/prj/login && cargo run)
+(cd ~/conf/prj/mkenv && cargo run)
 
 # Symlink `~/conf/etc` items, mostly into `~/.config`.
 ~/conf/src/install-dotfiles.zsh

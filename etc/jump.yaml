@@ -10,7 +10,7 @@
 
 # These may be at different paths on different machines. `JUMP_HOME` is defined
 # in `../platform/macos.toml`, which is converted to shell-friendly syntax by
-# `../../prj/login`. (`.env` syntax is fine for Bash and Zsh, but JSON is
+# `../../prj/mkenv`. (`.env` syntax is fine for Bash and Zsh, but JSON is
 # better for Nushell and Xonsh. I `jump` in multiple shells.)
 $JUMP_HOME/git/data: [d, data]
 $JUMP_HOME/git/nest: [nest]

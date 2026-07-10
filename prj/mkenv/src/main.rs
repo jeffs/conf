@@ -1,4 +1,4 @@
-//! Login shell launcher. See [`main`] for notes.
+//! Environment file generator. See [`main`] for notes.
 
 use std::{env, error::Error, ffi, fs, io, path::{Path, PathBuf}};
 
@@ -77,7 +77,7 @@ fn write_sh<'a>(
     env: impl IntoIterator<Item = (&'a String, &'a EnvValue)>,
     path_env: &IndexMap<String, PathEntry>,
 ) -> Result<(), Box<dyn Error>> {
-    let mut out = b"# This file is generated. See ~/conf/prj/login.\n\n".to_vec();
+    let mut out = b"# This file is generated. See ~/conf/prj/mkenv.\n\n".to_vec();
     for (key, value) in env {
         match value {
             EnvValue::String(s) => write_sh_var(&mut out, key.as_ref(), s.as_ref()),

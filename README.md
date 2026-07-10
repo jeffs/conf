@@ -18,7 +18,7 @@ Next, run programs to generate shell config and install some things from source:
 
 ```sh
 cd ~/conf/prj
-cargo run -p login  # Maps etc/platform/macos.toml to var/env.{json,sh}
+cargo run -p mkenv  # Maps etc/platform/macos.toml to var/env.{json,sh}
 cargo run -p rebase # Installs stuff from my source, per etc/rebase.toml
 ````
 
