@@ -46,6 +46,13 @@ bookmarks = ["custom"]
 upstream_ref = "main"
 build = []
 
+[repos.eza]
+clone = "git@github.com:jeffs/eza.git"
+upstream = "https://github.com/eza-community/eza"
+bookmarks = ["custom"]
+upstream_ref = "main"
+build = ["cargo install --path ."]
+
 [repos.typify]
 clone = "git@github.com:jeffs/typify.git"
 upstream = "https://github.com/oxidecomputer/typify"
