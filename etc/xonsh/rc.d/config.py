@@ -43,6 +43,7 @@ def setup():
         try:
             env_json = json.loads(Path("~/conf/var/env.json").expanduser().read_text())
             env.update(env_json)
+
             def _format(v):
                 if isinstance(v, str):
                     return v
@@ -52,9 +53,7 @@ def setup():
                     return "true" if v else "false"
                 return str(v)
 
-            os.environ.update(
-                {k: _format(v) for k, v in env_json.items()}
-            )
+            os.environ.update({k: _format(v) for k, v in env_json.items()})
         except Exception as e:
             print(f"error: env: {e}", file=sys.stderr)
 
