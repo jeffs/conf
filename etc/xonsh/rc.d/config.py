@@ -216,6 +216,12 @@ def setup():
         env["XONSH_USE_SYSTEM_CLIPBOARD"] = False  # ctrk+y: no, don't hide the ring
 
         env["XONSH_COLOR_STYLE"] = COLOR_STYLE
+
+        # Don't set the background color when listing (block or character) device files.
+        ls_colors = cast(dict[str, tuple[str]], env["LS_COLORS"])
+        ls_colors["bd"] = ("INTENSE_YELLOW",)
+        ls_colors["cd"] = ("INTENSE_YELLOW",)
+
         style_overrides = cast(dict[str, str], env["XONSH_STYLE_OVERRIDES"])
         style_overrides["completion-menu"] = "bg:ansiblack ansiwhite"
         style_overrides["completion-menu.completion"] = "bg:ansiblack ansiwhite"
