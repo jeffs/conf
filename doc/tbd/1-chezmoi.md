@@ -3,7 +3,7 @@ status: TODO
 title: Try chezmoi
 ---
 
-Consider replacing platform/machine-specific functionality with chezmoi. Claude's assessment:
+Consider replacing platform/machine-specific functionality (`~/conf/prj/platform`,`~/conf/prj/mkenv`) with chezmoi. Claude's assessment:
 
 > Most of the portability machinery here maps cleanly onto chezmoi:
 > 
