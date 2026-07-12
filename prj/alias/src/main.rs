@@ -124,11 +124,12 @@ fn main() {
         "di" => Exe::Jj.exec_with(["diff"], args),
         "st" => Exe::Jj.exec_with(["status"], args),
 
-        // TODO: Define once character per action or flag (b for bookmark, r to
-        //  mean `-r`, etc.), and disregard order of the letters in `argv[0]`,
-        //  as well as the order of args whose meanings are apparent; and while
-        //  you're at it, making frequent args (such as `-r`) optional. For
-        //  example, if @ is `wyrtkpsp`, the following should all be equivalent:
+        // TODO: Define one character per JJ action or flag (b for bookmark,
+        //  r to mean `-r`, etc.), and disregard order of the letters in
+        //  `argv[0]`, as well as the order of args whose meanings are apparent;
+        //  and while you're at it, making frequent args (such as `-r`)
+        //  optional. For example, if @ is `wyrtkpsp`, the following should all
+        //  be equivalent:
         //
         //  - `jdm 'Add a comment'`
         //  - `jdm 'Add a comment' wyrtkpsp`
@@ -140,20 +141,19 @@ fn main() {
         // functionality would probably be better served by tar-like "keys" than
         // by POSIX/GNU-style "options" (even though the latter are dominant in
         // the modern world).
-        //
-        // By default, JJ won't move bookmarks on commit, because it doesn't
-        // actually know which branch you're "on." Run `jj config set --repo
-        // experimental-advance-branches.enabled-branches '["main"]'` to make it
-        // move all bookmarks currently on the parent commit (`@-`); but, note
-        // that this also applies to `jj new`, which makes it very difficult to
-        // start a new branch atop `main` (without moving `main` itself).
-        "ci" => Exe::Jj.exec_with(["commit"], args),
         "jb" => Exe::Jj.exec_with(["bookmark"], args),
         "jbc" => Exe::Jj.exec_with(["bookmark", "create"], args),
         "jbd" => Exe::Jj.exec_with(["bookmark", "delete"], args),
         "jbm" => Exe::Jj.exec_with(["bookmark", "move"], args),
         "jbs" => Exe::Jj.exec_with(["bookmark", "set"], args),
         "jbt" => Exe::Jj.exec_with(["bookmark", "track"], args),
+        // NOTE: JJ won't move bookmarks on commit, because it doesn't actually
+        //  know which branch you're "on." You can `jj config set --repo
+        //  experimental-advance-branches.enabled-branches '["main"]'` to make
+        //  it move all bookmarks currently on the parent commit (`@-`); but,
+        //  this also applies to `jj new`, which makes it very difficult to
+        //  start a new branch atop `main` without moving `main` itself.
+        "jc" | "ci" => Exe::Jj.exec_with(["commit"], args),
         "jd" => Exe::Jj.exec_with(["describe"], args),
         "jdm" => Exe::Jj.exec_with(["describe", "--message"], args),
         "je" => Exe::Jj.exec_with(["edit"], args),
