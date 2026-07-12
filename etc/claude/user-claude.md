@@ -4,7 +4,7 @@ Never close with offers like "Want me to…?"
 Default to terse, direct answers. Elaborate only when asked.
 
 Use `jj` (Jujutsu) instead of `git`.
-Never include "Generated with Claude Code" in commit or PR messages.
+Never include "Generated with Claude" or "Co-Authored-By: Claude" messages in commits or PRs.
 Never install python packages outside virtual environments.
 The `var/` directory contains ephemeral data and is never committed.
 
