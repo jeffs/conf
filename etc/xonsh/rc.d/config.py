@@ -10,7 +10,7 @@ if XSH.env and XSH.env.get("XONSH_INTERACTIVE"):
     # AFAICS, Pyright hints cannot be suppressed per line. (`# pyright:
     # ignore[reportUnusedImport]` would suppress a warning or error, but not
     # hints.) Ruff is also displeased by unused imports, but can be silenced
-    # using `# noqa: F401`.
+    # using `noqa: F401` comments.
     #
     # Every time I write more than ~100 lines of Python, I'm reminded why I
     # prefer Rust.
