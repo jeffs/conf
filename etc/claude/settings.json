@@ -25,12 +25,6 @@
     "clangd-lsp@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true
   },
-  "alwaysThinkingEnabled": true,
-  "tui": "fullscreen",
-  "skipDangerousModePermissionPrompt": true,
-  "skipWorkflowUsageWarning": true,
-  "theme": "dark-daltonized",
-  "agentPushNotifEnabled": true,
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
       "source": {
@@ -38,5 +32,11 @@
         "repo": "anthropics/claude-plugins-official"
       }
     }
-  }
+  },
+  "alwaysThinkingEnabled": true,
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark-daltonized",
+  "agentPushNotifEnabled": true
 }
