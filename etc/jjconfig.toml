@@ -50,6 +50,7 @@ diff-formatter = ":git"
 
 # Meant to show whatever I'm actively working on, including branches.
 default-command = ["log", "-r", "fork_point(interesting())::interesting()"]
+diff-editor = ":builtin"
 
 # Works, but doesn't show the set of "active" branches; it's more like my old `git glog`.
 # default-command = ["log", "-r", "trunk()::first_ancestors(@)"]
