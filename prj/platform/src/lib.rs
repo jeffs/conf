@@ -125,6 +125,26 @@ fn expand_tilde(value: &str, home: &Path) -> String {
     value.to_owned()
 }
 
+/// Top-level keys recognized in platform and site TOML files.
+const KNOWN_KEYS: &[&str] = &["paths", "package_manager", "system_update", "env"];
+
+fn unknown_keys(table: &toml::Table) -> impl Iterator<Item = &str> {
+    table
+        .keys()
+        .map(String::as_str)
+        .filter(|k| !KNOWN_KEYS.contains(k))
+}
+
+fn warn_unknown_keys(table: &toml::Table, source: &Path) {
+    for key in unknown_keys(table) {
+        eprintln!(
+            "warning: {}: unrecognized top-level key `{key}` (known keys: {})",
+            source.display(),
+            KNOWN_KEYS.join(", "),
+        );
+    }
+}
+
 fn platform_toml_name() -> Result<&'static str, Error> {
     if cfg!(target_os = "macos") {
         Ok("macos.toml")
@@ -164,10 +184,12 @@ impl Platform {
     fn load_from(platform_path: &Path, site_path: &Path, home: &Path) -> Result<Self, Error> {
         let platform_str = fs::read_to_string(platform_path)?;
         let mut table: toml::Table = toml::from_str(&platform_str)?;
+        warn_unknown_keys(&table, platform_path);
 
         if site_path.is_file() {
             let site_str = fs::read_to_string(site_path)?;
             let site_table: toml::Table = toml::from_str(&site_str)?;
+            warn_unknown_keys(&site_table, site_path);
             deep_merge(&mut table, site_table);
         }
 
@@ -317,6 +339,20 @@ mod tests {
         assert!(p.env.contains_key("LESS"));
 
         let _ = fs::remove_file(&tmp);
+    }
+
+    #[test]
+    fn unknown_keys_flags_top_level_strays() {
+        let table: toml::Table =
+            toml::from_str("JUMP_DIRS = [\"conf/var\"]\n[env]\nFOO = \"bar\"\n").unwrap();
+        let strays: Vec<&str> = unknown_keys(&table).collect();
+        assert_eq!(strays, ["JUMP_DIRS"]);
+    }
+
+    #[test]
+    fn unknown_keys_accepts_known_sections() {
+        let table: toml::Table = toml::from_str("[paths]\nJUMP_DIRS = [\"conf/var\"]\n").unwrap();
+        assert_eq!(unknown_keys(&table).count(), 0);
     }
 
     #[test]
