@@ -43,6 +43,22 @@ if [[ "$TERM_PROGRAM" == vscode ]]; then
     alias rg='rg --no-heading'
 fi
 
+# TODO: Replace this with a non-shell-specific wrapper. In practice, I tend to
+#  run Zsh interactively in Terminal.app, and Xonsh in WezTerm (where OSC 52
+#  works fine).
+if [[ "$TERM_PROGRAM" == Apple_Terminal ]]; then
+    # Apple Terminal doesn't support OSC 52, Zellij's default copy mechanism,
+    # so pipe selections through pbcopy instead.  Only bare `zellij` and
+    # `zellij attach` accept a trailing `options` subcommand.
+    function zellij {
+        if (( $# == 0 )) || [[ "$1" == attach || "$1" == a ]]; then
+            command zellij "$@" options --copy-command pbcopy
+        else
+            command zellij "$@"
+        fi
+    }
+fi
+
 ## FUNCTIONS
 
 # Strip comment leaders from copy/pasted sample code.

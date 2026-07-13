@@ -8,3 +8,6 @@ if ! test -x ~/.local/bin/xonsh; then
 else
   pipx upgrade xonsh
 fi
+
+# TODO: In Xonsh:
+xpip install gnureadline pygments prompt-toolkit

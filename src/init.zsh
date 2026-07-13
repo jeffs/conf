@@ -13,7 +13,7 @@
 # Technically, you don't need fd or rg; but you'll want them.
 brew install nu zellij # Later, you can switch to `~/usr/src` forks.
 brew install git-delta
-cargo binstall --strategies crate-meta-data fd-find git-delta jj-cli ripgrep
+cargo binstall --strategies crate-meta-data fd-find jj-cli ripgrep
 
 # --------------------
 # INSTALL MY OWN STUFF
@@ -22,7 +22,6 @@ cargo binstall --strategies crate-meta-data fd-find git-delta jj-cli ripgrep
 
 # Some of my own tools.
 cargo install --path ~/conf/prj/jump
-cargo install --path ~/conf/prj/upgrade
 
 # Symlinked from `~/conf/bin`.
 (cd ~/conf/prj/edit && cargo build --release)

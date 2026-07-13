@@ -1,9 +1,11 @@
-#!/usr/bin/env nu
+#!/usr/bin/env zsh
 #
 # Claude Code is a terminal-based agentic AI. See Getting Started:
 # <https://docs.anthropic.com/en/docs/claude-code/getting-started>
 #
 # npm install -g @anthropic-ai/claude-code
+
+set -euo pipefail
 
 # No idea why they changed it, but this is what Anthropic now recommends:
 # <https://claude.ai/code/family>
