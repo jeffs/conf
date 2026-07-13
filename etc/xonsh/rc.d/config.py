@@ -59,9 +59,10 @@ def setup():
 
         # FNM is a version manager for Node.js.
         try:
+            fnm = "/opt/homebrew/bin/fnm"
             fnm_env = json.loads(
                 subprocess.run(
-                    ["/opt/homebrew/bin/fnm", "env", "--json"],
+                    [fnm, "env", "--json"],
                     capture_output=True,
                     text=True,
                     check=True,
@@ -72,6 +73,12 @@ def setup():
             fnm_bin = f"{fnm_env['FNM_MULTISHELL_PATH']}/bin"
             cast(list, env["PATH"]).insert(0, fnm_bin)
             os.environ["PATH"] = os.pathsep.join([fnm_bin, os.environ["PATH"]])
+
+            if "NVMRC" in os.environ:
+                version = Path(os.environ["NVMRC"]).read_text()
+                command = [fnm, "--log-level=quiet", "use", version]
+                subprocess.run(command, check=True)
+
         except Exception as e:
             print(f"error: fnm: {e}", file=sys.stderr)
 
