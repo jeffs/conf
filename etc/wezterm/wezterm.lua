@@ -157,6 +157,7 @@ config.hyperlink_rules = require 'hyperlink_rules'
 -- 
 local local_config = wezterm.home_dir .. '/conf/var/wezterm/local.lua'
 if if_readable(local_config) then
+  wezterm.add_to_config_reload_watch_list(local_config)
   local ok, overrides = pcall(dofile, local_config)
   if ok and type(overrides) == 'table' then
     for k, v in pairs(overrides) do
