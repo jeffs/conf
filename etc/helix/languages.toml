@@ -3,6 +3,7 @@ name = "bash"
 file-types = [
   "sh",
   "bash",
+  "xsh", # Syntax highlight Xonsh scripts.
   "zsh",
   { glob = "zprofile" },
   { glob = "zshrc" },
