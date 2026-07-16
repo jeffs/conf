@@ -12,6 +12,7 @@ rm /tmp/rustup.sh
 
 # Not currently using binstall because it may install untrusted binaries.
 cargo install -F fix cargo-audit
+cargo install cargo-update # Used by `~/conf/prj/upgrade`.
 cargo install cargo-watch
 
 # You may also have to run this command in projects where you want the LSP
