@@ -11,9 +11,7 @@
       "ReadMcpResourceTool"
     ],
     "deny": [
-      "Read(~/.ssh/**)",
-      "Glob(~/.ssh/**)",
-      "Grep(~/.ssh/**)"
+      "Read(~/.ssh/**)"
     ]
   },
   "model": "opus",
@@ -38,5 +36,6 @@
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "dark-daltonized",
+  "fileCheckpointingEnabled": false,
   "agentPushNotifEnabled": true
 }
