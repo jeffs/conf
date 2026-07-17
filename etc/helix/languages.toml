@@ -68,8 +68,12 @@ args = ["--stdio"]
 [language-server.harper-ls.config.harper-ls.linters]
 UseTitleCase = false
 
+[language-server.markdown-oxide]
+command = "markdown-oxide"
+
 [[language]]
 name = "markdown"
+language-servers = ["markdown-oxide"]
 soft-wrap.wrap-indicator = ""
 
 # Harper is extremely opinionated.
@@ -216,4 +220,3 @@ language-servers = [
   "ruff",
 ]
 auto-format = true
-
