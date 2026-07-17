@@ -41,9 +41,6 @@ bookmark_list = '''
 separate("\t", change_id.short(), commit_id.short(), bookmarks) ++ "\n"
 '''
 
-[git]
-import-tags = false
-
 [ui]
 pager = "delta"
 diff-formatter = ":git"
