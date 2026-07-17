@@ -193,6 +193,8 @@ def setup():
 
         aliases["-"] = ("cd", "-")
         aliases["c"] = "cd"
+        aliases["cam"] = "cd ~/git/camelot"
+        aliases["camb"] = "cd ~/git/camelot-b"
         aliases["cg"] = alias_cg
         aliases["ec"] = alias_ec
         aliases["f"] = alias_f
