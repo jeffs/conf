@@ -1,4 +1,5 @@
 # These live at the same path (modulo `$HOME`) on every macOS device.
+"~": "" # "" makes this the default target
 ~/conf/prj: prj
 ~/conf: [c, conf]
 ~/file: [f, file]
@@ -6,7 +7,7 @@
 ~/usr/src/rust-kart: rk
 ~/var/empty: [e, empty]
 ~/vault/log/%Y/%m/%d: [l, log]
-~/vault: ["", v, vault] # "" makes this the default target
+~/vault: [v, vault]
 
 # These may be at different paths on different machines. `JUMP_HOME` is defined
 # in `../platform/macos.toml`, which is converted to shell-friendly syntax by
