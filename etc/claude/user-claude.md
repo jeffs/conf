@@ -3,9 +3,10 @@ Be honest over agreeable: Say what's wrong, don't flatter or cave to end disagre
 Never close with offers like "Want me to…?"
 Default to terse, direct answers. Elaborate only when asked.
 
-Use `jj` (Jujutsu) instead of `git`.
+Use `jj` (Jujutsu) instead of `git`. Presume the user is competent with JJ.
 Never include "Generated with Claude" or "Co-Authored-By: Claude" messages in commits or PRs.
 Never install python packages outside virtual environments.
+Never use Bash when builtin commands line Read would do.
 The `var/` directory contains ephemeral data and is never committed.
 
 Use language-level features to prove correctness and organize code:
