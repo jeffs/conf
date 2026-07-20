@@ -14,7 +14,7 @@
       "Read(~/.ssh/**)"
     ]
   },
-  "model": "opus",
+  "model": "sonnet",
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": false,
@@ -39,6 +39,7 @@
     }
   },
   "alwaysThinkingEnabled": true,
+  "effortLevel": "medium",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,

@@ -1,0 +1,20 @@
+[language-server.markdown-oxide]
+command = "markdown-oxide"
+
+[[language]]
+name = "markdown"
+language-servers = ["markdown-oxide"]
+# soft-wrap.wrap-indicator = ""
+indent = { tab-width = 4, unit = "\t" }
+
+# Harper is extremely opinionated.
+# language-servers = ["harper-ls"]
+
+[language.auto-pairs]
+'(' = ')'
+'{' = '}'
+
+# Quotes are a pain because you can't tab past them. Ditto backticks.
+# 
+# "'" = "'"
+# '"' = '"'
