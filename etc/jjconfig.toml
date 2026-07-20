@@ -54,3 +54,9 @@ diff-editor = ":builtin"
 
 # An attempt to filter out "archived" bookmarks.
 # default-command = ["log", "-r", "@ | trunk() | bookmarks() ~ bookmarks(glob:ar/*)"]
+
+# Don't fetch upstream tags. `fetch-tags` takes a string pattern (not a revset)
+# and has no "match nothing" value -- "" produces an invalid refspec -- so this
+# names a tag that will never exist. Per-remote; literal names only, no globs.
+[remotes.origin]
+fetch-tags = "exact:jj-fetch-no-tags-sentinel"
