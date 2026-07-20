@@ -68,12 +68,16 @@ args = ["--stdio"]
 [language-server.harper-ls.config.harper-ls.linters]
 UseTitleCase = false
 
-[language-server.markdown-oxide]
-command = "markdown-oxide"
+# [language-server.markdown-oxide]
+# command = "markdown-oxide"
+
+[language-server.marksman]
+command = "marksman"
+args = ["server"]
 
 [[language]]
 name = "markdown"
-language-servers = ["markdown-oxide"]
+language-servers = ["marksman"]
 soft-wrap.wrap-indicator = ""
 
 # Harper is extremely opinionated.

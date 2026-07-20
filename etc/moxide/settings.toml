@@ -1,0 +1,3 @@
+# markdown-oxide LSP server config
+
+unresolved_diagnostics = false
