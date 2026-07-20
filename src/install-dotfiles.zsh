@@ -57,4 +57,4 @@ mkdir -p "$config_home/Code/User"
 ln -sf ~/conf/etc/vscode/settings.json "$config_home/Code/User"
 
 mkdir -p "$config_home/dev.sachaos.viddy"
-ln -sf ~/conf/etc/viddy.toml "$config_home/dev.sachaos.viddy"
+ln -sf ~/conf/etc/viddy.toml "$config_home/dev.sachaos.viddy/config.toml"
