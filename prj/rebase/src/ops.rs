@@ -267,6 +267,19 @@ fn clone_one(repo: &Repo, dry_run: bool) -> Outcome {
         RepoKind::Own => {}
     }
 
+    // `jj git clone` only creates a local bookmark for the fork's default
+    // branch, so custom bookmarks (e.g. `custom`) start out as `name@origin`
+    // only.  Track them locally so rebase/checkout/push can resolve the bare
+    // name; a bookmark absent on origin is silently skipped.
+    if let RepoKind::ForkRebase { bookmarks, .. } = &repo.kind {
+        for bm in bookmarks {
+            let r = jj::bookmark_track(&repo.path, bm, "origin", dry_run);
+            if !r.success {
+                return Outcome::Failed(format!("tracking {bm}@origin failed"));
+            }
+        }
+    }
+
     // Run full update
     update_one(repo, dry_run)
 }

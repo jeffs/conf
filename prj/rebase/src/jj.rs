@@ -153,6 +153,17 @@ pub fn remote_add(cwd: &Path, name: &str, url: &str, dry_run: bool) -> RunResult
     run(&["jj", "git", "remote", "add", name, url], cwd, dry_run)
 }
 
+/// Create a local bookmark tracking `bookmark@remote`.
+///
+/// `jj git clone` only creates a local bookmark for the remote's default
+/// branch; others exist solely as `name@remote`.  Tracking makes the bare
+/// bookmark name resolve locally.  A no-op (still succeeds) when the remote
+/// bookmark is absent, giving "track it if present" semantics.
+pub fn bookmark_track(cwd: &Path, bookmark: &str, remote: &str, dry_run: bool) -> RunResult {
+    let qualified = format!("{bookmark}@{remote}");
+    run(&["jj", "bookmark", "track", &qualified], cwd, dry_run)
+}
+
 pub fn build(cwd: &Path, cmd_str: &str, dry_run: bool) -> RunResult {
     run_shell(cmd_str, cwd, dry_run)
 }
