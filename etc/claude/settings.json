@@ -21,7 +21,8 @@
     "gopls-lsp@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
-    "notion-workspace-plugin@notion-plugin-marketplace": true
+    "notion-workspace-plugin@notion-plugin-marketplace": true,
+    "slack@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
