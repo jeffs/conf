@@ -8,6 +8,10 @@ if [[ ! -v JEFF_LOGIN_DONE ]]; then
     # FNM is a version manager for Node.js.
     eval "$(fnm env --shell zsh)"
 
+    if [[ -v NVMRC ]]; then
+        fnm --log-level=quiet use "$(<$NVMRC)"
+    fi
+
     for conf_module in ~/git/conf-*(N); do
         if [ -r $conf_module/etc/zprofile ]; then
             source $conf_module/etc/zprofile
