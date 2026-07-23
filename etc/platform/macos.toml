@@ -64,6 +64,7 @@ command = ["softwareupdate", "--list"]
 [env]
 LESS = "-FRX -j5"
 MANPAGER = "col -b | bat -pl man"
+BAT_THEME = "dark"
 HOMEBREW_NO_ENV_HINTS = true
 GRIT_TRUNKS = "dev,main,master,trunk"
 
