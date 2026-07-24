@@ -5,6 +5,7 @@ theme = 'jeffs_base16_terminal'
 # theme = 'aurara'
 
 editor.true-color = true
+editor.text-width = 80
 
 # [Recommended settings](https://docs.helix-editor.com/editor.html):
 # Show warnings and errors on the cursorline inline.
