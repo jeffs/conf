@@ -25,12 +25,12 @@ bookmarks = ["custom"]
 upstream_ref = "master"
 build = ["cargo install --path ."]
 
-[repos.zellij]
-clone = "git@github.com:jeffs/zellij.git"
-upstream = "https://github.com/zellij-org/zellij"
-bookmarks = ["custom", "fix-stack-cycle-order"]
-upstream_ref = "release-0.44@upstream"
-build = ["cargo install --path . --locked"]
+# [repos.zellij]
+# clone = "git@github.com:jeffs/zellij.git"
+# upstream = "https://github.com/zellij-org/zellij"
+# bookmarks = ["custom", "fix-stack-cycle-order"]
+# upstream_ref = "release-0.44@upstream"
+# build = ["cargo install --path . --locked"]
 
 [repos.nushell]
 clone = "git@github.com:jeffs/nushell.git"
