@@ -3,8 +3,13 @@
 # run `bat --help` to get a list of all possible configuration options.
 
 # Specify desired highlighting theme (e.g. "TwoDark"). Run `bat --list-themes`
-# for a list of all available themes
-#--theme="TwoDark"
+# for a list of all available themes.
+#
+# "dark" is not a theme; it's the special value that means "skip terminal
+# querying and use whatever --theme-dark names". Set here rather than via
+# BAT_THEME, because delta embeds an older bat that doesn't know the special
+# values and warns "Unknown theme 'dark'".
+--theme="dark"
 
 # Enable this to use italic text on the terminal. This is not supported on all
 # terminal emulators (like tmux, by default):
