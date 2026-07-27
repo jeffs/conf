@@ -36,6 +36,15 @@ email = "jeff@unbuggy.com"
 'active_heads()' = 'bookmarks() | (visible_heads() & mine()) ~ remote_bookmarks(glob:"ar/*")'
 'interesting()' = '@ | trunk() | active_heads()'
 
+# Per-branch truncation: every head in x keeps its last N commits plus the
+# branch root; jj elides the middle with `~`. `ancestors(heads(x), N)` is a
+# depth window applied per head (topological, unlike `latest()`).
+'sparse(x)' = '(ancestors(heads(x), 2) & x) | roots(x)'
+
+[revsets]
+# Plain `jj log` with no -r: default scope, long branches elided per-branch.
+log = '@ | sparse(immutable_heads()..) | present(trunk())'
+
 [template-aliases]
 bookmark_list = '''
 separate("\t", change_id.short(), commit_id.short(), bookmarks) ++ "\n"
@@ -45,8 +54,12 @@ separate("\t", change_id.short(), commit_id.short(), bookmarks) ++ "\n"
 pager = "delta"
 diff-formatter = ":git"
 
-# Meant to show whatever I'm actively working on, including branches.
-default-command = ["log", "-r", "fork_point(interesting())::interesting()"]
+# Meant to show whatever I'm actively working on, including branches,
+# with long branches elided per-branch by sparse().
+default-command = ["log", "-r", "@ | sparse(fork_point(interesting())::interesting())"]
+
+# Same, but showing every commit on every active branch.
+# default-command = ["log", "-r", "fork_point(interesting())::interesting()"]
 diff-editor = ":builtin"
 
 # Works, but doesn't show the set of "active" branches; it's more like my old `git glog`.
