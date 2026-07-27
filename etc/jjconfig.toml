@@ -39,7 +39,7 @@ email = "jeff@unbuggy.com"
 # Per-branch truncation: every head in x keeps its last N commits plus the
 # branch root; jj elides the middle with `~`. `ancestors(heads(x), N)` is a
 # depth window applied per head (topological, unlike `latest()`).
-'sparse(x)' = '(ancestors(heads(x), 2) & x) | roots(x)'
+'sparse(x)' = '(ancestors(heads(x), 40) & x) | roots(x)'
 
 [revsets]
 # Plain `jj log` with no -r: default scope, long branches elided per-branch.
