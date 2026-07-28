@@ -526,6 +526,13 @@ name = "jbct"
 version = "0.1.0"
 
 [[package]]
+name = "jjpr"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
 name = "js-sys"
 version = "0.3.91"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -1,9 +1,6 @@
 //! Create and track, and optionally push, a Jujutsu bookmark.
 
-use std::{
-    os::unix::process::{CommandExt, ExitStatusExt},
-    process::Command,
-};
+use std::{os::unix::process::CommandExt, process::Command};
 
 /// Returns true if the executable name is "jbctp" (meaning we should push the
 // new bookmark), and false if the name is "jbct" (indicating that we should
@@ -34,25 +31,15 @@ fn main() {
     };
 
     // create
-    let status = Command::new("jj")
+    run(Command::new("jj")
         .args(["bookmark", "create"])
         .arg(&bookmark)
-        .args(std::env::args_os().skip(2)) // -r CHANGE_ID
-        .status()
-        .expect("running jj");
-    if !status.success() {
-        std::process::exit(status.into_raw())
-    }
+        .args(std::env::args_os().skip(2))); // -r CHANGE_ID
 
     // track
-    let status = Command::new("jj")
+    run(Command::new("jj")
         .args(["bookmark", "track"])
-        .arg(&bookmark)
-        .status()
-        .expect("running jj");
-    if !status.success() {
-        std::process::exit(status.into_raw())
-    }
+        .arg(&bookmark));
 
     if push {
         let error = Command::new("jj")
@@ -61,5 +48,13 @@ fn main() {
             .exec();
         eprintln!("error: {error}");
         std::process::exit(1);
+    }
+}
+
+/// Run `command` to completion, ending this process if it fails.
+fn run(command: &mut Command) {
+    let status = command.status().expect("running jj");
+    if !status.success() {
+        std::process::exit(status.code().unwrap_or(1));
     }
 }
