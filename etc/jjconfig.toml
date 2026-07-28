@@ -30,10 +30,15 @@ email = "jeff@unbuggy.com"
 [revset-aliases]
 
 # Local bookmarks, plus heads I authored, minus heads I've "archived" by
-# slapping `ar/` prefixed remote bookmarks on them.
+# slapping `ar/` prefixed remote bookmarks on them, minus untracked remote
+# bookmarks -- someone else's branch that squash-merged a review of mine is
+# theirs, not mine; if I want it back, I'll track it. `~` and `&` bind equally
+# and associate left to right, and `|` is weaker, so both exclusions apply
+# only to the `visible_heads()` term: a local bookmark sharing a commit with
+# an untracked remote one still shows.
 #
 # TODO: Alias `ar` to archive a bookmark: rename, push, untrack, delete.
-'active_heads()' = 'bookmarks() | (visible_heads() & mine()) ~ remote_bookmarks(glob:"ar/*")'
+'active_heads()' = 'bookmarks() | (visible_heads() & mine()) ~ remote_bookmarks(glob:"ar/*") ~ untracked_remote_bookmarks()'
 'interesting()' = '@ | trunk() | active_heads()'
 
 # Per-branch truncation: every head in x keeps its last N commits plus the
