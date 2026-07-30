@@ -15,6 +15,75 @@
     ],
     "defaultMode": "auto"
   },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jeff/.cargo/bin/buddy hook SessionStart 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jeff/.cargo/bin/buddy hook UserPromptSubmit 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jeff/.cargo/bin/buddy hook PostToolUse 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jeff/.cargo/bin/buddy hook PostToolUseFailure 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jeff/.cargo/bin/buddy hook Stop 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jeff/.cargo/bin/buddy hook SessionEnd 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "/Users/jeff/.cargo/bin/buddy statusline",
+    "padding": 0
+  },
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": false,
@@ -47,73 +116,5 @@
   "theme": "dark-daltonized",
   "fileCheckpointingEnabled": false,
   "agentPushNotifEnabled": true,
-  "statusLine": {
-    "type": "command",
-    "command": "/Users/jeff/.cargo/bin/buddy statusline 2>/dev/null || true",
-    "padding": 0
-  },
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/jeff/.cargo/bin/buddy hook SessionStart 2>/dev/null || true"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/jeff/.cargo/bin/buddy hook UserPromptSubmit 2>/dev/null || true"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/jeff/.cargo/bin/buddy hook PostToolUse 2>/dev/null || true"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/jeff/.cargo/bin/buddy hook PostToolUseFailure 2>/dev/null || true"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/jeff/.cargo/bin/buddy hook Stop 2>/dev/null || true"
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/jeff/.cargo/bin/buddy hook SessionEnd 2>/dev/null || true"
-          }
-        ]
-      }
-    ]
-  }
+  "model": "fable"
 }
