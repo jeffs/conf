@@ -15,6 +15,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -115,6 +116,5 @@
   "skipWorkflowUsageWarning": true,
   "theme": "dark-daltonized",
   "fileCheckpointingEnabled": false,
-  "agentPushNotifEnabled": true,
-  "model": "fable"
+  "agentPushNotifEnabled": true
 }
