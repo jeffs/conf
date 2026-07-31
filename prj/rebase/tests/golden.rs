@@ -2,14 +2,13 @@
 //! and assert the exact command sequence each one would execute.
 
 use std::fs;
-use std::path::{Path, PathBuf};
 use std::sync::Mutex;
-use std::sync::atomic::{AtomicUsize, Ordering};
 
 use rebase::jj::Mode;
 use rebase::manifest::{self, Repo};
 use rebase::ops::{Op, Outcome, Runner};
 use rebase::output::{Kind, Sink};
+use tempfile::TempDir;
 
 const FORK_REBASE: &str = r#"
 clone = "git@example.com:me/app.git"
@@ -43,31 +42,8 @@ build = ["cargo install --path ."]
 
 const CONFLICT_CHECK: &str = "jj log -r custom --no-graph -T if(conflict, \"CONFLICT\\n\")";
 
-/// A scratch directory serving as the manifest root, removed on drop.
-struct TempRoot(PathBuf);
-
-impl TempRoot {
-    fn new() -> Self {
-        static COUNTER: AtomicUsize = AtomicUsize::new(0);
-        let n = COUNTER.fetch_add(1, Ordering::Relaxed);
-        let path = std::env::temp_dir().join(format!("rebase-golden-{}-{n}", std::process::id()));
-        fs::create_dir_all(&path).unwrap();
-        Self(path)
-    }
-
-    fn path(&self) -> &Path {
-        &self.0
-    }
-}
-
-impl Drop for TempRoot {
-    fn drop(&mut self) {
-        let _ = fs::remove_dir_all(&self.0);
-    }
-}
-
 /// Write a manifest containing a single repo `app` and load it back.
-fn load_repo(root: &TempRoot, entry: &str) -> Repo {
+fn load_repo(root: &TempDir, entry: &str) -> Repo {
     let manifest_path = root.path().join("rebase.toml");
     let text = format!(
         "root = {:?}\n\n[repos.app]{entry}",
@@ -114,7 +90,7 @@ fn dry_run(op: Op, repo: &Repo) -> (TestSink, Outcome) {
 
 #[test]
 fn update_fork_rebase_runs_full_pipeline() {
-    let root = TempRoot::new();
+    let root = TempDir::new().unwrap();
     let repo = load_repo(&root, FORK_REBASE);
     fs::create_dir(&repo.path).unwrap();
 
@@ -140,7 +116,7 @@ fn update_fork_rebase_runs_full_pipeline() {
 
 #[test]
 fn update_tag_upstream_skips_trunk_sync_and_push() {
-    let root = TempRoot::new();
+    let root = TempDir::new().unwrap();
     let repo = load_repo(&root, FORK_REBASE_TAG);
     fs::create_dir(&repo.path).unwrap();
 
@@ -163,7 +139,7 @@ fn update_tag_upstream_skips_trunk_sync_and_push() {
 
 #[test]
 fn update_fork_track_checks_out_upstream_ref() {
-    let root = TempRoot::new();
+    let root = TempDir::new().unwrap();
     let repo = load_repo(&root, FORK_TRACK);
     fs::create_dir(&repo.path).unwrap();
 
@@ -187,7 +163,7 @@ fn update_fork_track_checks_out_upstream_ref() {
 
 #[test]
 fn update_own_checks_out_trunk() {
-    let root = TempRoot::new();
+    let root = TempDir::new().unwrap();
     let repo = load_repo(&root, OWN);
     fs::create_dir(&repo.path).unwrap();
 
@@ -206,7 +182,7 @@ fn update_own_checks_out_trunk() {
 
 #[test]
 fn rebase_own_repo_is_a_noop() {
-    let root = TempRoot::new();
+    let root = TempDir::new().unwrap();
     let repo = load_repo(&root, OWN);
     fs::create_dir(&repo.path).unwrap();
 
@@ -222,7 +198,7 @@ fn rebase_own_repo_is_a_noop() {
 
 #[test]
 fn missing_repo_is_skipped() {
-    let root = TempRoot::new();
+    let root = TempDir::new().unwrap();
     let repo = load_repo(&root, FORK_REBASE);
 
     let (sink, outcome) = dry_run(Op::Update, &repo);
@@ -234,7 +210,7 @@ fn missing_repo_is_skipped() {
 
 #[test]
 fn clone_missing_repo_previews_full_pipeline() {
-    let root = TempRoot::new();
+    let root = TempDir::new().unwrap();
     let repo = load_repo(&root, FORK_REBASE);
 
     let (sink, outcome) = dry_run(Op::Clone, &repo);
@@ -266,7 +242,7 @@ fn clone_missing_repo_previews_full_pipeline() {
 
 #[test]
 fn clone_existing_repo_is_a_noop() {
-    let root = TempRoot::new();
+    let root = TempDir::new().unwrap();
     let repo = load_repo(&root, FORK_REBASE);
     fs::create_dir(&repo.path).unwrap();
 
@@ -279,7 +255,7 @@ fn clone_existing_repo_is_a_noop() {
 
 #[test]
 fn manifest_rejects_bookmarks_without_upstream() {
-    let root = TempRoot::new();
+    let root = TempDir::new().unwrap();
     let manifest_path = root.path().join("rebase.toml");
     fs::write(
         &manifest_path,
