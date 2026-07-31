@@ -1,7 +1,8 @@
+use std::io::IsTerminal;
 use std::process;
 
 use clap::Parser;
-use rebase::{Cli, Cmd, manifest, ops};
+use rebase::{Cli, Cmd, manifest, ops, tui};
 
 fn main() {
     let cli = Cli::parse();
@@ -42,7 +43,18 @@ fn main() {
         Some(Cmd::Clone) => ops::Op::Clone,
     };
 
-    let all_ok = ops::run(op, &repos, cli.dry_run);
+    let use_tui = !cli.plain && !cli.dry_run && std::io::stdout().is_terminal();
+    let all_ok = if use_tui {
+        match tui::run(op, &repos, cli.jobs) {
+            Ok(ok) => ok,
+            Err(e) => {
+                eprintln!("error: {e}");
+                false
+            }
+        }
+    } else {
+        ops::run(op, &repos, cli.dry_run)
+    };
     if !all_ok {
         process::exit(1);
     }

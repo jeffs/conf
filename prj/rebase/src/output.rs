@@ -8,32 +8,47 @@ const GREEN: &str = "\x1b[32m";
 const YELLOW: &str = "\x1b[33m";
 const CYAN: &str = "\x1b[36m";
 
+/// The role of a single line of progress output.
+#[derive(Clone, Copy, Debug)]
+pub enum Kind {
+    /// A command about to run.
+    Cmd,
+    /// A command printed instead of run.
+    DryRun,
+    Ok,
+    Warn,
+    Error,
+    Info,
+    /// A line streamed from a child process.
+    Out,
+}
+
+/// Destination for one repo's progress lines.
+///
+/// `Sync` so a single sink can serve the stdout and stderr reader threads of
+/// a streaming child process.
+pub trait Sink: Sync {
+    fn line(&self, kind: Kind, text: String);
+}
+
+/// Prints lines to stderr, colored, for sequential (non-TUI) runs.
+pub struct StderrSink;
+
+impl Sink for StderrSink {
+    fn line(&self, kind: Kind, text: String) {
+        match kind {
+            Kind::Cmd => eprintln!("{DIM}  $ {text}{RESET}"),
+            Kind::DryRun => eprintln!("{DIM}  [dry-run] {text}{RESET}"),
+            Kind::Ok => eprintln!("{GREEN}  {text}{RESET}"),
+            Kind::Warn => eprintln!("{YELLOW}  {text}{RESET}"),
+            Kind::Error => eprintln!("{RED}  {text}{RESET}"),
+            Kind::Info | Kind::Out => eprintln!("{DIM}  {text}{RESET}"),
+        }
+    }
+}
+
 pub fn header(repo_name: &str) {
     eprintln!("{BOLD}{CYAN}==> {repo_name}{RESET}");
-}
-
-pub fn cmd(display: &str) {
-    eprintln!("{DIM}  $ {display}{RESET}");
-}
-
-pub fn dry_run(display: &str) {
-    eprintln!("{DIM}  [dry-run] {display}{RESET}");
-}
-
-pub fn ok(msg: &str) {
-    eprintln!("{GREEN}  {msg}{RESET}");
-}
-
-pub fn warn(msg: &str) {
-    eprintln!("{YELLOW}  {msg}{RESET}");
-}
-
-pub fn error(msg: &str) {
-    eprintln!("{RED}  {msg}{RESET}");
-}
-
-pub fn info(msg: &str) {
-    eprintln!("{DIM}  {msg}{RESET}");
 }
 
 /// Outcome for a single repo.
