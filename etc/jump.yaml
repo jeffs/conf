@@ -3,7 +3,7 @@
 ~/conf/prj: prj
 ~/conf: [c, conf]
 ~/file: [f, file]
-~/git/play/play: [p, play]
+~/git/play/rust: [p, play]
 ~/usr/src/rust-kart: rk
 ~/var/empty: [e, empty]
 ~/vault/log/%Y/%m/%d: [l, log]

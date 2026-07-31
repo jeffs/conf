@@ -1,5 +1,6 @@
 [general]
 show_title = false
+disable_mouse = true
 
 # These settings aren't exposed in upstream Viddy. (They're supported by the
 # CLI, just not by config files.) See the adjacent `rebase.toml` for forks.

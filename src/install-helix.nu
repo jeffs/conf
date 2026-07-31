@@ -20,6 +20,9 @@ cargo install taplo-cli
 # Install Obsidian-aware Markdown LSP. Binstall is also available.
 cargo install --locked --git https://github.com/Feel-ix-343/markdown-oxide.git markdown-oxide
 
+# Install the snippet/word completion server configured as scls.
+cargo install --locked --git https://github.com/estin/simple-completion-language-server.git
+
 # Clone or update the Helix fork.
 let helix_dir = $"($env.HOME)/usr/src/helix"
 if ($helix_dir | path exists) {
