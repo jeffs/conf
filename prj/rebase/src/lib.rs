@@ -4,7 +4,9 @@ pub mod ops;
 pub mod output;
 pub mod tui;
 
-use clap::{Parser, Subcommand};
+use clap::Parser;
+
+use crate::ops::Op;
 
 #[derive(Parser)]
 #[command(name = "rebase", about = "Source-installed package manager")]
@@ -30,23 +32,5 @@ pub struct Cli {
     pub plain: bool,
 
     #[command(subcommand)]
-    pub command: Option<Cmd>,
-}
-
-#[derive(Subcommand)]
-pub enum Cmd {
-    /// Show state of all repos
-    Status,
-    /// Fetch from remotes
-    Fetch,
-    /// Rebase fork bookmarks onto upstream
-    Rebase,
-    /// Build and install
-    Build,
-    /// Push fork bookmarks to origin
-    Push,
-    /// fetch → rebase → build → push (default)
-    Update,
-    /// Clone repos that don't exist locally
-    Clone,
+    pub command: Option<Op>,
 }

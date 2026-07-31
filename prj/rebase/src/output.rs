@@ -1,5 +1,7 @@
 use std::fmt::Write as _;
 
+use crate::ops::Outcome;
+
 const RESET: &str = "\x1b[0m";
 const BOLD: &str = "\x1b[1m";
 const DIM: &str = "\x1b[2m";
@@ -9,7 +11,7 @@ const YELLOW: &str = "\x1b[33m";
 const CYAN: &str = "\x1b[36m";
 
 /// The role of a single line of progress output.
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Kind {
     /// A command about to run.
     Cmd,
@@ -29,6 +31,22 @@ pub enum Kind {
 /// a streaming child process.
 pub trait Sink: Sync {
     fn line(&self, kind: Kind, text: String);
+
+    fn ok(&self, text: &str) {
+        self.line(Kind::Ok, text.to_string());
+    }
+
+    fn info(&self, text: &str) {
+        self.line(Kind::Info, text.to_string());
+    }
+
+    fn warn(&self, text: &str) {
+        self.line(Kind::Warn, text.to_string());
+    }
+
+    fn error(&self, text: &str) {
+        self.line(Kind::Error, text.to_string());
+    }
 }
 
 /// Prints lines to stderr, colored, for sequential (non-TUI) runs.
@@ -49,13 +67,6 @@ impl Sink for StderrSink {
 
 pub fn header(repo_name: &str) {
     eprintln!("{BOLD}{CYAN}==> {repo_name}{RESET}");
-}
-
-/// Outcome for a single repo.
-pub enum Outcome {
-    Ok,
-    Skipped(String),
-    Failed(String),
 }
 
 /// Print a summary table after all repos have been processed.

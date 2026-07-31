@@ -1,4 +1,8 @@
 # Config for the `rebase` utility; see `../prj/rebase`.
+#
+# `checkout` is the revset the working copy moves to (via `jj new`) after an
+# update.  Defaults: fork-track repos use the upstream ref, own repos use
+# trunk(); fork-rebase repos stay put unless `checkout` is set.
 
 root = "~/usr/src"
 
@@ -8,6 +12,7 @@ root = "~/usr/src"
 clone = "git@github.com:jeffs/helix.git"
 upstream = "https://github.com/helix-editor/helix"
 bookmarks = ["custom"]
+checkout = "custom"
 upstream_ref = "master"
 build = ["cargo install --path helix-term"]
 
@@ -15,6 +20,7 @@ build = ["cargo install --path helix-term"]
 clone = "git@github.com:jeffs/md-tui.git"
 upstream = "https://github.com/henriklovhaug/md-tui"
 bookmarks = ["custom"]
+checkout = "custom"
 upstream_ref = "main"
 build = ["cargo install --path ."]
 
@@ -22,6 +28,7 @@ build = ["cargo install --path ."]
 clone = "git@github.com:jeffs/viddy.git"
 upstream = "https://github.com/sachaos/viddy"
 bookmarks = ["custom"]
+checkout = "custom"
 upstream_ref = "master"
 build = ["cargo install --path ."]
 
@@ -29,6 +36,7 @@ build = ["cargo install --path ."]
 # clone = "git@github.com:jeffs/zellij.git"
 # upstream = "https://github.com/zellij-org/zellij"
 # bookmarks = ["custom", "fix-stack-cycle-order"]
+# checkout = "custom"
 # upstream_ref = "release-0.44@upstream"
 # build = ["cargo install --path . --locked"]
 
@@ -36,6 +44,7 @@ build = ["cargo install --path ."]
 clone = "git@github.com:jeffs/nushell.git"
 upstream = "https://github.com/nushell/nushell"
 bookmarks = ["custom"]
+checkout = "custom"
 upstream_ref = "main"
 build = ["cargo install --path . --locked"]
 
@@ -43,6 +52,7 @@ build = ["cargo install --path . --locked"]
 clone = "git@github.com:jeffs/reedline.git"
 upstream = "https://github.com/nushell/reedline"
 bookmarks = ["custom"]
+checkout = "custom"
 upstream_ref = "main"
 build = []
 
@@ -50,6 +60,7 @@ build = []
 clone = "git@github.com:jeffs/eza.git"
 upstream = "https://github.com/eza-community/eza"
 bookmarks = ["custom"]
+checkout = "custom"
 upstream_ref = "main"
 build = ["cargo install --path ."]
 
@@ -57,6 +68,7 @@ build = ["cargo install --path ."]
 clone = "git@github.com:jeffs/typify.git"
 upstream = "https://github.com/oxidecomputer/typify"
 bookmarks = ["custom"]
+checkout = "custom"
 upstream_ref = "main"
 build = []
 
@@ -78,6 +90,7 @@ build = []
 clone = "git@github.com:jeffs/sl.git"
 upstream = "https://github.com/mtoyoda/sl"
 bookmarks = ["custom"]
+checkout = "custom"
 upstream_ref = "master"
 build = ["cargo install --path rust"]
 
@@ -85,6 +98,7 @@ build = ["cargo install --path rust"]
 clone = "git@github.com:jeffs/asciiquarium.git"
 upstream = "https://github.com/cmatsuoka/asciiquarium"
 bookmarks = ["custom"]
+checkout = "custom"
 upstream_ref = "master"
 build = ["cargo install --path ."]
 

@@ -1,5 +1,6 @@
 use serde::Deserialize;
 use std::collections::BTreeMap;
+use std::ops::Deref;
 use std::path::{Path, PathBuf};
 use std::{fmt, fs};
 
@@ -16,12 +17,33 @@ pub struct Manifest {
 pub struct RawRepo {
     pub clone: String,
     pub upstream: Option<String>,
-    pub bookmarks: Option<Vec<String>>,
+    pub bookmarks: Option<Vec<Bookmark>>,
     pub upstream_ref: Option<String>,
     pub build: Vec<String>,
     #[serde(default)]
     pub post_build: Vec<String>,
     pub path: Option<String>,
+    /// Revset to position the working copy on after `update`.
+    pub checkout: Option<String>,
+}
+
+/// A local jj bookmark name.
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+#[serde(transparent)]
+pub struct Bookmark(String);
+
+impl Deref for Bookmark {
+    type Target = str;
+
+    fn deref(&self) -> &str {
+        &self.0
+    }
+}
+
+impl fmt::Display for Bookmark {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
 }
 
 /// A parsed `upstream_ref` value: ref name + remote qualifier.
@@ -76,22 +98,37 @@ impl UpstreamRef {
     }
 }
 
+/// A fork's relationship to its upstream: the remote URL plus the ref the
+/// fork follows.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Fork {
+    pub upstream: String,
+    pub upstream_ref: UpstreamRef,
+}
+
 /// Inferred behavior for a repo.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RepoKind {
-    /// Fork with upstream + bookmarks to rebase and push.
+    /// Fork with bookmarks to rebase onto upstream and push.
     ForkRebase {
-        upstream: String,
-        upstream_ref: UpstreamRef,
-        bookmarks: Vec<String>,
+        fork: Fork,
+        bookmarks: Vec<Bookmark>,
     },
     /// Fork tracking upstream, no custom bookmarks.
-    ForkTrack {
-        upstream: String,
-        upstream_ref: UpstreamRef,
-    },
+    ForkTrack { fork: Fork },
     /// Own repo or upstream-only (no fork relationship).
     Own,
+}
+
+impl RepoKind {
+    /// The fork relationship, if any.
+    #[must_use]
+    pub fn fork(&self) -> Option<&Fork> {
+        match self {
+            Self::ForkRebase { fork, .. } | Self::ForkTrack { fork } => Some(fork),
+            Self::Own => None,
+        }
+    }
 }
 
 /// A fully resolved repo ready for operations.
@@ -103,6 +140,22 @@ pub struct Repo {
     pub kind: RepoKind,
     pub build: Vec<String>,
     pub post_build: Vec<String>,
+    /// Revset to position the working copy on after `update`.
+    pub checkout: Option<String>,
+}
+
+impl Repo {
+    /// Where to move the working copy after an update: the explicit
+    /// `checkout` revset if given, else a per-kind default.
+    #[must_use]
+    pub fn checkout_target(&self) -> Option<String> {
+        match (&self.checkout, &self.kind) {
+            (Some(revision), _) => Some(revision.clone()),
+            (None, RepoKind::ForkRebase { .. }) => None,
+            (None, RepoKind::ForkTrack { fork }) => Some(fork.upstream_ref.qualified()),
+            (None, RepoKind::Own) => Some("trunk()".into()),
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -180,8 +233,10 @@ pub fn load(path: &Path) -> Result<Vec<Repo>, ManifestError> {
                     )));
                 }
                 RepoKind::ForkRebase {
-                    upstream: upstream.clone(),
-                    upstream_ref,
+                    fork: Fork {
+                        upstream: upstream.clone(),
+                        upstream_ref,
+                    },
                     bookmarks: bookmarks.clone(),
                 }
             }
@@ -192,8 +247,10 @@ pub fn load(path: &Path) -> Result<Vec<Repo>, ManifestError> {
                 let upstream_ref = UpstreamRef::parse(&raw_ref)
                     .map_err(|e| ManifestError::Validation(format!("{name}: {e}")))?;
                 RepoKind::ForkTrack {
-                    upstream: upstream.clone(),
-                    upstream_ref,
+                    fork: Fork {
+                        upstream: upstream.clone(),
+                        upstream_ref,
+                    },
                 }
             }
             (None, Some(_)) => {
@@ -218,6 +275,7 @@ pub fn load(path: &Path) -> Result<Vec<Repo>, ManifestError> {
             kind,
             build: raw.build,
             post_build: raw.post_build,
+            checkout: raw.checkout,
         });
     }
 

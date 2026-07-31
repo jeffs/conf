@@ -2,7 +2,9 @@ use std::io::IsTerminal;
 use std::process;
 
 use clap::Parser;
-use rebase::{Cli, Cmd, manifest, ops, tui};
+use rebase::jj::Mode;
+use rebase::ops::{self, Op};
+use rebase::{Cli, manifest, tui};
 
 fn main() {
     let cli = Cli::parse();
@@ -33,19 +35,16 @@ fn main() {
         filtered
     };
 
-    let op = match cli.command {
-        None | Some(Cmd::Update) => ops::Op::Update,
-        Some(Cmd::Status) => ops::Op::Status,
-        Some(Cmd::Fetch) => ops::Op::Fetch,
-        Some(Cmd::Rebase) => ops::Op::Rebase,
-        Some(Cmd::Build) => ops::Op::Build,
-        Some(Cmd::Push) => ops::Op::Push,
-        Some(Cmd::Clone) => ops::Op::Clone,
+    let op = cli.command.unwrap_or(Op::Update);
+    let mode = if cli.dry_run {
+        Mode::DryRun
+    } else {
+        Mode::Execute
     };
 
-    let use_tui = !cli.plain && !cli.dry_run && std::io::stdout().is_terminal();
+    let use_tui = !cli.plain && mode == Mode::Execute && std::io::stdout().is_terminal();
     let all_ok = if use_tui {
-        match tui::run(op, &repos, cli.jobs) {
+        match tui::run(op, &repos, cli.jobs, mode) {
             Ok(ok) => ok,
             Err(e) => {
                 eprintln!("error: {e}");
@@ -53,7 +52,7 @@ fn main() {
             }
         }
     } else {
-        ops::run(op, &repos, cli.dry_run)
+        ops::run(op, &repos, mode)
     };
     if !all_ok {
         process::exit(1);

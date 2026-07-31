@@ -13,9 +13,10 @@ use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Paragraph};
 use ratatui::{DefaultTerminal, Frame};
 
+use crate::jj::Mode;
 use crate::manifest::Repo;
-use crate::ops::{self, Op};
-use crate::output::{Kind, Outcome, Sink};
+use crate::ops::{Op, Outcome, Runner};
+use crate::output::{Kind, Sink};
 
 /// Progress reported by worker threads.
 enum Event {
@@ -54,7 +55,7 @@ impl Sink for ChannelSink {
 /// # Errors
 ///
 /// Returns an error if the terminal cannot be drawn or read.
-pub fn run(op: Op, repos: &[Repo], jobs: usize) -> io::Result<bool> {
+pub fn run(op: Op, repos: &[Repo], jobs: usize, mode: Mode) -> io::Result<bool> {
     let mut tasks: Vec<RepoTask> = repos
         .iter()
         .map(|r| RepoTask {
@@ -64,7 +65,7 @@ pub fn run(op: Op, repos: &[Repo], jobs: usize) -> io::Result<bool> {
         })
         .collect();
 
-    let rx = spawn_workers(op, repos.to_vec(), jobs);
+    let rx = spawn_workers(op, repos.to_vec(), jobs, mode);
 
     let mut terminal = ratatui::init();
     let result = event_loop(&mut terminal, &mut tasks, &rx);
@@ -73,7 +74,7 @@ pub fn run(op: Op, repos: &[Repo], jobs: usize) -> io::Result<bool> {
 }
 
 /// Start up to `jobs` worker threads that pull repos off a shared queue.
-fn spawn_workers(op: Op, repos: Vec<Repo>, jobs: usize) -> mpsc::Receiver<Event> {
+fn spawn_workers(op: Op, repos: Vec<Repo>, jobs: usize, mode: Mode) -> mpsc::Receiver<Event> {
     let (tx, rx) = mpsc::channel();
     let repos = Arc::new(repos);
     let next = Arc::new(AtomicUsize::new(0));
@@ -90,8 +91,8 @@ fn spawn_workers(op: Op, repos: Vec<Repo>, jobs: usize) -> mpsc::Receiver<Event>
                     repo: i,
                     tx: tx.clone(),
                 };
-                let outcome = ops::run_one(op, repo, false, &sink);
-                let _ = tx.send(Event::Done(i, outcome));
+                let runner = Runner { mode, sink: &sink };
+                let _ = tx.send(Event::Done(i, runner.run_one(op, repo)));
             }
         });
     }

@@ -1,343 +1,219 @@
 use std::path::Path;
 
-use crate::jj;
-use crate::manifest::{self, Repo, RepoKind};
-use crate::output::{self, Kind, Outcome, Sink};
+use clap::Subcommand;
 
-/// Run the status check for a single repo.
-fn status_one(repo: &Repo, sink: &dyn Sink) -> Outcome {
-    if !repo.path.exists() {
-        sink.line(Kind::Warn, "not cloned".into());
-        return Outcome::Skipped("not cloned".into());
-    }
-
-    let st = jj::status(&repo.path, sink);
-    if !st.success {
-        return Outcome::Failed("jj status failed".into());
-    }
-
-    let stdout = st.stdout.trim();
-    if stdout.starts_with("The working copy has no changes") {
-        sink.line(Kind::Ok, "clean".into());
-    } else {
-        // Show just the first line (e.g. "Working copy changes:" or similar).
-        let first_line = stdout.lines().next().unwrap_or(stdout);
-        sink.line(Kind::Warn, first_line.into());
-    }
-
-    match &repo.kind {
-        RepoKind::ForkRebase {
-            upstream_ref,
-            bookmarks,
-            ..
-        } => {
-            let qualified = upstream_ref.qualified();
-            for bm in bookmarks {
-                let log = jj::log_bookmark(&repo.path, bm, &qualified, sink);
-                let commits: Vec<&str> = log
-                    .stdout
-                    .lines()
-                    .filter(|l| !l.trim().is_empty())
-                    .collect();
-                if commits.is_empty() {
-                    sink.line(
-                        Kind::Info,
-                        format!("{bm}: up to date with {}", upstream_ref.name),
-                    );
-                } else {
-                    sink.line(
-                        Kind::Info,
-                        format!(
-                            "{bm}: {} commit(s) ahead of {}",
-                            commits.len(),
-                            upstream_ref.name,
-                        ),
-                    );
-                }
-            }
-        }
-        RepoKind::ForkTrack { .. } | RepoKind::Own => {}
-    }
-
-    Outcome::Ok
-}
-
-/// Fetch remotes for a single repo.
-fn fetch_one(repo: &Repo, dry_run: bool, sink: &dyn Sink) -> Outcome {
-    if !repo.path.exists() {
-        sink.line(Kind::Warn, "not cloned — skipping".into());
-        return Outcome::Skipped("not cloned".into());
-    }
-
-    match &repo.kind {
-        RepoKind::ForkRebase { .. } | RepoKind::ForkTrack { .. } => {
-            let r1 = jj::fetch(&repo.path, Some("upstream"), dry_run, sink);
-            if !r1.success {
-                return Outcome::Failed("fetch upstream failed".into());
-            }
-            let r2 = jj::fetch(&repo.path, Some("origin"), dry_run, sink);
-            if !r2.success {
-                return Outcome::Failed("fetch origin failed".into());
-            }
-        }
-        RepoKind::Own => {
-            let r = jj::fetch(&repo.path, None, dry_run, sink);
-            if !r.success {
-                return Outcome::Failed("fetch failed".into());
-            }
-        }
-    }
-
-    Outcome::Ok
-}
-
-/// Sync the trunk bookmark for a fork: set local trunk to upstream, push to origin.
-/// Only meaningful for branches; tags (`@git`) can't be managed as bookmarks.
-fn sync_trunk(
-    repo: &Repo,
-    upstream_ref: &manifest::UpstreamRef,
-    dry_run: bool,
-    sink: &dyn Sink,
-) -> bool {
-    let target = upstream_ref.qualified();
-    let r = jj::bookmark_set(&repo.path, &upstream_ref.name, &target, dry_run, sink);
-    if !r.success {
-        return false;
-    }
-    let r = jj::push(&repo.path, "origin", &upstream_ref.name, dry_run, sink);
-    r.success
-}
-
-/// Rebase fork bookmarks onto upstream.
-fn rebase_one(repo: &Repo, dry_run: bool, sink: &dyn Sink) -> Outcome {
-    if !repo.path.exists() {
-        sink.line(Kind::Warn, "not cloned — skipping".into());
-        return Outcome::Skipped("not cloned".into());
-    }
-
-    if let RepoKind::ForkRebase {
-        upstream_ref,
-        bookmarks,
-        ..
-    } = &repo.kind
-    {
-        let qualified = upstream_ref.qualified();
-        for bm in bookmarks {
-            let r = jj::rebase(&repo.path, bm, &qualified, dry_run, sink);
-            if !r.success {
-                return Outcome::Failed(format!("rebase {bm} failed"));
-            }
-
-            let conflict_check = jj::has_conflicts(&repo.path, bm, dry_run, sink);
-            if !conflict_check.success {
-                return Outcome::Failed(format!("{bm} has conflicts"));
-            }
-        }
-        Outcome::Ok
-    } else {
-        sink.line(
-            Kind::Info,
-            "not a fork-rebase repo — nothing to rebase".into(),
-        );
-        Outcome::Ok
-    }
-}
-
-/// Run build commands for a single repo.
-fn build_one(repo: &Repo, dry_run: bool, sink: &dyn Sink) -> Outcome {
-    if !repo.path.exists() {
-        sink.line(Kind::Warn, "not cloned — skipping".into());
-        return Outcome::Skipped("not cloned".into());
-    }
-
-    for cmd_str in &repo.build {
-        let r = jj::build(&repo.path, cmd_str, dry_run, sink);
-        if !r.success {
-            return Outcome::Failed(format!("build command failed: {cmd_str}"));
-        }
-    }
-    for cmd_str in &repo.post_build {
-        let r = jj::build(&repo.path, cmd_str, dry_run, sink);
-        if !r.success {
-            return Outcome::Failed(format!("post_build command failed: {cmd_str}"));
-        }
-    }
-
-    Outcome::Ok
-}
-
-/// Push fork bookmarks to origin.
-fn push_one(repo: &Repo, dry_run: bool, sink: &dyn Sink) -> Outcome {
-    if !repo.path.exists() {
-        sink.line(Kind::Warn, "not cloned — skipping".into());
-        return Outcome::Skipped("not cloned".into());
-    }
-
-    if let RepoKind::ForkRebase {
-        upstream_ref,
-        bookmarks,
-        ..
-    } = &repo.kind
-    {
-        for bm in bookmarks {
-            let r = jj::push(&repo.path, "origin", bm, dry_run, sink);
-            if !r.success {
-                return Outcome::Failed(format!("push {bm} failed"));
-            }
-        }
-        if upstream_ref.is_branch() {
-            let r = jj::push(&repo.path, "origin", &upstream_ref.name, dry_run, sink);
-            if !r.success {
-                return Outcome::Failed(format!("push {} failed", upstream_ref.name));
-            }
-        }
-        Outcome::Ok
-    } else {
-        sink.line(
-            Kind::Info,
-            "not a fork-rebase repo — nothing to push".into(),
-        );
-        Outcome::Ok
-    }
-}
-
-/// Full update pipeline: fetch → sync trunk → rebase → build → push.
-fn update_one(repo: &Repo, dry_run: bool, sink: &dyn Sink) -> Outcome {
-    if !repo.path.exists() {
-        sink.line(Kind::Warn, "not cloned — skipping".into());
-        return Outcome::Skipped("not cloned".into());
-    }
-
-    // Fetch
-    let outcome = fetch_one(repo, dry_run, sink);
-    if !matches!(outcome, Outcome::Ok) {
-        return outcome;
-    }
-
-    // Sync trunk + rebase (fork-rebase), or advance working copy (others)
-    match &repo.kind {
-        RepoKind::ForkRebase {
-            upstream_ref,
-            bookmarks,
-            ..
-        } => {
-            if upstream_ref.is_branch() && !sync_trunk(repo, upstream_ref, dry_run, sink) {
-                return Outcome::Failed("sync trunk failed".into());
-            }
-            let outcome = rebase_one(repo, dry_run, sink);
-            if !matches!(outcome, Outcome::Ok) {
-                return outcome;
-            }
-            if bookmarks.contains(&"custom".to_string()) {
-                let r = jj::new_at(&repo.path, "custom", dry_run, sink);
-                if !r.success {
-                    return Outcome::Failed("jj new failed".into());
-                }
-            }
-        }
-        RepoKind::ForkTrack { upstream_ref, .. } => {
-            let r = jj::new_at(&repo.path, &upstream_ref.qualified(), dry_run, sink);
-            if !r.success {
-                return Outcome::Failed("jj new failed".into());
-            }
-        }
-        RepoKind::Own => {
-            let r = jj::new_at(&repo.path, "trunk()", dry_run, sink);
-            if !r.success {
-                return Outcome::Failed("jj new failed".into());
-            }
-        }
-    }
-
-    // Build
-    let outcome = build_one(repo, dry_run, sink);
-    if !matches!(outcome, Outcome::Ok) {
-        return outcome;
-    }
-
-    // Push (fork-rebase only)
-    push_one(repo, dry_run, sink)
-}
-
-/// Clone repos that don't exist locally, then run update.
-fn clone_one(repo: &Repo, dry_run: bool, sink: &dyn Sink) -> Outcome {
-    if repo.path.exists() {
-        sink.line(Kind::Info, "already cloned".into());
-        return Outcome::Ok;
-    }
-
-    // Clone
-    let parent = repo.path.parent().unwrap_or(Path::new("."));
-    let r = jj::clone(parent, &repo.clone_url, &repo.path, dry_run, sink);
-    if !r.success {
-        return Outcome::Failed("clone failed".into());
-    }
-
-    // Add upstream remote for forks
-    match &repo.kind {
-        RepoKind::ForkRebase { upstream, .. } | RepoKind::ForkTrack { upstream, .. } => {
-            let r = jj::remote_add(&repo.path, "upstream", upstream, dry_run, sink);
-            if !r.success {
-                return Outcome::Failed("adding upstream remote failed".into());
-            }
-        }
-        RepoKind::Own => {}
-    }
-
-    // `jj git clone` only creates a local bookmark for the fork's default
-    // branch, so custom bookmarks (e.g. `custom`) start out as `name@origin`
-    // only.  Track them locally so rebase/checkout/push can resolve the bare
-    // name; a bookmark absent on origin is silently skipped.
-    if let RepoKind::ForkRebase { bookmarks, .. } = &repo.kind {
-        for bm in bookmarks {
-            let r = jj::bookmark_track(&repo.path, bm, "origin", dry_run, sink);
-            if !r.success {
-                return Outcome::Failed(format!("tracking {bm}@origin failed"));
-            }
-        }
-    }
-
-    // Run full update
-    update_one(repo, dry_run, sink)
-}
+use crate::jj::{self, Mode, Remote, Workspace};
+use crate::manifest::{Repo, RepoKind, UpstreamRef};
+use crate::output::{self, Sink};
 
 /// The operations that the CLI can invoke.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Subcommand)]
 pub enum Op {
+    /// Show state of all repos
     Status,
+    /// Fetch from remotes
     Fetch,
+    /// Rebase fork bookmarks onto upstream
     Rebase,
+    /// Build and install
     Build,
+    /// Push fork bookmarks to origin
     Push,
+    /// fetch → rebase → build → push (default)
     Update,
+    /// Clone repos that don't exist locally
     Clone,
 }
 
-/// Run an operation on a single repo, reporting progress to `sink`.
-#[must_use]
-pub fn run_one(op: Op, repo: &Repo, dry_run: bool, sink: &dyn Sink) -> Outcome {
-    match op {
-        Op::Status => status_one(repo, sink),
-        Op::Fetch => fetch_one(repo, dry_run, sink),
-        Op::Rebase => rebase_one(repo, dry_run, sink),
-        Op::Build => build_one(repo, dry_run, sink),
-        Op::Push => push_one(repo, dry_run, sink),
-        Op::Update => update_one(repo, dry_run, sink),
-        Op::Clone => clone_one(repo, dry_run, sink),
+/// Result of running an operation on one repo.
+#[derive(Debug, PartialEq, Eq)]
+pub enum Outcome {
+    Ok,
+    Skipped(String),
+    Failed(String),
+}
+
+/// Execution context shared by every operation: how commands run, and where
+/// progress is reported.
+pub struct Runner<'a> {
+    pub mode: Mode,
+    pub sink: &'a dyn Sink,
+}
+
+impl Runner<'_> {
+    /// Run an operation on a single repo, reporting progress to the sink.
+    #[must_use]
+    pub fn run_one(&self, op: Op, repo: &Repo) -> Outcome {
+        if !matches!(op, Op::Clone) && !repo.path.exists() {
+            self.sink.warn("not cloned — skipping");
+            return Outcome::Skipped("not cloned".into());
+        }
+        let result = match op {
+            Op::Status => self.status(repo),
+            Op::Fetch => self.fetch(repo),
+            Op::Rebase => self.rebase(repo),
+            Op::Build => self.build(repo),
+            Op::Push => self.push(repo),
+            Op::Update => self.update(repo),
+            Op::Clone => self.clone(repo),
+        };
+        match result {
+            Ok(()) => Outcome::Ok,
+            Err(e) => Outcome::Failed(e.0),
+        }
+    }
+
+    fn ws<'r>(&'r self, path: &'r Path) -> Workspace<'r> {
+        Workspace::new(path, self.mode, self.sink)
+    }
+
+    fn status(&self, repo: &Repo) -> jj::Result<()> {
+        let ws = self.ws(&repo.path);
+        let st = ws.status()?;
+        let stdout = st.stdout.trim();
+        if stdout.starts_with("The working copy has no changes") {
+            self.sink.ok("clean");
+        } else {
+            // Show just the first line (e.g. "Working copy changes:").
+            self.sink.warn(stdout.lines().next().unwrap_or(stdout));
+        }
+
+        if let RepoKind::ForkRebase { fork, bookmarks } = &repo.kind {
+            let upstream = &fork.upstream_ref;
+            let qualified = upstream.qualified();
+            for bm in bookmarks {
+                let log = ws.log_bookmark(bm, &qualified)?;
+                let ahead = log.stdout.lines().filter(|l| !l.trim().is_empty()).count();
+                if ahead == 0 {
+                    self.sink
+                        .info(&format!("{bm}: up to date with {}", upstream.name));
+                } else {
+                    self.sink.info(&format!(
+                        "{bm}: {ahead} commit(s) ahead of {}",
+                        upstream.name
+                    ));
+                }
+            }
+        }
+        Ok(())
+    }
+
+    fn fetch(&self, repo: &Repo) -> jj::Result<()> {
+        let ws = self.ws(&repo.path);
+        if repo.kind.fork().is_some() {
+            ws.fetch(Some(Remote::Upstream))?;
+            ws.fetch(Some(Remote::Origin))?;
+        } else {
+            ws.fetch(None)?;
+        }
+        Ok(())
+    }
+
+    fn rebase(&self, repo: &Repo) -> jj::Result<()> {
+        let RepoKind::ForkRebase { fork, bookmarks } = &repo.kind else {
+            self.sink.info("not a fork-rebase repo — nothing to rebase");
+            return Ok(());
+        };
+        let ws = self.ws(&repo.path);
+        let dest = fork.upstream_ref.qualified();
+        for bm in bookmarks {
+            ws.rebase(bm, &dest)?;
+            ws.ensure_no_conflicts(bm)?;
+        }
+        Ok(())
+    }
+
+    fn build(&self, repo: &Repo) -> jj::Result<()> {
+        let ws = self.ws(&repo.path);
+        for cmd in repo.build.iter().chain(&repo.post_build) {
+            ws.build(cmd)?;
+        }
+        Ok(())
+    }
+
+    fn push(&self, repo: &Repo) -> jj::Result<()> {
+        let RepoKind::ForkRebase { fork, bookmarks } = &repo.kind else {
+            self.sink.info("not a fork-rebase repo — nothing to push");
+            return Ok(());
+        };
+        let ws = self.ws(&repo.path);
+        for bm in bookmarks {
+            ws.push(Remote::Origin, bm)?;
+        }
+        if fork.upstream_ref.is_branch() {
+            ws.push(Remote::Origin, &fork.upstream_ref.name)?;
+        }
+        Ok(())
+    }
+
+    /// Set the fork's local trunk bookmark to upstream and push it to origin.
+    /// Only meaningful for branches; tags (`@git`) can't be managed as
+    /// bookmarks.
+    fn sync_trunk(&self, repo: &Repo, upstream_ref: &UpstreamRef) -> jj::Result<()> {
+        let ws = self.ws(&repo.path);
+        ws.bookmark_set(&upstream_ref.name, &upstream_ref.qualified())?;
+        ws.push(Remote::Origin, &upstream_ref.name)?;
+        Ok(())
+    }
+
+    /// Full update pipeline: fetch → sync trunk → rebase → checkout → build
+    /// → push.
+    fn update(&self, repo: &Repo) -> jj::Result<()> {
+        self.fetch(repo)?;
+
+        if let RepoKind::ForkRebase { fork, .. } = &repo.kind {
+            if fork.upstream_ref.is_branch() {
+                self.sync_trunk(repo, &fork.upstream_ref)?;
+            }
+            self.rebase(repo)?;
+        }
+        if let Some(revision) = repo.checkout_target() {
+            self.ws(&repo.path).new_at(&revision)?;
+        }
+        self.build(repo)?;
+        self.push(repo)
+    }
+
+    /// Clone the repo if absent, then run the full update.
+    fn clone(&self, repo: &Repo) -> jj::Result<()> {
+        if repo.path.exists() {
+            self.sink.info("already cloned");
+            return Ok(());
+        }
+
+        // The workspace doesn't exist yet; clone from its parent directory.
+        let parent = repo.path.parent().unwrap_or(Path::new("."));
+        self.ws(parent).clone(&repo.clone_url, &repo.path)?;
+
+        let ws = self.ws(&repo.path);
+        if let Some(fork) = repo.kind.fork() {
+            ws.remote_add(Remote::Upstream, &fork.upstream)?;
+        }
+        if let RepoKind::ForkRebase { bookmarks, .. } = &repo.kind {
+            // `jj git clone` leaves non-default bookmarks as `name@origin`
+            // only; track them so the bare names resolve locally.
+            for bm in bookmarks {
+                ws.bookmark_track(bm, Remote::Origin)?;
+            }
+        }
+
+        self.update(repo)
     }
 }
 
 /// Run an operation across all repos sequentially, printing to stderr.
 #[must_use]
-pub fn run(op: Op, repos: &[Repo], dry_run: bool) -> bool {
-    let mut results: Vec<(String, Outcome)> = Vec::new();
+pub fn run(op: Op, repos: &[Repo], mode: Mode) -> bool {
+    let runner = Runner {
+        mode,
+        sink: &output::StderrSink,
+    };
 
+    let mut results: Vec<(String, Outcome)> = Vec::new();
     for repo in repos {
         output::header(&repo.name);
-        let outcome = run_one(op, repo, dry_run, &output::StderrSink);
-        results.push((repo.name.clone(), outcome));
+        results.push((repo.name.clone(), runner.run_one(op, repo)));
     }
-
     output::summary(&results);
 
     results
