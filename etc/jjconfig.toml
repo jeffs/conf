@@ -20,8 +20,12 @@ lb = ["log", "-r", "remote_bookmarks() & mine()", "--no-graph", "-T", "bookmark_
 flog = ["log", "-r", "first_ancestors(@)", "--no-graph", "-T", "builtin_log_oneline"]
 glog = ["log", "-r", "first_ancestors(@)"]
 
+# Refresh the bookmark-to-pull-request table that format_pr_refs() reads.
+prsync = ["util", "exec", "--", "pr-sync"]
+
 [colors]
 "diff token" = { underline = false }
+pr = "cyan"
 
 [user]
 name = "Jeff Schwab"
@@ -59,6 +63,38 @@ log = '@ | sparse(immutable_heads()..) | present(trunk())'
 [template-aliases]
 bookmark_list = '''
 separate("\t", change_id.short(), commit_id.short(), bookmarks) ++ "\n"
+'''
+
+# Label each bookmark with the pull request open on it. A template cannot reach
+# the network, so the numbers come from a `pr` table in repo config that the
+# `prsync` alias rewrites from `gh pr list`; a bookmark absent from that table
+# renders nothing, and separate() then drops it.
+'pr_number(bookmark)' = 'config("pr.\"" ++ bookmark.name() ++ "\"")'
+'format_pr_refs(commit)' = '''
+commit.local_bookmarks()
+  .filter(|bookmark| pr_number(bookmark))
+  .map(|bookmark| label("pr", "PR#" ++ pr_number(bookmark)))
+  .join(" ")
+'''
+
+# jj 0.43's own definition, with format_pr_refs() spliced in after the
+# bookmarks. Every builtin log template draws its first line from this one, so
+# the pull request numbers reach compact, oneline, and comfortable alike.
+'format_short_commit_header(commit)' = '''
+separate(" ",
+  format_short_change_id_with_change_offset(commit),
+  format_short_signature(commit.author()),
+  format_timestamp(commit_timestamp(commit)),
+  commit.bookmarks(),
+  format_pr_refs(commit),
+  commit.tags(),
+  commit.working_copies(),
+  format_short_commit_id(commit.commit_id()),
+  format_commit_labels(commit),
+  if(config("ui.show-cryptographic-signatures").as_boolean(),
+    format_short_cryptographic_signature(commit.signature())
+  ),
+)
 '''
 
 [ui]
