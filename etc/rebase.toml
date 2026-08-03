@@ -14,7 +14,7 @@ upstream = "https://github.com/helix-editor/helix"
 bookmarks = ["custom"]
 checkout = "custom"
 upstream_ref = "master"
-build = ["cargo install --path helix-term"]
+build = ["cargo install --path helix-term --locked"]
 
 [repos.md-tui]
 clone = "git@github.com:jeffs/md-tui.git"
@@ -22,7 +22,7 @@ upstream = "https://github.com/henriklovhaug/md-tui"
 bookmarks = ["custom"]
 checkout = "custom"
 upstream_ref = "main"
-build = ["cargo install --path ."]
+build = ["cargo install --path . --locked"]
 
 [repos.viddy]
 clone = "git@github.com:jeffs/viddy.git"
@@ -30,7 +30,7 @@ upstream = "https://github.com/sachaos/viddy"
 bookmarks = ["custom"]
 checkout = "custom"
 upstream_ref = "master"
-build = ["cargo install --path ."]
+build = ["cargo install --path . --locked"]
 
 # [repos.zellij]
 # clone = "git@github.com:jeffs/zellij.git"
@@ -62,7 +62,7 @@ upstream = "https://github.com/eza-community/eza"
 bookmarks = ["custom"]
 checkout = "custom"
 upstream_ref = "main"
-build = ["cargo install --path ."]
+build = ["cargo install --path . --locked"]
 
 [repos.typify]
 clone = "git@github.com:jeffs/typify.git"
@@ -78,13 +78,13 @@ build = []
 # clone = "git@github.com:jeffs/crush.git"
 # upstream = "https://github.com/liljencrantz/crush"
 # upstream_ref = "main"
-# build = ["cargo install --path ."]
+# build = ["cargo install --path . --locked"]
 
 # Upstream-only
 
 # [repos.uv]
 # clone = "https://github.com/astral-sh/uv"
-# build = ["cargo install --path crates/uv"]
+# build = ["cargo install --path crates/uv --locked"]
 
 [repos.sl]
 clone = "git@github.com:jeffs/sl.git"
@@ -92,7 +92,7 @@ upstream = "https://github.com/mtoyoda/sl"
 bookmarks = ["custom"]
 checkout = "custom"
 upstream_ref = "master"
-build = ["cargo install --path rust"]
+build = ["cargo install --path rust --locked"]
 
 [repos.asciiquarium]
 clone = "git@github.com:jeffs/asciiquarium.git"
@@ -100,18 +100,18 @@ upstream = "https://github.com/cmatsuoka/asciiquarium"
 bookmarks = ["custom"]
 checkout = "custom"
 upstream_ref = "master"
-build = ["cargo install --path ."]
+build = ["cargo install --path . --locked"]
 
 # De novo
 
 [repos.rust-kart]
 clone = "git@github.com:jeffs/rust-kart.git"
-build = ["cargo install --path crates/days", "cargo install --path crates/lev"]
+build = ["cargo install --path crates/days --locked", "cargo install --path crates/lev --locked"]
 
 [repos.ralph]
 clone = "git@github.com:jeffs/ralph.git"
-build = ["cargo install --path ."]
+build = ["cargo install --path . --locked"]
 
 [repos.claude-buddy]
 clone = "git@github.com:jeffs/claude-buddy.git"
-build = ["cargo install --path ."]
+build = ["cargo install --path . --locked"]

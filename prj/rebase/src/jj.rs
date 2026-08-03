@@ -216,7 +216,6 @@ impl<'a> Workspace<'a> {
         let spawned = Command::new(cmd[0])
             .args(&cmd[1..])
             .current_dir(self.cwd)
-            .env_remove("CARGO_MANIFEST_DIR")
             .output();
 
         let out = match spawned {
@@ -246,7 +245,6 @@ impl<'a> Workspace<'a> {
         let spawned = Command::new(cmd[0])
             .args(&cmd[1..])
             .current_dir(self.cwd)
-            .env_remove("CARGO_MANIFEST_DIR")
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())

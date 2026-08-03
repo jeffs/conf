@@ -6,6 +6,8 @@
 # - [ ] Update Docker images
 # - [ ] Build `on-file-click.app`
 
+# Build with cargo, but run the binaries directly; see rebase.zsh.
 cd ~/conf/prj
-cargo run -p upgrade "$@"
-cargo run -p rebase "$@"
+cargo build -p upgrade -p rebase
+target/debug/upgrade "$@"
+target/debug/rebase "$@"
