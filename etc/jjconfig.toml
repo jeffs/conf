@@ -78,7 +78,8 @@ commit.local_bookmarks()
 '''
 
 # jj 0.43's own definition, reordered to lead with the two identifiers and the
-# pull request, and shortened: the author is rendered by the alias the oneline
+# pull request and to trail with the author, whom the bookmark names already to
+# anyone reading the convention. The author is rendered by the alias the oneline
 # template uses, which keeps the local part of the email, and the timestamp is
 # dropped. Only builtin_log_compact and builtin_log_compact_full_description
 # draw their first line from here; builtin_log_oneline inlines its own field
@@ -88,8 +89,8 @@ separate(" ",
   format_short_change_id_with_change_offset(commit),
   format_short_commit_id(commit.commit_id()),
   format_pr_refs(commit),
-  format_short_signature_oneline(commit.author()),
   commit.bookmarks(),
+  format_short_signature_oneline(commit.author()),
   commit.tags(),
   commit.working_copies(),
   format_commit_labels(commit),
