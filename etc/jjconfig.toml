@@ -41,6 +41,12 @@ email = "jeff@unbuggy.com"
 'active_heads()' = 'bookmarks() | (visible_heads() & mine()) ~ remote_bookmarks(glob:"ar/*") ~ untracked_remote_bookmarks()'
 'interesting()' = '@ | trunk() | active_heads()'
 
+# My unmerged work: commits I authored that sit on an active head and that
+# trunk has not absorbed. `trunk()..` tests ancestry, so a squash-merged PR
+# leaves its local commit outside trunk forever; confining the search to
+# active_heads() is what keeps those landed commits out of the view.
+'my_work()' = '(trunk()..active_heads()) & mine()'
+
 # Per-branch truncation: every head in x keeps its last N commits plus the
 # branch root; jj elides the middle with `~`. `ancestors(heads(x), N)` is a
 # depth window applied per head (topological, unlike `latest()`).
@@ -59,12 +65,14 @@ separate("\t", change_id.short(), commit_id.short(), bookmarks) ++ "\n"
 pager = "delta"
 diff-formatter = ":git"
 
-# Meant to show whatever I'm actively working on, including branches,
-# with long branches elided per-branch by sparse().
-default-command = ["log", "-r", "@ | sparse(fork_point(interesting())::interesting())"]
+# Meant to show whatever I'm actively working on: every active branch tip, plus
+# my own unmerged commits behind those tips, with long stacks elided per-branch
+# by sparse(). Trunk contributes only its tip, so a branch that has fallen weeks
+# behind costs nothing.
+default-command = ["log", "-r", "interesting() | sparse(my_work())"]
 
-# Same, but showing every commit on every active branch.
-# default-command = ["log", "-r", "fork_point(interesting())::interesting()"]
+# Same, but showing every commit on every active branch, whoever wrote it.
+# default-command = ["log", "-r", "interesting() | sparse(trunk()..active_heads())"]
 diff-editor = ":builtin"
 
 # Works, but doesn't show the set of "active" branches; it's more like my old `git glog`.
