@@ -106,7 +106,21 @@ build = ["cargo install --path . --locked"]
 
 [repos.rust-kart]
 clone = "git@github.com:jeffs/rust-kart.git"
-build = ["cargo install --path crates/days --locked", "cargo install --path crates/lev --locked"]
+build = [
+    "cargo install --path crates/gh-prs --locked",
+    "cargo install --path crates/kcal --locked",
+    "cargo install --path crates/lev --locked",
+    "cargo install --path crates/md-align --locked",
+    "cargo install --path crates/now --locked",
+    "cargo install --path crates/pangram --locked",
+    "cargo install --path crates/primes --locked",
+    "cargo install --path crates/save-context --locked",
+    "cargo install --path crates/text-utils --locked",
+    "cargo install --path crates/tmux-send --locked",
+    "cargo install --path crates/utf --locked",
+    "cargo install --path crates/vimod --locked",
+    "cargo install --path crates/wl2md --locked",
+]
 
 [repos.ralph]
 clone = "git@github.com:jeffs/ralph.git"
