@@ -86,6 +86,11 @@ alias xp = x --peek
 alias jobs = job list
 alias now = date now
 
+# u, as in up.
+alias u = cd ..
+alias uu = cd ../..
+alias uuu = cd ../../..
+
 # TODO: Plain `job unfreeze` sometimes mistakenly thinks there's no job running,
 # so you have to give it the job ID explicitly.
 alias fg = job unfreeze

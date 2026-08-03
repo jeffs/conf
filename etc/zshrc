@@ -59,6 +59,13 @@ if [[ "$TERM_PROGRAM" == Apple_Terminal ]]; then
     }
 fi
 
+## ALIASES
+
+# u, as in up.
+alias u='cd ..'
+alias uu='cd ../..'
+alias uuu='cd ../../..'
+
 ## FUNCTIONS
 
 # Strip comment leaders from copy/pasted sample code.
@@ -68,6 +75,23 @@ function // { "$@" }
 function c { cd "$@" && ls; }
 function cg { c $(git rev-parse --show-toplevel); }
 function mc { mkdir -p $1 && c $1; }
+
+# Jump command wrapper: `f y` visits yesterday's log directory, URL targets
+# open in the browser, and directory targets are created if necessary.  See
+# etc/nushell/config.nu for details.
+function f {
+    local found
+    if [[ $# -eq 1 && "$1" == y ]]; then
+        found=~/file/log/$(date -v-1d +%Y/%m/%d)
+    else
+        found=$(jump "$@") || return
+    fi
+    if [[ "$found" == http://* || "$found" == https://* ]]; then
+        open "$found"
+    else
+        mc "$found"
+    fi
+}
 
 ## PROFILES
 #
