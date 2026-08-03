@@ -77,19 +77,21 @@ commit.local_bookmarks()
   .join(" ")
 '''
 
-# jj 0.43's own definition, with format_pr_refs() spliced in after the
-# bookmarks. Every builtin log template draws its first line from this one, so
-# the pull request numbers reach compact, oneline, and comfortable alike.
+# jj 0.43's own definition, reordered to lead with the two identifiers and the
+# pull request, and shortened: the author is rendered by the alias the oneline
+# template uses, which keeps the local part of the email, and the timestamp is
+# dropped. Only builtin_log_compact and builtin_log_compact_full_description
+# draw their first line from here; builtin_log_oneline inlines its own field
+# list, so `flog` keeps the stock layout and shows no pull request number.
 'format_short_commit_header(commit)' = '''
 separate(" ",
   format_short_change_id_with_change_offset(commit),
-  format_short_signature(commit.author()),
-  format_timestamp(commit_timestamp(commit)),
-  commit.bookmarks(),
+  format_short_commit_id(commit.commit_id()),
   format_pr_refs(commit),
+  format_short_signature_oneline(commit.author()),
+  commit.bookmarks(),
   commit.tags(),
   commit.working_copies(),
-  format_short_commit_id(commit.commit_id()),
   format_commit_labels(commit),
   if(config("ui.show-cryptographic-signatures").as_boolean(),
     format_short_cryptographic_signature(commit.signature())
