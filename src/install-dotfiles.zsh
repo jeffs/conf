@@ -9,7 +9,8 @@ done
 chmod -R 700 var/nvim
 
 # Move existing config files out of the way.
-for f in .config/nvim .gitconfig .tmux.conf .zprofile .zshrc; do
+for f in .config/nushell/config.nu .config/nvim .gitconfig .tmux.conf \
+        .zprofile .zshrc; do
     if [ -e $f ]; then
         mkdir -p orig
         mv $f orig
@@ -32,6 +33,13 @@ ln -s ~/conf/etc/xonsh ~/.config
 ln -s ~/conf/etc/zellij ~/.config
 ln -s ~/conf/etc/zprofile ~/.zprofile
 ln -s ~/conf/etc/zshrc ~/.zshrc
+
+# Nushell writes history into its config directory, so link individual files
+# rather than the directory itself.
+mkdir -p ~/.config/nushell
+for f in autoload config.nu login.nu; do
+    ln -s ~/conf/etc/nushell/$f ~/.config/nushell/$f
+done
 
 # Symlinking CLAUDE.md is fine on a machine that requires no further
 # user-level config. However, on a machine that wants to augment it at all,

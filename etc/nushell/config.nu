@@ -61,10 +61,12 @@ use std/dirs
 # respect aliases. So, I source them here, in which case they _kinda_ respect
 # aliases. This seems unrelated to the known issue mentioned in the TODO above.
 #
-# Nushell doesn't appear to have any way (other than autoload) to source files
-# only if they exist. Maybe `$NU_LIB_DIRS` can be used to search "real" paths,
-# falling back to empty dummy files committed to this repository.
-use ~/pkg/nu_scripts/custom-completions/git/git-completions.nu *
+# `use` resolves at parse time, and a parse error would abort this whole file;
+# so skip the module (`use null` is a no-op) on machines without nu_scripts.
+const path_git_completions = (
+  '~/pkg/nu_scripts/custom-completions/git/git-completions.nu' | path expand
+)
+use (if ($path_git_completions | path exists) { $path_git_completions }) *
 
 # Fun fact: There's now the exact opposite bug to this:
 # <https://github.com/nushell/nushell/issues/7790>
