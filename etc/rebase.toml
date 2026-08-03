@@ -111,3 +111,7 @@ build = ["cargo install --path crates/days", "cargo install --path crates/lev"]
 [repos.ralph]
 clone = "git@github.com:jeffs/ralph.git"
 build = ["cargo install --path ."]
+
+[repos.claude-buddy]
+clone = "git@github.com:jeffs/claude-buddy.git"
+build = ["cargo install --path ."]
