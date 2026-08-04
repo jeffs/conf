@@ -20,9 +20,6 @@ lb = ["log", "-r", "remote_bookmarks() & mine()", "--no-graph", "-T", "bookmark_
 flog = ["log", "-r", "first_ancestors(@)", "--no-graph", "-T", "builtin_log_oneline"]
 glog = ["log", "-r", "first_ancestors(@)"]
 
-# Refresh the bookmark-to-pull-request table that format_pr_refs() reads.
-prsync = ["util", "exec", "--", "pr-sync"]
-
 [colors]
 "diff token" = { underline = false }
 pr = "cyan"
@@ -67,8 +64,9 @@ separate("\t", change_id.short(), commit_id.short(), bookmarks) ++ "\n"
 
 # Label each bookmark with the pull request open on it. A template cannot reach
 # the network, so the numbers come from a `pr` table in repo config that the
-# `prsync` alias rewrites from `gh pr list`; a bookmark absent from that table
-# renders nothing, and separate() then drops it.
+# `pr-sync` program (or `jgs`, which also fetches) rewrites from `gh pr list`;
+# a bookmark absent from that table renders nothing, and separate() then drops
+# it.
 'pr_number(bookmark)' = 'config("pr.\"" ++ bookmark.name() ++ "\"")'
 'format_pr_refs(commit)' = '''
 commit.local_bookmarks()
