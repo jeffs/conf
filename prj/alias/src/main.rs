@@ -56,6 +56,8 @@ fn pasteboard_token() -> Option<ffi::OsString> {
 /// Executable target file
 #[derive(Clone, Copy)]
 enum Exe {
+    /// Animated ASCII aquarium
+    Asciiquarium,
     /// Cat with wings
     Bat,
     /// Rust package manager and build tool
@@ -107,6 +109,7 @@ impl Exe {
 
     fn path(self) -> PathBuf {
         match self {
+            Exe::Asciiquarium => cargo_bin().join("asciiquarium"),
             Exe::Bat => cargo_bin().join("bat"),
             Exe::Cargo => cargo_bin().join("cargo"), // Whoa, meta.
             Exe::Edit => cargo_bin().join("edit"),
@@ -140,6 +143,9 @@ fn main() {
     let t_args = ["--git-ignore", "-T", "--group-directories-first"];
 
     let err = match name {
+        // `-t` keeps the terminal's own background, rather than painting black.
+        "aq" => Exe::Asciiquarium.exec_with(["-t"], args),
+
         "e" => Exe::Edit.exec(args),
         "fe" => Exe::Fzf.exec_with(fe_args, args),
         "fz" => Exe::Fzf.exec_with(&fe_args[1..], args),
