@@ -13,6 +13,12 @@
 //! The GitHub query is the only work here that runs no jj command, so it is the
 //! only work that overlaps the fetch; everything else waits, and two jj
 //! commands never touch the repo at once.
+//!
+//! A module to a job, in the order a run reaches them: [`stale`] catches the
+//! working copy up, [`head`] and [`bookmarks`] hand git the HEAD and the
+//! branches it reads, and [`prs`] writes the table.  Under those, [`jj`] asks
+//! where the repository is and [`process`] runs the children.  All report
+//! failure as the one [`Error`].
 
 use std::{
     env,
@@ -22,10 +28,14 @@ use std::{
 };
 
 use error::Error;
-use jjkit::{bookmarks, head, stale};
 
+mod bookmarks;
 mod error;
+mod head;
+mod jj;
+mod process;
 mod prs;
+mod stale;
 
 /// Everything the command line may hold.
 pub const USAGE: &str = "usage: jj-sync [--fetch] [worktree | prs] [-- <fetch argument>...]";
@@ -132,27 +142,27 @@ impl Plan {
 const FETCH: &str = "jj git fetch";
 
 /// Start `jj git fetch`, forwarding `args`.
-fn spawn_fetch(args: &[OsString]) -> Result<Child, jjkit::Error> {
+fn spawn_fetch(args: &[OsString]) -> Result<Child, Error> {
     Command::new("jj")
         .args(["git", "fetch"])
         .args(args)
         .spawn()
-        .map_err(|source| jjkit::Error::Io {
+        .map_err(|source| Error::Io {
             program: FETCH.to_owned(),
             source,
         })
 }
 
 /// Wait for the fetch.
-fn join(mut fetch: Child) -> Result<(), jjkit::Error> {
-    let status = fetch.wait().map_err(|source| jjkit::Error::Io {
+fn join(mut fetch: Child) -> Result<(), Error> {
+    let status = fetch.wait().map_err(|source| Error::Io {
         program: FETCH.to_owned(),
         source,
     })?;
     if status.success() {
         Ok(())
     } else {
-        Err(jjkit::Error::Exit {
+        Err(Error::Exit {
             program: FETCH.to_owned(),
             status,
             stderr: Vec::new(),

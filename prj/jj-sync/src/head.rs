@@ -180,7 +180,7 @@ impl Worktree {
 
     /// Register the worktree with git, leaving HEAD wherever it already
     /// points.  Both ways this can be refused are settled before anything is
-    /// written, so a workspace this crate may not claim leaves no trace in the
+    /// written, so a workspace this program may not claim leaves no trace in the
     /// shared git directory.
     fn register(&self, commit: &CommitId, link: Link) -> Result<(), Error> {
         if link == Link::Stranger {

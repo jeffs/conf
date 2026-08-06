@@ -529,15 +529,8 @@ version = "0.1.0"
 name = "jj-sync"
 version = "0.1.0"
 dependencies = [
- "jjkit",
  "serde",
  "serde_json",
-]
-
-[[package]]
-name = "jjkit"
-version = "0.1.0"
-dependencies = [
  "tempfile",
 ]
 

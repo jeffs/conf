@@ -19,10 +19,12 @@
 
 use std::{collections::BTreeMap, process::Command};
 
-use jjkit::process::{capture, run};
 use serde::Deserialize;
 
-use crate::error::Error;
+use crate::{
+    error::Error,
+    process::{capture, run},
+};
 
 pub use key::Key;
 pub use pull::Pull;

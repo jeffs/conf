@@ -3,9 +3,9 @@
 //! A bookmark lives in jj's own store, and git sees it only once jj has written
 //! it out as a branch under `refs/heads`.  jj writes them itself at the end of
 //! every command that changes the repository -- but only in the one workspace
-//! it colocates.  Work done in a secondary workspace, which is where the rest
-//! of this crate earns its keep, leaves git's branches behind until
-//! `jj git export` catches them up.
+//! it colocates.  Work done in a secondary workspace, which is where this
+//! program earns its keep, leaves git's branches behind until `jj git export`
+//! catches them up.
 
 use std::process::Command;
 

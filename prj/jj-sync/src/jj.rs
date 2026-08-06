@@ -1,8 +1,8 @@
-//! What this crate asks jj, and its repository on disk, about where it is.
+//! What this program asks jj, and its repository on disk, about where it is.
 //!
 //! Where the repository lives is read from the files under `.jj`, which cost
 //! no subprocess -- worth having for a caller that runs once a second.  What a
-//! revset names is jj's own question to answer, and the one `jj` this crate
+//! revset names is jj's own question to answer, and the one `jj` this module
 //! runs.
 
 use std::{
@@ -19,7 +19,7 @@ pub use commit::{Commit, CommitId};
 /// where no ancestor of it holds a `.jj` directory -- which is jj's own rule
 /// for finding a workspace.
 ///
-/// The path is canonical, so that it compares equal to paths this crate
+/// The path is canonical, so that it compares equal to paths this program
 /// resolves through the repository.
 ///
 /// # Errors
@@ -73,7 +73,7 @@ pub fn is_colocated(root: &Path, git_dir: &Path) -> bool {
 /// # Errors
 ///
 /// Fails if jj cannot be run, refuses the revset, or describes the commit in
-/// terms this crate cannot read.
+/// terms this program cannot read.
 pub fn commit(revset: &str) -> Result<Option<Commit>, Error> {
     let mut command = Command::new("jj");
     command.args([
