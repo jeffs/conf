@@ -1,6 +1,6 @@
 //! Bring a Jujutsu repository into line with what other tools read: the Git
-//! HEAD a workspace is diffed against, and the table of open pull requests
-//! `jj log` labels bookmarks from.
+//! HEAD a workspace is diffed against and the branches git offers beside it,
+//! and the table of open pull requests `jj log` labels bookmarks from.
 //!
 //! `worktree` (or `w`) does the first, `prs` (or `p`) the second, and no
 //! subcommand at all does both.  `--fetch` runs `jj git fetch` before any of
@@ -22,7 +22,7 @@ use std::{
 };
 
 use error::Error;
-use jjkit::{head, stale};
+use jjkit::{bookmarks, head, stale};
 
 mod error;
 mod prs;
@@ -61,6 +61,8 @@ fn sync() -> Result<(), Error> {
         prs::record(&open)?;
     }
     if plan.task.worktree() {
+        // After the fetch, so that whatever it brought reaches git too.
+        bookmarks::export()?;
         // The outcome goes unreported: a workspace jj keeps colocated, a
         // directory in no workspace, and a HEAD already in place are all quiet
         // successes, and `watch-jj` syncs on every refresh.
@@ -80,7 +82,8 @@ struct Plan {
 /// Which of the two syncs to do.
 #[derive(Clone, Copy)]
 enum Task {
-    /// Point this workspace's Git HEAD at `@-`.
+    /// Give git this workspace: its HEAD pointed at `@-`, and jj's bookmarks
+    /// written out as branches.
     Worktree,
     /// Rewrite the table of open pull requests.
     Prs,
