@@ -6,7 +6,7 @@ Use `jj` (Jujutsu) instead of `git`. Presume the user is competent with JJ.
 Never use Bash, awk, sed, or grep to find data. Use Python instead.
 Never include "Generated with Claude" or "Co-Authored-By: Claude" messages in commits or PRs.
 Never install python packages outside virtual environments.
-Never use Bash when builtin commands line Read would do.
+Never use Bash when builtin commands like Read would do.
 The `var/` directory contains ephemeral data and is never committed.
 
 A refactor preserves behavior exactly. Never bundle a semantic change into a refactor, however justified it seems — propose it separately and wait.

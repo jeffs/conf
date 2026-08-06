@@ -421,13 +421,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed5909b6e89a2db4456e54cd5f673791d7eca6732202bbf2a9cc504fe2f9b84a"
 
 [[package]]
-name = "head-sync"
-version = "0.1.0"
-dependencies = [
- "jjkit",
-]
-
-[[package]]
 name = "heck"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -531,6 +524,15 @@ checksum = "92ecc6618181def0457392ccd0ee51198e065e016d1d527a7ac1b6dc7c1f09d2"
 [[package]]
 name = "jbct"
 version = "0.1.0"
+
+[[package]]
+name = "jj-sync"
+version = "0.1.0"
+dependencies = [
+ "jjkit",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "jjkit"
@@ -707,14 +709,6 @@ dependencies = [
  "indexmap",
  "serde",
  "toml",
-]
-
-[[package]]
-name = "pr-sync"
-version = "0.1.0"
-dependencies = [
- "serde",
- "serde_json",
 ]
 
 [[package]]

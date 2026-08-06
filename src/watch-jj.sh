@@ -7,8 +7,8 @@ readonly no_time='template-aliases."format_timestamp(timestamp)"='
 # read the repo through git -- Helix's diff gutter, say -- see an unchanged
 # workspace.  Each pass puts HEAD back on `@-`; it says nothing where there is
 # nothing to do.  `:` stands in until the command has been built.
-if [ -x ~/conf/bin/head-sync ]; then
-  readonly sync='~/conf/bin/head-sync'
+if [ -x ~/conf/bin/jj-sync ]; then
+  readonly sync='~/conf/bin/jj-sync worktree'
 else
   readonly sync=':'
 fi

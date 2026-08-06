@@ -9,6 +9,10 @@ fn cargo_bin() -> PathBuf {
     env::home_dir().expect("home dir").join(".cargo/bin")
 }
 
+fn conf_bin() -> PathBuf {
+    env::home_dir().expect("home dir").join("conf/bin")
+}
+
 fn tput_cols() -> u32 {
     let stdout = Command::new("tput")
         .arg("cols")
@@ -76,6 +80,8 @@ enum Exe {
     Glow,
     /// Jujutsu
     Jj,
+    /// Jujutsu Git HEAD and pull request sync
+    JjSync,
 }
 
 impl Exe {
@@ -119,6 +125,7 @@ impl Exe {
             Exe::Gh => "/opt/homebrew/bin/gh".into(),
             Exe::Glow => "/opt/homebrew/bin/glow".into(),
             Exe::Jj => cargo_bin().join("jj"),
+            Exe::JjSync => conf_bin().join("jj-sync"),
         }
     }
 }
@@ -200,6 +207,10 @@ fn main() {
         "jgi" => Exe::Jj.exec_with(["git", "init"], args),
         "jgp" => Exe::Jj.exec_with(["git", "push"], args),
         "jgpad" => Exe::Jj.exec_with(["git", "push", "--all", "--deleted"], args),
+        // The sync spawns the fetch itself, rather than following one, so that
+        // the GitHub query it also makes overlaps the fetch's round trip.
+        // Arguments for the fetch go after `--`, as `jj-sync` explains.
+        "jgs" => Exe::JjSync.exec_with(["--fetch"], args),
         "jl" => Exe::Jj.exec_with(["log"], args),
         "jlr" => Exe::Jj.exec_with(["log", "--revisions"], args),
         // I often fetch, log, then run `jn main`. The log may or may not
