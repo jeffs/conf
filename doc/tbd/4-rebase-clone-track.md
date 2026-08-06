@@ -1,5 +1,5 @@
 ---
-status: TODO
+status: DONE
 title: rebase clone should track fork bookmarks
 ---
 
