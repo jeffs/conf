@@ -199,6 +199,7 @@ fn main() {
         //  this also applies to `jj new`, which makes it very difficult to
         //  start a new branch atop `main` without moving `main` itself.
         "jc" | "ci" => Exe::Jj.exec_with(["commit"], args),
+        "jcm" | "cim" => Exe::Jj.exec_with(["commit", "-m"], args),
         "jd" => Exe::Jj.exec_with(["describe"], args),
         "jdm" => Exe::Jj.exec_with(["describe", "--message"], args),
         "je" => Exe::Jj.exec_with(["edit"], args),
