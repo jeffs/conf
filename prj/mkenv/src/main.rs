@@ -1,6 +1,11 @@
 //! Environment file generator. See [`main`] for notes.
 
-use std::{env, error::Error, ffi, fs, io, path::{Path, PathBuf}};
+use std::{
+    env,
+    error::Error,
+    ffi, fs, io,
+    path::{Path, PathBuf},
+};
 
 use indexmap::IndexMap;
 use platform::{EnvValue, PathEntry};

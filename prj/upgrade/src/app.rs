@@ -118,7 +118,9 @@ impl App {
     }
 
     fn any_failed(&self) -> bool {
-        self.tasks.iter().any(|t| matches!(t.state, crate::task::State::Failed(_)))
+        self.tasks
+            .iter()
+            .any(|t| matches!(t.state, crate::task::State::Failed(_)))
     }
 }
 

@@ -319,7 +319,10 @@ mod tests {
                 line("gitdir: ", &worktree.admin.with_file_name("renamed")),
                 Link::Stale,
             ),
-            (line("gitdir: ", Path::new("/elsewhere/.git")), Link::Stranger),
+            (
+                line("gitdir: ", Path::new("/elsewhere/.git")),
+                Link::Stranger,
+            ),
             (b"not a link at all\n".to_vec(), Link::Stranger),
         ] {
             fs::write(&worktree.link, &contents).unwrap();

@@ -201,25 +201,23 @@ impl Platform {
         let path_env = raw
             .paths
             .into_iter()
-            .filter_map(|(key, value)| {
-                match value {
-                    toml::Value::Array(arr) => {
-                        let dirs: Vec<PathBuf> = arr
-                            .into_iter()
-                            .filter_map(|v| match v {
-                                toml::Value::String(s) => Some(home.join(&s)),
-                                _ => None,
-                            })
-                            .collect();
-                        if dirs.is_empty() {
-                            None
-                        } else {
-                            Some((key, PathEntry::Multi(dirs)))
-                        }
+            .filter_map(|(key, value)| match value {
+                toml::Value::Array(arr) => {
+                    let dirs: Vec<PathBuf> = arr
+                        .into_iter()
+                        .filter_map(|v| match v {
+                            toml::Value::String(s) => Some(home.join(&s)),
+                            _ => None,
+                        })
+                        .collect();
+                    if dirs.is_empty() {
+                        None
+                    } else {
+                        Some((key, PathEntry::Multi(dirs)))
                     }
-                    toml::Value::String(s) => Some((key, PathEntry::Single(home.join(&s)))),
-                    _ => None,
                 }
+                toml::Value::String(s) => Some((key, PathEntry::Single(home.join(&s)))),
+                _ => None,
             })
             .collect();
 
@@ -368,5 +366,4 @@ mod tests {
         // The first key in our macos.toml [env] section is LESS.
         assert_eq!(keys[0], "LESS");
     }
-
 }
