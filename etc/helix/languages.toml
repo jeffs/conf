@@ -116,6 +116,13 @@ name = "sql"
 language-servers = ["sqls"]
 formatter = { command = "squint" }
 
+[[language]]
+name = "swift"
+auto-format = true
+# `swift-format` ships with the Xcode command line tools. Reading from stdin
+# requires an explicit `-`; without it, the tool warns and is deprecated.
+formatter = { command = "swift-format", args = ["-"] }
+
 # [[language]]
 # name = "toml"
 # formatter = { command = "taplo", args = ["fmt", "-"] }
