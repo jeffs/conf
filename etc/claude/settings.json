@@ -134,6 +134,7 @@
   "disabledMcpjsonServers": [
     "agentation"
   ],
+  "cleanupPeriodDays": 365,
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "tui": "fullscreen",
