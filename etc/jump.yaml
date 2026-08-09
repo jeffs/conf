@@ -16,4 +16,4 @@
 $JUMP_HOME/git/data: [d, data]
 $JUMP_HOME/git/nest: [nest]
 $JUMP_HOME/git/nest/top: [top]
-$JUMP_HOME/vault: a
+$JUMP_HOME/git/rust-scripts: [s, script, scripts]
