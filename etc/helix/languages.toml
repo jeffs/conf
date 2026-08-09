@@ -102,11 +102,18 @@ name = "rust"
 rulers = [81, 101]
 language-servers = ["scls", "rust-analyzer"]
 
-# The Rust LSP has some magic whereby it knows to match `<` for generics, but
-# not when preceded by whitespace (as in a `<=` comparison). Setting auto-pairs
-# breaks that magic.
-# 
-# auto-pairs = { '(' = ')', '{' = '}', '[' = ']', '"' = '"', '<' = '>' }
+# Helix's built-in Rust config auto-pairs backticks, which fights Markdown code
+# blocks in doc comments. A language's auto-pairs replace the built-in table
+# wholesale, so restate it minus the backtick.
+#
+# `<` is deliberately absent: the Rust LSP has some magic whereby it knows to
+# match `<` for generics, but not when preceded by whitespace (as in a `<=`
+# comparison). Pairing `<` here breaks that magic.
+[language.auto-pairs]
+'(' = ')'
+'{' = '}'
+'[' = ']'
+'"' = '"'
 
 [language-server.sqls]
 command = "sqls"

@@ -13,18 +13,15 @@ editor.end-of-line-diagnostics = "hint"
 editor.inline-diagnostics.cursor-line = "warning"
 
 # Don't auto-insert closing ``` ` ```. It plays hell with Markdown code blocks,
-# including those in Rust doc comments. Sadly:
+# including those in Rust doc comments. Two caveats:
 #
-# * We have to do this separately for each language, otherwise the language
-#   config overrides it. It _seems_ like setting editor.auto-pairs should
-#   work unless language.auto-pairs has been set explicitly by the user, but
-#   it doesn't. See also:
+# * There is no way to add or remove a single pair. This restates Helix's
+#   DEFAULT_PAIRS minus the backtick. See also:
 #   <https://docs.helix-editor.com/editor.html#editorauto-pairs-section>
-# * There doesn't seem to be any way to modify the default. You have
-#   to explicitly restate the entire mappin, even when that mapping is
-#   language-specific.
-#
-# editor.auto-pairs = { '(' = ')', '{' = '}', '[' = ']', '"' = '"', '<' = '>' }
+# * A language's own auto-pairs replace this wholesale rather than merging
+#   with it, so every language whose built-in config sets auto-pairs needs the
+#   same treatment in languages.toml.
+editor.auto-pairs = { '(' = ')', '{' = '}', '[' = ']', "'" = "'", '"' = '"' }
 
 # Remove "line-numbers" to toggle them. As with auto-pairs, there doesn't seem
 # to be any way to add or remove elements: All you can do is replace the
