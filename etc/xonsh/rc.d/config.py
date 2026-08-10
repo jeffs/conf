@@ -34,8 +34,8 @@ def setup():
 
     from xonsh.built_ins import XSH
 
-    aliases = cast(dict[str, object], XSH.aliases)
-    env = cast(dict[str, object], XSH.env)
+    assert XSH.aliases is not None and XSH.env is not None
+    aliases, env = XSH.aliases, XSH.env
 
     if "JEFF_LOGIN_DONE" not in env:
         env["JEFF_LOGIN_DONE"] = True
