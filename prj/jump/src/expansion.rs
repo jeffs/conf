@@ -38,6 +38,19 @@ pub enum Target {
     String(String),
 }
 
+impl Target {
+    /// Returns this target with `suffix` appended, separated by `/`. Any
+    /// trailing separator already present on the target is reused rather than
+    /// doubled.
+    #[must_use]
+    pub fn join(self, suffix: &str) -> Self {
+        match self {
+            Self::Path(path) => Self::Path(path.join(suffix)),
+            Self::String(s) => Self::String(format!("{}/{suffix}", s.trim_end_matches('/'))),
+        }
+    }
+}
+
 enum Expansion<'a, 'b> {
     Path(&'a Path),
     PathBuf(PathBuf),
@@ -156,5 +169,40 @@ impl<'a> Expand<'a> {
         } else {
             Ok(Target::String(value.to_owned()))
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn expand(value: &str) -> Target {
+        Expand::with_home(Path::new("/home/user"))
+            .target(value)
+            .unwrap()
+    }
+
+    #[test]
+    fn join_path() {
+        let Target::Path(path) = expand("~/file/prd").join("1508") else {
+            panic!("expected a path");
+        };
+        assert_eq!(path, Path::new("/home/user/file/prd/1508"));
+    }
+
+    #[test]
+    fn join_url() {
+        let Target::String(s) = expand("https://example.com").join("1508") else {
+            panic!("expected a string");
+        };
+        assert_eq!(s, "https://example.com/1508");
+    }
+
+    #[test]
+    fn join_url_with_trailing_separator() {
+        let Target::String(s) = expand("https://example.com/").join("1508") else {
+            panic!("expected a string");
+        };
+        assert_eq!(s, "https://example.com/1508");
     }
 }

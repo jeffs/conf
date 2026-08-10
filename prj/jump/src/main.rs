@@ -12,7 +12,8 @@
 //! - [ ] Tab completion/expansion; for example:
 //!   + Name: `j mo<Tab>` => `jump month`
 //!   + Path: `j log<Tab>` => `jump /Users/jeff/log/2025/03/27`
-//! - [ ] Parameters; e.g., `jump linear TIK-42` or `jump github my-repo#42`
+//! - [ ] Parameters other than a path-separated suffix; e.g.,
+//!   `jump github my-repo#42`
 //! - [ ] Relative date expansion; e.g, yesterday (syntax TBD)
 //! - [ ] Recognize unambiguous prefixes; e.g., `c|co|con|conf` for `conf`
 
@@ -67,20 +68,26 @@ impl fmt::Display for Error {
 
 struct Args {
     target: Option<String>,
+    /// Appended to the resolved target, separated by `/`.
+    suffix: Option<String>,
 }
 
 fn parse_args() -> Result<Args, ArgError> {
     let mut target = None;
+    let mut suffix = None;
     for arg in env::args().skip(1) {
         if arg.starts_with('-') {
             return Err(ArgError::Flag(arg));
         }
-        if target.is_some() {
+        if target.is_none() {
+            target = Some(arg);
+        } else if suffix.is_none() {
+            suffix = Some(arg);
+        } else {
             return Err(ArgError::Extra(arg));
         }
-        target = Some(arg);
     }
-    Ok(Args { target })
+    Ok(Args { target, suffix })
 }
 
 fn write(mut w: impl Write, s: &[u8]) {
@@ -91,7 +98,12 @@ fn main_imp() -> Result<(), Error> {
     let args = parse_args()?;
     let app = jump::App::from_env()?;
     let stdout = io::stdout();
-    match app.resolve(&args.target.unwrap_or_default())? {
+    let target = app.resolve(&args.target.unwrap_or_default())?;
+    let target = match args.suffix {
+        Some(suffix) => target.join(&suffix),
+        None => target,
+    };
+    match target {
         jump::Target::Path(path) => write(&stdout, path.as_os_str().as_bytes()),
         jump::Target::String(s) => write(&stdout, s.as_bytes()),
     }
@@ -102,7 +114,7 @@ fn main() -> ExitCode {
     if let Err(err) = main_imp() {
         eprintln!("error: {err}");
         if matches!(err, Error::Args(_)) {
-            eprintln!("usage: jump TARGET");
+            eprintln!("usage: jump TARGET [SUFFIX]");
         }
         return ExitCode::FAILURE;
     }
