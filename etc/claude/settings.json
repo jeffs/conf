@@ -135,6 +135,9 @@
     "agentation"
   ],
   "cleanupPeriodDays": 365,
+  "worktree": {
+    "bgIsolation": "none"
+  },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "tui": "fullscreen",
