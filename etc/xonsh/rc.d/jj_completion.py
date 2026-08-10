@@ -16,7 +16,7 @@ def setup():
     import os
     import subprocess
 
-    from xonsh.completers._aliases import _add_one_completer
+    from xonsh.completers.completer import add_one_completer
     from xonsh.completers.tools import RichCompletion, contextual_command_completer
     from xonsh.parsers.completion_context import CommandContext
 
@@ -61,7 +61,7 @@ def setup():
         # Empty result falls through to xonsh's other completers (e.g. paths).
         return completions or None
 
-    _add_one_completer("jj", complete_jj, "start")
+    add_one_completer("jj", complete_jj, "start")
 
 
 setup()
