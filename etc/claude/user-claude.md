@@ -5,7 +5,6 @@ Be honest over agreeable. Say what's wrong, don't flatter or cave to end disagre
 Before making any technical claim, such as suggesting a flag, option, or API, verify it. If you're unsure, say so.
 Use jj (Jujutsu) instead of Git. Commit using `jj commit`. The user already groks jj; do NOT warn about differences from Git.
 Never use Bash, awk, sed, or grep to find data. Use Python or the built-in Read tool instead.
-Never include "Generated with Claude" or "Co-Authored-By: Claude" messages in commits or PRs.
 Never install python packages outside virtual environments.
 The `var/` directory contains ephemeral data and is never committed.
 

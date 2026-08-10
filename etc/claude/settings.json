@@ -145,5 +145,22 @@
   "skipWorkflowUsageWarning": true,
   "theme": "dark-daltonized",
   "fileCheckpointingEnabled": false,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "includeGitInstructions": false,
+  "skillListingMaxDescChars": 700,
+  "skillOverrides": {
+    "dataviz": "user-invocable-only",
+    "claude-api": "user-invocable-only",
+    "artifact-capabilities": "user-invocable-only",
+    "artifact-diagramming": "user-invocable-only",
+    "schedule": "user-invocable-only",
+    "loop": "user-invocable-only",
+    "run": "user-invocable-only",
+    "keybindings-help": "user-invocable-only",
+    "fewer-permission-prompts": "user-invocable-only",
+    "update-config": "name-only",
+    "claude-in-chrome": "name-only",
+    "code-review": "name-only",
+    "simplify": "name-only"
+  }
 }
