@@ -33,6 +33,7 @@ def setup():
     import sys
 
     from xonsh.built_ins import XSH
+    from xonsh.environ import LsColors
 
     assert XSH.aliases is not None and XSH.env is not None
     aliases, env = XSH.aliases, XSH.env
@@ -232,9 +233,13 @@ def setup():
         env["XONSH_COLOR_STYLE"] = COLOR_STYLE
 
         # Don't set the background color when listing (block or character) device files.
-        ls_colors = cast(dict[str, tuple[str]], env["LS_COLORS"])
+        ls_colors = cast(LsColors, env["LS_COLORS"])
         ls_colors["bd"] = ("INTENSE_YELLOW",)
         ls_colors["cd"] = ("INTENSE_YELLOW",)
+
+        # Xonsh detypes $LS_COLORS only for the processes it spawns itself.
+        # Export it too, for the children of `subprocess.run`.
+        os.environ["LS_COLORS"] = ls_colors.detype()
 
         style_overrides = cast(dict[str, str], env["XONSH_STYLE_OVERRIDES"])
         style_overrides["completion-menu"] = "bg:ansiblack ansiwhite"
