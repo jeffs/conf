@@ -3,8 +3,8 @@ mod expansion;
 
 pub mod db;
 
-use std::env;
 use std::path::{Path, PathBuf};
+use std::{env, fs};
 
 pub use db::Database;
 pub use error::Error;
@@ -38,6 +38,39 @@ fn db_from_env(home: &Path) -> Result<(Database, Vec<PathBuf>)> {
         db.read_file(path)?;
     }
     Ok((db, paths))
+}
+
+/// Splits a partially typed suffix into the leading components, which are
+/// complete, and the final component, which is not.
+fn split_suffix(suffix: &str) -> (&str, &str) {
+    match suffix.rfind('/') {
+        Some(i) => suffix.split_at(i + 1),
+        None => ("", suffix),
+    }
+}
+
+/// Returns the names in `dir` that begin with `prefix`, each preceded by
+/// `parent` and followed by `/` if it names a directory. Hidden names are
+/// omitted unless `prefix` itself begins with `.`.
+fn entries(dir: &Path, parent: &str, prefix: &str) -> Vec<String> {
+    let Ok(entries) = fs::read_dir(dir) else {
+        return Vec::new();
+    };
+    entries
+        .filter_map(|entry| {
+            let entry = entry.ok()?;
+            let name = entry.file_name().into_string().ok()?;
+            if !name.starts_with(prefix) || (name.starts_with('.') && !prefix.starts_with('.')) {
+                return None;
+            }
+            let separator = if entry.file_type().is_ok_and(|t| t.is_dir()) {
+                "/"
+            } else {
+                ""
+            };
+            Some(format!("{parent}{name}{separator}"))
+        })
+        .collect()
 }
 
 /// Maps target names to paths from a [`Database`].
@@ -100,5 +133,46 @@ impl App {
                 .ok_or(err)
         })?;
         Ok(Expand::with_home(&self.home).target(value)?)
+    }
+
+    /// Returns the target names that begin with `prefix`. The default target,
+    /// whose name is empty, is not a candidate.
+    fn targets(&self, prefix: &str) -> Vec<String> {
+        self.db
+            .names()
+            .filter(|name| !name.is_empty() && name.starts_with(prefix))
+            .map(str::to_owned)
+            .collect()
+    }
+
+    /// Returns the paths under `target` that begin with `suffix`. A target
+    /// that is not a path, or cannot be resolved, has no candidates.
+    fn suffixes(&self, target: &str, suffix: &str) -> Vec<String> {
+        let Ok(Target::Path(path)) = self.resolve(target) else {
+            return Vec::new();
+        };
+        let (parent, prefix) = split_suffix(suffix);
+        entries(&path.join(parent), parent, prefix)
+    }
+
+    /// Returns the completion candidates for the last of `words`, the
+    /// arguments typed so far. The first word completes to a target name and
+    /// the second to a path under that target; a later word has no
+    /// candidates.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the first word names a target whose value contains an
+    /// invalid `strftime` format string; see [`Expand::path`].
+    #[must_use]
+    pub fn complete(&self, words: &[String]) -> Vec<String> {
+        let mut candidates = match words {
+            [] => self.targets(""),
+            [target] => self.targets(target),
+            [target, suffix] => self.suffixes(target, suffix),
+            _ => Vec::new(),
+        };
+        candidates.sort_unstable();
+        candidates
     }
 }

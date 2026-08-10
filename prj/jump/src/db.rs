@@ -143,6 +143,11 @@ impl Database {
     pub fn get(&self, name: &str) -> Option<&String> {
         self.0.get(name)
     }
+
+    /// Returns every target name, in unspecified order.
+    pub fn names(&self) -> impl Iterator<Item = &str> {
+        self.0.keys().map(String::as_str)
+    }
 }
 
 #[cfg(test)]
@@ -200,6 +205,14 @@ mod tests {
     fn blank_lines_ignored() {
         let db = parse("\n~/conf: c\n\n");
         assert_eq!(db.get("c"), Some(&"~/conf".into()));
+    }
+
+    #[test]
+    fn names() {
+        let db = parse("~/conf: [c, conf]\n~/file/log: log\n");
+        let mut names = db.names().collect::<Vec<_>>();
+        names.sort_unstable();
+        assert_eq!(names, ["c", "conf", "log"]);
     }
 
     #[test]

@@ -7,11 +7,11 @@
 //! Each `jump.yaml` maps target values (paths, URLs) to short names or lists,
 //! like `~/conf: conf` or `~/conf: [c, conf]`.
 //!
+//! `jump --complete WORD...` serves a shell's tab completion, printing one
+//! candidate per line for the last of the words typed so far.
+//!
 //! # TODO
 //!
-//! - [ ] Tab completion/expansion; for example:
-//!   + Name: `j mo<Tab>` => `jump month`
-//!   + Path: `j log<Tab>` => `jump /Users/jeff/log/2025/03/27`
 //! - [ ] Parameters other than a path-separated suffix; e.g.,
 //!   `jump github my-repo#42`
 //! - [ ] Relative date expansion; e.g, yesterday (syntax TBD)
@@ -72,10 +72,22 @@ struct Args {
     suffix: Option<String>,
 }
 
-fn parse_args() -> Result<Args, ArgError> {
+enum Command {
+    /// Resolve a target and print it.
+    Jump(Args),
+    /// Print the completion candidates for the last of the given words.
+    Complete(Vec<String>),
+}
+
+fn parse_args(args: impl Iterator<Item = String>) -> Result<Command, ArgError> {
+    let mut args = args.peekable();
+    if args.peek().is_some_and(|arg| arg == "--complete") {
+        args.next();
+        return Ok(Command::Complete(args.collect()));
+    }
     let mut target = None;
     let mut suffix = None;
-    for arg in env::args().skip(1) {
+    for arg in args {
         if arg.starts_with('-') {
             return Err(ArgError::Flag(arg));
         }
@@ -87,16 +99,14 @@ fn parse_args() -> Result<Args, ArgError> {
             return Err(ArgError::Extra(arg));
         }
     }
-    Ok(Args { target, suffix })
+    Ok(Command::Jump(Args { target, suffix }))
 }
 
 fn write(mut w: impl Write, s: &[u8]) {
     w.write_all(s).expect("output should be writable");
 }
 
-fn main_imp() -> Result<(), Error> {
-    let args = parse_args()?;
-    let app = jump::App::from_env()?;
+fn jump(app: &jump::App, args: Args) -> Result<(), Error> {
     let stdout = io::stdout();
     let target = app.resolve(&args.target.unwrap_or_default())?;
     let target = match args.suffix {
@@ -110,11 +120,30 @@ fn main_imp() -> Result<(), Error> {
     Ok(())
 }
 
+fn complete(app: &jump::App, words: &[String]) {
+    let mut stdout = io::stdout().lock();
+    for candidate in app.complete(words) {
+        write(&mut stdout, candidate.as_bytes());
+        write(&mut stdout, b"\n");
+    }
+}
+
+fn main_imp() -> Result<(), Error> {
+    let command = parse_args(env::args().skip(1))?;
+    let app = jump::App::from_env()?;
+    match command {
+        Command::Jump(args) => jump(&app, args)?,
+        Command::Complete(words) => complete(&app, &words),
+    }
+    Ok(())
+}
+
 fn main() -> ExitCode {
     if let Err(err) = main_imp() {
         eprintln!("error: {err}");
         if matches!(err, Error::Args(_)) {
             eprintln!("usage: jump TARGET [SUFFIX]");
+            eprintln!("       jump --complete [WORD...]");
         }
         return ExitCode::FAILURE;
     }
