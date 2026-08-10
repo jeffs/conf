@@ -102,6 +102,7 @@ def setup():
 
         path_jj = Path("~/.cargo/bin/jj").expanduser()
         path_jump = Path("~/conf/prj/target/release/jump").expanduser()
+        path_ls = Path("~/conf/bin/ls").expanduser()
 
         def capture_text(command, args=()):
             try:
@@ -118,6 +119,10 @@ def setup():
             dir = Path(arg).expanduser()
             dir.mkdir(parents=True, exist_ok=True)
             os.chdir(dir)
+
+        def mcls(arg):
+            mc(arg)
+            subprocess.run(path_ls)
 
         def alias_cg():
             match capture_text(["git", "rev-parse", "--show-toplevel"]):
@@ -156,7 +161,7 @@ def setup():
             if args == ("y",):
                 yesterday = dt.datetime.now() - dt.timedelta(days=1)
                 target = Path.home() / "file/log" / yesterday.strftime("%Y/%m/%d")
-                return mc(target)
+                return mcls(target)
 
             match capture_text([path_jump], args):
                 case [stdout, _, 0] if stdout.startswith("http:") or stdout.startswith(
@@ -164,7 +169,7 @@ def setup():
                 ):
                     return 0 if webbrowser.open(stdout) else 1
                 case [stdout, _, 0]:
-                    mc(Path(stdout.rstrip()))
+                    mcls(Path(stdout.rstrip()))
                 case other:
                     return other
 
