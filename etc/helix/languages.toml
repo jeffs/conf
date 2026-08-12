@@ -52,7 +52,7 @@ file-types = [{ glob = ".gitignore" }, { glob = "gitexcludes" }]
 name = "json"
 # indent = { tab-width = 4, unit = "  " }
 roots = ["deno.json", "deno.jsonc", "package.json"]
-file-types = ["json", { glob="deno.lock" }]
+file-types = ["json", { glob = ".swift-format" }, { glob = "deno.lock" }]
 auto-format = true
 language-servers = ["deno-lsp"]
 
