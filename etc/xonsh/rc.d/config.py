@@ -205,6 +205,7 @@ def setup():
         aliases["ec"] = alias_ec
         aliases["f"] = alias_f
         aliases["mc"] = alias_mc
+        aliases["/exit"] = "exit"  # Nasty habit from using LLM TUIs.
 
         prompt_fields = cast(dict, env["PROMPT_FIELDS"])
         prompt_fields["curr_branch"] = curr_branch
