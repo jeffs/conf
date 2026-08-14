@@ -116,7 +116,7 @@
     "clangd-lsp@claude-plugins-official": false,
     "lua-lsp@claude-plugins-official": false,
     "notion-workspace-plugin@notion-plugin-marketplace": false,
-    "slack@claude-plugins-official": false
+    "slack@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
