@@ -98,25 +98,6 @@ pub fn tasks() -> Vec<Task> {
             depends_on: None,
         },
         Task {
-            id: "uv",
-            label: "uv tool install",
-            section: Section::PackageManagers,
-            command: Command::Shell {
-                program: "uv",
-                args: &[
-                    "tool",
-                    "install",
-                    "specify-cli",
-                    "--force",
-                    "--from",
-                    "git+https://github.com/github/spec-kit.git",
-                ],
-            },
-            state: State::Pending,
-            output: Vec::new(),
-            depends_on: None,
-        },
-        Task {
             id: "softwareupdate",
             label: "softwareupdate",
             section: Section::PackageManagers,
