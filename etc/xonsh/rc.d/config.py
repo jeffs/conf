@@ -226,6 +226,7 @@ def setup():
 
         env["FUZZY_PATH_COMPLETION"] = False
         env["SUBSEQUENCE_PATH_COMPLETION"] = False
+        env["XONSH_COMPLETER_MODE"] = "prefix"
 
         # There's an actual kill ring. After ctrl+y, use alt+y to rotate.
         env["XONSH_COPY_ON_DELETE"] = True  # ctrl+k: yes, keep it on the kill ring
