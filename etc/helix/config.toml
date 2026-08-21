@@ -92,9 +92,12 @@ space.V = ':insert-output mdrich --paste'
 
 [keys.normal.C-f]
 c = ':buffer-close'
+# For Rust: Wrap the current selection in `dbg!()`.
+#
+# TODO: Language-specific input bindings.
 d = ['save_selection', ":append-output echo ')'", 'jump_backward', ":insert-output echo 'dbg!('", 'jump_forward', 'jump_backward']
 f = ':format'
-i = ':toggle lsp.display-inlay-hints'
+h = ':toggle lsp.display-inlay-hints'
 n = ':toggle soft-wrap.enable'
 q = ':quit'
 r = ':reload-all'
@@ -102,6 +105,10 @@ w = ':write'
 z = ':write-quit'
 C-c = ':config-reload'
 C-f = 'page_down'
+
+[keys.normal.C-f.i]
+d = [":insert-output date -I"]
+t = [":insert-output date +%H:%M"]
 
 # Running a sequence of :set or :toggle commands is currently broken. See:
 # <https://github.com/helix-editor/helix/issues/13187>
@@ -113,7 +120,7 @@ e = [":toggle end-of-line-diagnostics hint disable", ":toggle inline-diagnostics
 [keys.select.C-f]
 c = ':buffer-close'
 d = ['save_selection', ":append-output echo ')'", 'jump_backward', ":insert-output echo 'dbg!('", 'jump_forward', 'jump_backward']
-i = ':toggle lsp.display-inlay-hints'
+h = ':toggle lsp.display-inlay-hints'
 n = ':toggle soft-wrap.enable'
 q = ':quit'
 w = ':write'
