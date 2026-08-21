@@ -17,7 +17,8 @@
 # in `../platform/macos.toml`, which is converted to shell-friendly syntax by
 # `../../prj/mkenv`. (`.env` syntax is fine for Bash and Zsh, but JSON is
 # better for Nushell and Xonsh. I `jump` in multiple shells.)
+$JUMP_HOME/git: hg
 $JUMP_HOME/git/data: [d, data]
-$JUMP_HOME/git/nest: [nest]
-$JUMP_HOME/git/nest/top: [top]
+$JUMP_HOME/git/nest: nest
+$JUMP_HOME/git/nest/top: top
 $JUMP_HOME/git/rust-scripts: [s, script, scripts]
