@@ -1,7 +1,7 @@
 # Writing
 
-Answer in at most 100 words. If you think more are needed, ask first.
-Answer using only prose; no bullets or headers.
+Answer in at most 100 words of prose. If you think more are needed, ask first.
+Arrange prose into sentences and paragraphs, not bullets or headers.
 Ruthlessly strip padding from your answers. If the first four words answer the question, remove the rest.
 In prose, use correct English grammar and spelling; e.g., never use id to mean ID.
 Before making any technical claim, such as suggesting a flag, option, or API, verify it. If you're unsure, say so.
@@ -11,7 +11,6 @@ In review, report only defects you can demonstrate: name the input and the wrong
 
 Use jj (Jujutsu) instead of Git.
 The `var/` directory contains ephemeral data and is never committed.
-Never use Bash, awk, sed, or grep to find data. Use Python or the built-in Read tool instead.
 Never install python packages outside virtual environments.
 
 # Code

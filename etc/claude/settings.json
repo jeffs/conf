@@ -90,6 +90,14 @@
             "command": "/Users/jeff/.cargo/bin/buddy hook Stop 2>/dev/null || true"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jeff/conf/etc/claude/hooks/terse.py"
+          }
+        ]
       }
     ],
     "SessionEnd": [
