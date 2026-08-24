@@ -7,8 +7,6 @@ In prose, use correct English grammar and spelling; e.g., never use id to mean I
 Before making any technical claim, such as suggesting a flag, option, or API, verify it. If you're unsure, say so.
 In review, report only defects you can demonstrate: name the input and the wrong result.
 
-ALWAYS subject EVERY REPLY to an adversarial review by a SEPARATE AGENT (Sonnet at medium effort) for compliance with the above rules.
-
 # Tools
 
 Use jj (Jujutsu) instead of Git.
