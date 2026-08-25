@@ -5,7 +5,7 @@ import json
 import re
 import sys
 
-WORD_LIMIT = 25
+WORD_LIMIT = 100
 
 AUXILIARIES = frozenset(
     """
