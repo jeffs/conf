@@ -78,6 +78,8 @@ enum Exe {
     Gh,
     /// Markdown reader written in Go
     Glow,
+    /// Hexadecimal output of file contents
+    Hexdump,
     /// Jujutsu
     Jj,
     /// Jujutsu Git HEAD and pull request sync
@@ -124,6 +126,7 @@ impl Exe {
             Exe::Fzf => "/opt/homebrew/bin/fzf".into(),
             Exe::Gh => "/opt/homebrew/bin/gh".into(),
             Exe::Glow => "/opt/homebrew/bin/glow".into(),
+            Exe::Hexdump => "/usr/bin/hexdump".into(),
             Exe::Jj => cargo_bin().join("jj"),
             Exe::JjSync => conf_bin().join("jj-sync"),
         }
@@ -156,6 +159,7 @@ fn main() {
         "e" => Exe::Edit.exec(args),
         "fe" => Exe::Fzf.exec_with(fe_args, args),
         "fz" => Exe::Fzf.exec_with(&fe_args[1..], args),
+        "hd" => Exe::Hexdump.exec_with(["-C"], args),
 
         "glow" => Exe::Glow.exec_with(["--pager", "--width", &tput_cols().to_string()], args),
         "mat" => Exe::Bat.exec_with(["-pl", "man"], args),
