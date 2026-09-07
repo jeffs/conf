@@ -1,5 +1,6 @@
 //! Ratatui front end that runs repos through a bounded worker pool.
 
+use std::fmt::Write as _;
 use std::io;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, mpsc};
@@ -165,19 +166,25 @@ fn render(frame: &mut Frame, tasks: &[RepoTask]) {
     render_status_bar(frame, chunks[1], tasks);
 }
 
+/// Skipped repos are left out; only their count reaches the status bar.
 fn render_tasks(frame: &mut Frame, area: Rect, tasks: &[RepoTask]) {
     let block = Block::default().title("Repos").borders(Borders::ALL);
     let inner = block.inner(area);
     frame.render_widget(block, area);
 
+    let shown: Vec<&RepoTask> = tasks.iter().filter(|t| !is_skipped(&t.state)).collect();
     let areas = Layout::default()
         .direction(Direction::Vertical)
-        .constraints(vec![Constraint::Min(2); tasks.len()])
+        .constraints(vec![Constraint::Min(2); shown.len()])
         .split(inner);
 
-    for (task, task_area) in tasks.iter().zip(areas.iter()) {
+    for (task, task_area) in shown.iter().zip(areas.iter()) {
         render_task(frame, *task_area, task);
     }
+}
+
+const fn is_skipped(state: &State) -> bool {
+    matches!(state, State::Done(Outcome::Skipped(_)))
 }
 
 fn render_task(frame: &mut Frame, area: Rect, task: &RepoTask) {
@@ -244,13 +251,17 @@ fn render_status_bar(frame: &mut Frame, area: Rect, tasks: &[RepoTask]) {
         .iter()
         .filter(|t| matches!(t.state, State::Done(Outcome::Failed(_))))
         .count();
+    let skipped = tasks.iter().filter(|t| is_skipped(&t.state)).count();
     let total = tasks.len();
 
-    let status = if failed > 0 {
-        format!("{done}/{total} done, {failed} failed │ q to quit")
-    } else {
-        format!("{done}/{total} done │ q to quit")
-    };
+    let mut status = format!("{done}/{total} done");
+    if skipped > 0 {
+        let _ = write!(status, ", {skipped} skipped");
+    }
+    if failed > 0 {
+        let _ = write!(status, ", {failed} failed");
+    }
+    status.push_str(" │ q to quit");
 
     let block = Block::default().borders(Borders::TOP);
     frame.render_widget(Paragraph::new(status).block(block), area);
