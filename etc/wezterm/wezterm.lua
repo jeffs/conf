@@ -90,17 +90,16 @@ end)
 -- - <https://wezterm.org/config/lua/config/visual_bell.html>
 config.audible_bell = 'Disabled'
 
--- Zellij handles tabs/panes; WezTerm's tab bar is just for multiple WezTerm
--- windows. Can toggle with CMD+i.
--- config.hide_tab_bar_if_only_one_tab = true
+-- Hide the tab bar, as I mostly use Zellij for tabs/panes.
+-- Toggle using CMD+i.
 config.enable_tab_bar = false
+-- config.hide_tab_bar_if_only_one_tab = true
 wezterm.on('toggle-tab-bar', function(window)
   local overrides = window:get_config_overrides() or {}
   overrides.enable_tab_bar =  not overrides.enable_tab_bar
   window:set_config_overrides(overrides)
 end)
 
--- Multiplexing is handled by Zellij; WezTerm just provides the terminal.
 config.keys = {
   -- Alter appearance
   {
@@ -122,11 +121,6 @@ config.keys = {
   {
     mods = 'CTRL', key = 'T',
     action = wezterm.action.DisableDefaultAssignment,
-  },
-  {
-    -- Send Alt+t for Zellij's NewTab binding
-    mods = 'CMD', key = 't',
-    action = wezterm.action.SendKey { mods = 'ALT', key = 't' },
   },
 
   -- Nushell accepts Alt+Enter to enter multiline commands, so I use Cmd+Enter
