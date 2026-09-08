@@ -3,6 +3,7 @@
 # General settings
 emoji_check_marks = false
 help_menu = false
+quote_default = "blue"
 width = 0
 # flavor = "claude"
 
