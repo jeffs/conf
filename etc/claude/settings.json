@@ -34,8 +34,7 @@
       "Bash(jj workspace root *)"
     ],
     "deny": [
-      "Read(~/.ssh/**)",
-      "Workflow"
+      "Read(~/.ssh/**)"
     ],
     "defaultMode": "auto"
   },
