@@ -4,6 +4,7 @@ theme = 'jeffs_base16_terminal'
 # theme = 'term16_dark'
 # theme = 'aurara'
 
+editor.mouse-yank-register = "+"
 editor.true-color = true
 editor.text-width = 80
 
