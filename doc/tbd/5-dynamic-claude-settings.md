@@ -1,9 +1,6 @@
----
-status: TODO
-title: dynamic claude settings
----
+# Assemble Claude Code settings dynamically
 
-# Context
+## Context
 
 Claude Code defaults to storing various settings, such as the model to use for new chats, in a user-level `settings.json` file. (Mine is symlinked from `~/.claude/settings.json` to `~/conf/etc/claude/settings.json`). CC also allows folder-level overrides in intrusive `.claude` directories, within which some files are versioned, whereas others are excluded.
 
@@ -11,7 +8,7 @@ Moreover, user- and folder-scope `.claude` directories include not only settings
 
 In short: Claude Code's configuration support is built around a single config per machine, with overrides per physical directory. This paradigm is at odds with mixing and matching config across machines or projects, which is how the `jeffs/conf` system of sharing and overrides is meant to work.
 
-# Problems
+## Problems
 
 1. The atomicity of `settings.json` (and `settings.local.json`) makes it essentially impossible to share a subset of settings (such as default model or effort level) across machines, or across folders.
 
@@ -19,7 +16,7 @@ In short: Claude Code's configuration support is built around a single config pe
 
 3. Claude Code frequently reorders the entries in `settings.json`, causing meaningless diffs in version control.
 
-# Goal
+## Goal
 
 The result of this ticket should be the ability to define the contents of `settings.json` in multiple, separately versioned (or unversioned) files, and to assemble them on demand into whatever files Claude Code actually consults. This functionality is functionally similar to what `../../prj/mkenv` does for shell config.
 

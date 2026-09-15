@@ -1,7 +1,4 @@
----
-status: TODO
-title: Try chezmoi
----
+# Try `chezmoi`
 
 Consider replacing platform/machine-specific functionality (`~/conf/prj/platform`,`~/conf/prj/mkenv`) with chezmoi. Claude's assessment:
 

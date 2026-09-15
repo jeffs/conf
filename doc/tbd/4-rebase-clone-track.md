@@ -1,7 +1,4 @@
----
-status: DONE
-title: rebase clone should track fork bookmarks
----
+# Let `rebase clone` track fork bookmarks
 
 After `rebase clone`, configured bookmarks exist only as untracked remote
 bookmarks (e.g. `custom@origin`), so the first rebase fails with

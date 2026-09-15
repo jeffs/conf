@@ -1,7 +1,4 @@
----
-status: WORK
-title: Stop hooks
----
+# Add stop hooks for Claude Code
 
 Force Claude to comply with basic restrictions on:
 
