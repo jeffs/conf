@@ -25,3 +25,7 @@ Additionally, the result should enable assemblage of entire `.claude` directorie
 For example, a stable assemblage of settings should be definable per filesystem path. Given machines M and N, and O, it should be possible to define settings shared by M and N, as well as settings shared by N and O, without manually maintained copies of any of the settings. Similar flexibility should apply to multiple repos R, S, and T. 
 
 Assemblages should be deterministic, avoiding problem 3 above.
+
+# See also
+
+`~/conf/src/diff-claude-settings.sh`
