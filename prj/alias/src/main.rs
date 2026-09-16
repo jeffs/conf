@@ -190,6 +190,7 @@ fn main() {
         // by POSIX/GNU-style "options" (even though the latter are dominant in
         // the modern world).
         "jb" => Exe::Jj.exec_with(["bookmark"], args),
+        "jba" => Exe::Jj.exec_with(["bookmark", "advance"], args),
         "jbc" => Exe::Jj.exec_with(["bookmark", "create"], args),
         "jbd" => Exe::Jj.exec_with(["bookmark", "delete"], args),
         "jbf" => Exe::Jj.exec_with(["bookmark", "forget"], args),
