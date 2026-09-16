@@ -51,11 +51,16 @@ select = 'underline'
 [keys.insert]
 C-e = ['normal_mode']
 
-# `emmet-ls` steals tab and can't be rebound.
-C-f = 'smart_tab'
-
 C-t = ['normal_mode', ':write']
 C-space = 'completion'
+
+[keys.insert.C-f]
+# `emmet-ls` steals tab and can't be rebound.
+';' = 'smart_tab'
+
+[keys.insert.C-f.i]
+d = ['normal_mode', ':insert-output date -I | tr -d "\n"', 'append_mode', 'collapse_selection']
+t = ['normal_mode', ':insert-output date +%H:%M | tr -d "\n"', 'append_mode', 'collapse_selection']
 
 [keys.normal]
 '{' = 'goto_prev_paragraph'
