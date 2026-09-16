@@ -1,6 +1,9 @@
 #!/usr/bin/env -S zsh -euo pipefail
 #
 # This script configures the local host to my liking.
+#
+# TODO: Add a test suite to detect forward references. The last time I ran this,
+#  it tripped on several missing dependencies requiring manual correction.
 
 # ----------------------
 # INSTALL UPSTREAM STUFF
@@ -10,10 +13,12 @@
 ~/conf/src/install-bat.zsh
 ~/conf/src/install-rust.zsh
 
-# Technically, you don't need fd or rg; but you'll want them.
-brew install nu zellij # Later, you can switch to `~/usr/src` forks.
-brew install git-delta
-cargo binstall --strategies crate-meta-data fd-find jj-cli ripgrep
+# Technically, you don't need fd or rg; but you'll want them. Get ripgrep via
+# brew rather than binstall because opencode needs the homebrew version, anyway.
+#
+# Later, you can switch to `~/usr/src` forks of nu and zellij.
+brew install nu zellij git-delta ripgrep
+cargo binstall --strategies crate-meta-data fd-find jj-cli
 
 # --------------------
 # INSTALL MY OWN STUFF
