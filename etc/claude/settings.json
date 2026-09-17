@@ -1,4 +1,7 @@
 {
+  "cleanupPeriodDays": 365,
+  "skillListingMaxDescChars": 700,
+  "includeGitInstructions": false,
   "permissions": {
     "allow": [
       "Read",
@@ -37,6 +40,24 @@
       "Read(~/.ssh/**)"
     ],
     "defaultMode": "auto"
+  },
+  "disabledMcpjsonServers": [
+    "agentation"
+  ],
+  "skillOverrides": {
+    "dataviz": "user-invocable-only",
+    "claude-api": "user-invocable-only",
+    "artifact-capabilities": "user-invocable-only",
+    "artifact-diagramming": "user-invocable-only",
+    "schedule": "user-invocable-only",
+    "loop": "user-invocable-only",
+    "run": "user-invocable-only",
+    "keybindings-help": "user-invocable-only",
+    "fewer-permission-prompts": "user-invocable-only",
+    "update-config": "name-only",
+    "claude-in-chrome": "name-only",
+    "code-review": "name-only",
+    "simplify": "name-only"
   },
   "hooks": {
     "SessionStart": [
@@ -110,6 +131,9 @@
       }
     ]
   },
+  "worktree": {
+    "bgIsolation": "none"
+  },
   "statusLine": {
     "type": "command",
     "command": "/Users/jeff/.cargo/bin/buddy statusline",
@@ -139,36 +163,16 @@
       }
     }
   },
-  "disabledMcpjsonServers": [
-    "agentation"
-  ],
-  "cleanupPeriodDays": 365,
-  "worktree": {
-    "bgIsolation": "none"
-  },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
+  "remote": {
+    "defaultEnvironmentId": "env_016JX63FBxWZpr4ZeQ9ofg4t"
+  },
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "dark-daltonized",
   "fileCheckpointingEnabled": false,
-  "agentPushNotifEnabled": true,
-  "includeGitInstructions": false,
-  "skillListingMaxDescChars": 700,
-  "skillOverrides": {
-    "dataviz": "user-invocable-only",
-    "claude-api": "user-invocable-only",
-    "artifact-capabilities": "user-invocable-only",
-    "artifact-diagramming": "user-invocable-only",
-    "schedule": "user-invocable-only",
-    "loop": "user-invocable-only",
-    "run": "user-invocable-only",
-    "keybindings-help": "user-invocable-only",
-    "fewer-permission-prompts": "user-invocable-only",
-    "update-config": "name-only",
-    "claude-in-chrome": "name-only",
-    "code-review": "name-only",
-    "simplify": "name-only"
-  }
+  "remoteControlAtStartup": true,
+  "agentPushNotifEnabled": true
 }
