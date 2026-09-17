@@ -78,7 +78,7 @@ args = ["server"]
 [[language]]
 name = "markdown"
 language-servers = ["marksman"]
-soft-wrap.wrap-indicator = ""
+soft-wrap.wrap-indicator = '  '
 
 # Harper is extremely opinionated.
 # language-servers = ["harper-ls"]

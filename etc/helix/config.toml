@@ -36,8 +36,6 @@ editor.auto-pairs = { '(' = ')', '{' = '}', '[' = ']', "'" = "'", '"' = '"' }
 
 [editor.soft-wrap]
 enable = true
-# Indenting wrapped lines eases visual parsing of Markdown lists. I haven't
-# figured out how to set language-specific wrap indicators in Helix yet.
 wrap-indicator = '  ↪ '
 
 # Show the tab bar when multiple buffers are open.
