@@ -60,7 +60,7 @@ C-space = 'completion'
 
 [keys.insert.C-f.i]
 d = ['normal_mode', ':insert-output date -I | tr -d "\n"', 'append_mode', 'collapse_selection']
-t = ['normal_mode', ':insert-output date +%H:%M | tr -d "\n"', 'append_mode', 'collapse_selection']
+t = ['normal_mode', ':insert-output date +%%H:%%M | tr -d "\n"', 'append_mode', 'collapse_selection']
 
 [keys.normal]
 '{' = 'goto_prev_paragraph'
@@ -114,7 +114,7 @@ C-f = 'page_down'
 
 [keys.normal.C-f.i]
 d = [":insert-output date -I"]
-t = [":insert-output date +%H:%M"]
+t = [":insert-output date +%%H:%%M"]
 
 # Running a sequence of :set or :toggle commands is currently broken. See:
 # <https://github.com/helix-editor/helix/issues/13187>
