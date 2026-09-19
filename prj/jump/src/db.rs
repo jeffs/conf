@@ -96,7 +96,11 @@ impl fmt::Display for Error {
 pub type Result<T> = std::result::Result<T, Error>;
 
 pub struct Database(
-    /// Maps target names to raw target values (paths, URLs, or arbitrary strings).
+    /// Maps target names to raw target values.
+    ///
+    /// # TODO
+    ///
+    /// - [ ] Switch to an a-list. Each Jump call does only a single lookup.
     HashMap<String, String>,
 );
 
@@ -112,18 +116,10 @@ impl Database {
         Self(HashMap::new())
     }
 
-    /// # Errors
-    ///
-    /// Returns an error if the file cannot be read, or if its syntax is
-    /// invalid.
-    pub fn read_file(&mut self, path: impl AsRef<Path>) -> Result<()> {
-        let path = path.as_ref();
-        let contents = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;
-
-        let yaml: HashMap<String, Keys> =
-            serde_saphyr::from_str(&contents).map_err(|e| Error::yaml(path.into(), Box::new(e)))?;
-
-        for (value, keys) in yaml {
+    /// Parses the YAML as a map, then inverts the map and merge into self.
+    fn read_string(&mut self, yaml: &str) -> std::result::Result<(), serde_saphyr::Error> {
+        let object: HashMap<String, Keys> = serde_saphyr::from_str(yaml)?;
+        for (value, keys) in object {
             match keys {
                 Keys::One(key) => {
                     self.0.insert(key, value);
@@ -135,7 +131,18 @@ impl Database {
                 }
             }
         }
+        Ok(())
+    }
 
+    /// # Errors
+    ///
+    /// Returns an error if the file cannot be read, or if its syntax is
+    /// invalid.
+    pub fn read_file(&mut self, path: impl AsRef<Path>) -> Result<()> {
+        let path = path.as_ref();
+        let contents = fs::read_to_string(path).map_err(|e| Error::io(path.into(), e))?;
+        self.read_string(&contents)
+            .map_err(|e| Error::yaml(path.into(), Box::new(e)))?;
         Ok(())
     }
 
@@ -153,13 +160,11 @@ impl Database {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::io::Write;
 
+    /// Returns a new database defined by the YAML text.
     fn parse(yaml: &str) -> Database {
-        let mut file = tempfile::NamedTempFile::new().unwrap();
-        file.write_all(yaml.as_bytes()).unwrap();
         let mut db = Database::new();
-        db.read_file(file.path()).unwrap();
+        db.read_string(yaml).unwrap();
         db
     }
 

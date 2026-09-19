@@ -102,6 +102,10 @@ impl App {
     /// # Errors
     ///
     /// Returns [`Error::Target`] if the target is not in this app's database.
+    ///
+    /// # TODO
+    ///
+    /// - [ ] Support unambiguous prefixes
     fn target(&self, target: &str) -> Result<&String> {
         self.db.get(target).ok_or_else(|| Error::Target {
             name: target.to_owned(),
