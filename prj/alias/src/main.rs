@@ -191,6 +191,7 @@ fn main() {
         // the modern world).
         "jb" => Exe::Jj.exec_with(["bookmark"], args),
         "jba" => Exe::Jj.exec_with(["bookmark", "advance"], args),
+        "jba-" => Exe::Jj.exec_with(["bookmark", "advance", "--to=@-"], args),
         "jbc" => Exe::Jj.exec_with(["bookmark", "create"], args),
         "jbd" => Exe::Jj.exec_with(["bookmark", "delete"], args),
         "jbf" => Exe::Jj.exec_with(["bookmark", "forget"], args),
@@ -204,7 +205,7 @@ fn main() {
         //  this also applies to `jj new`, which makes it very difficult to
         //  start a new branch atop `main` without moving `main` itself.
         "jc" | "ci" => Exe::Jj.exec_with(["commit"], args),
-        "jcm" | "cim" => Exe::Jj.exec_with(["commit", "-m"], args),
+        "jcm" | "cim" => Exe::Jj.exec_with(["commit", "--message"], args),
         "jd" => Exe::Jj.exec_with(["describe"], args),
         "jdm" => Exe::Jj.exec_with(["describe", "--message"], args),
         "je" => Exe::Jj.exec_with(["edit"], args),
