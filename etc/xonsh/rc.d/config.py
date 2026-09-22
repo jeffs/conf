@@ -5,7 +5,15 @@ if XSH.env and XSH.env.get("XONSH_INTERACTIVE"):
     # that makes them import-ant.
     from pathlib import Path
     from subprocess import call, run
+    from sys import stderr
     import json
+
+    # Show an image whenever I open a new shell.
+    splash = Path("~/big/img/fun/dont-panic.jpg").expanduser()
+    try:
+        run(["/opt/homebrew/bin/chafa", "-f", "kitty", splash])
+    except FileNotFoundError as e:
+        print(f"warning: can't show image: {e}", file=stderr)
 
     # AFAICS, Pyright hints cannot be suppressed per line. (`# pyright:
     # ignore[reportUnusedImport]` would suppress a warning or error, but not
@@ -17,7 +25,7 @@ if XSH.env and XSH.env.get("XONSH_INTERACTIVE"):
     def ignore_unused(*_):
         pass
 
-    ignore_unused(Path, call, json, run)
+    ignore_unused(Path, call, json, run, splash, stderr)
     del ignore_unused
 
 del XSH
