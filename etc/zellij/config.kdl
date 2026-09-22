@@ -10,6 +10,8 @@ default_mode "locked"
 // Session resurrection seems broken and, for my purposes, useless.
 session_serialization false
 
+mouse_scroll_resize false
+
 scrollback_editor "/Users/jeff/conf/src/edit.zsh"
 
 // Colorful, but still not as bright as the default.
