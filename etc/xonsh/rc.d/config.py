@@ -1,5 +1,6 @@
 from xonsh.built_ins import XSH
 
+
 if XSH.env and XSH.env.get("XONSH_INTERACTIVE"):
     # Import a few items into every interactive shell, for convenience. Guess
     # that makes them import-ant.
@@ -8,12 +9,18 @@ if XSH.env and XSH.env.get("XONSH_INTERACTIVE"):
     from sys import stderr
     import json
 
-    # Show an image whenever I open a new shell.
-    splash = Path("~/big/img/fun/dont-panic.jpg").expanduser()
-    try:
-        run(["/opt/homebrew/bin/chafa", "-f", "kitty", splash])
-    except FileNotFoundError as e:
-        print(f"warning: can't show image: {e}", file=stderr)
+    # Show an image whenever I open a new shell. Unfortunately, this takes
+    # several seconds. Without Zellij, `wezterm imgcat` works fast.
+    #
+    # def show_splash():
+    #     splash = Path("~/big/img/fun/dont-panic.jpg").expanduser()
+    #     try:
+    #         run(["/opt/homebrew/bin/chafa", "-f", "kitty", splash])
+    #     except FileNotFoundError as e:
+    #         print(f"warning: can't show image: {e}", file=stderr)
+    #
+    # show_splash()
+    # del show_splash
 
     # AFAICS, Pyright hints cannot be suppressed per line. (`# pyright:
     # ignore[reportUnusedImport]` would suppress a warning or error, but not
@@ -25,7 +32,7 @@ if XSH.env and XSH.env.get("XONSH_INTERACTIVE"):
     def ignore_unused(*_):
         pass
 
-    ignore_unused(Path, call, json, run, splash, stderr)
+    ignore_unused(Path, call, json, run, stderr)
     del ignore_unused
 
 del XSH
