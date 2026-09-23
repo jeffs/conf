@@ -88,5 +88,7 @@ async fn run_cargo_crates(
     id: &'static str,
     tx: mpsc::UnboundedSender<Event>,
 ) -> Result<(), String> {
-    run_shell(id, "cargo", &["install-update", "-a"], tx).await
+    // `cargo-nextest` in particular refuses to install without `--locked`; see:
+    // <https://nexte.st/changelog/#0.9.124>
+    run_shell(id, "cargo", &["install-update", "--all", "--locked"], tx).await
 }

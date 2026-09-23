@@ -1,4 +1,5 @@
 use std::io;
+use std::process::ExitCode;
 use std::time::Duration;
 
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
@@ -24,7 +25,8 @@ impl App {
         }
     }
 
-    pub async fn run(mut self, mut terminal: DefaultTerminal) -> io::Result<()> {
+    /// Runs all tasks, returning failure if any task failed or the user quit early.
+    pub async fn run(mut self, mut terminal: DefaultTerminal) -> io::Result<ExitCode> {
         self.start_initial_tasks();
 
         loop {
@@ -39,7 +41,7 @@ impl App {
                 && key.kind == KeyEventKind::Press
                 && key.code == KeyCode::Char('q')
             {
-                return Ok(());
+                return Ok(ExitCode::FAILURE);
             }
 
             if self.all_done() {
@@ -51,8 +53,9 @@ impl App {
         terminal.draw(|frame| crate::ui::render(frame, &self.tasks))?;
         if self.any_failed() {
             wait_for_quit()?;
+            return Ok(ExitCode::FAILURE);
         }
-        Ok(())
+        Ok(ExitCode::SUCCESS)
     }
 
     fn start_initial_tasks(&mut self) {
