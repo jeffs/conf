@@ -16,10 +16,10 @@ pub enum Op {
     /// Rebase fork bookmarks onto upstream
     Rebase,
     /// Build and install
-    Build,
+    Install,
     /// Push fork bookmarks to origin
     Push,
-    /// fetch → rebase → build → push (default)
+    /// fetch → rebase → install → push (default)
     Update,
     /// Clone repos that don't exist locally
     Clone,
@@ -52,7 +52,7 @@ impl Runner<'_> {
             Op::Status => self.status(repo),
             Op::Fetch => self.fetch(repo),
             Op::Rebase => self.rebase(repo),
-            Op::Build => self.build(repo),
+            Op::Install => self.install(repo),
             Op::Push => self.push(repo),
             Op::Update => self.update(repo),
             Op::Clone => self.clone(repo),
@@ -123,7 +123,7 @@ impl Runner<'_> {
         Ok(())
     }
 
-    fn build(&self, repo: &Repo) -> jj::Result<()> {
+    fn install(&self, repo: &Repo) -> jj::Result<()> {
         let ws = self.ws(&repo.path);
         for cmd in repo.build.iter().chain(&repo.post_build) {
             ws.build(cmd)?;
@@ -156,7 +156,7 @@ impl Runner<'_> {
         Ok(())
     }
 
-    /// Full update pipeline: fetch → sync trunk → rebase → checkout → build
+    /// Full update pipeline: fetch → sync trunk → rebase → checkout → install
     /// → push.
     fn update(&self, repo: &Repo) -> jj::Result<()> {
         self.fetch(repo)?;
@@ -170,7 +170,7 @@ impl Runner<'_> {
         if let Some(revision) = repo.checkout_target() {
             self.ws(&repo.path).new_at(&revision)?;
         }
-        self.build(repo)?;
+        self.install(repo)?;
         self.push(repo)
     }
 
