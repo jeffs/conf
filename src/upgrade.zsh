@@ -8,6 +8,6 @@
 
 # Build with cargo, but run the binaries directly; see rebase.zsh.
 cd ~/conf/prj
-cargo build --release --package upgrade --package rebase
+cargo build --quiet --release --package upgrade --package rebase
 target/release/upgrade "$@"
 target/release/rebase "$@"

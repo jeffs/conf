@@ -4,5 +4,5 @@
 # inherit RUSTUP_TOOLCHAIN from the rustup shim, overriding each repo's own
 # toolchain resolution in the builds rebase spawns.
 cd ~/conf/prj
-cargo build --release --package rebase
+cargo build --quiet --release --package rebase
 exec target/release/rebase "$@"
