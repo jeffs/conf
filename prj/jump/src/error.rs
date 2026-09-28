@@ -13,6 +13,11 @@ pub enum Error {
     Expansion(expansion::Error),
     /// No target was specified, and no default found.
     Missing,
+    /// The argument is a prefix of more than one target name.
+    Ambiguous {
+        name: String,
+        candidates: Vec<String>,
+    },
     /// No target was found for the argument.
     Target {
         name: String,
@@ -41,6 +46,13 @@ impl fmt::Display for Error {
             Self::Database(e) => e.fmt(f),
             Self::Expansion(e) => e.fmt(f),
             Self::Missing => "no default target is configured".fmt(f),
+            Self::Ambiguous { name, candidates } => {
+                write!(f, "{name}: ambiguous target; candidates:")?;
+                for candidate in candidates {
+                    write!(f, "\n  {candidate}")?;
+                }
+                Ok(())
+            }
             Self::Target { name, searched } => {
                 write!(f, "{name}: target not found; searched:")?;
                 for path in searched {

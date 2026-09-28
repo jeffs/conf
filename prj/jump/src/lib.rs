@@ -99,18 +99,37 @@ impl App {
         Ok(App { home, db, db_paths })
     }
 
+    /// Returns the value of the target named `target`, or else of the only
+    /// target whose name begins with `target`. Empty `target` names only the
+    /// default target.
+    ///
     /// # Errors
     ///
-    /// Returns [`Error::Target`] if the target is not in this app's database.
-    ///
-    /// # TODO
-    ///
-    /// - [ ] Support unambiguous prefixes
+    /// Returns [`Error::Target`] if no target matches, or
+    /// [`Error::Ambiguous`] if several do.
     fn target(&self, target: &str) -> Result<&String> {
-        self.db.get(target).ok_or_else(|| Error::Target {
-            name: target.to_owned(),
-            searched: self.db_paths.clone(),
-        })
+        if let Some(value) = self.db.get(target) {
+            return Ok(value);
+        }
+        let mut names = if target.is_empty() {
+            Vec::new()
+        } else {
+            self.targets(target)
+        };
+        match names.as_mut_slice() {
+            [name] => Ok(self.db.get(name).expect("name should be in database")),
+            [] => Err(Error::Target {
+                name: target.to_owned(),
+                searched: self.db_paths.clone(),
+            }),
+            candidates => {
+                candidates.sort_unstable();
+                Err(Error::Ambiguous {
+                    name: target.to_owned(),
+                    candidates: names,
+                })
+            }
+        }
     }
 
     /// Looks up the specified target in this app's database and resolves it
@@ -121,20 +140,25 @@ impl App {
     /// - Paths (`/`, `~`, `$`, `%`) → `Target::Path` (expanded)
     /// - Everything else → `Target::String` (verbatim)
     ///
-    /// If the target is not found, but ends with a slash character (`'/'`),
+    /// The target may be named by any unambiguous prefix of its name. If no
+    /// target matches, but `target` ends with a slash character (`'/'`),
     /// lookup is also attempted without the trailing slash, in case the user's
     /// shell tab-completed a directory that happened to have the same name as
     /// the target.
     ///
     /// # Errors
     ///
-    /// Returns [`Err`] if the target cannot be found or resolved.
+    /// Returns [`Err`] if the target cannot be found or resolved, or is
+    /// ambiguous.
     pub fn resolve(&self, target: &str) -> Result<Target> {
         let value = self.target(target).or_else(|err| {
-            target
-                .strip_suffix('/')
-                .and_then(|target| self.target(target).ok())
-                .ok_or(err)
+            let (Error::Target { .. }, Some(stripped)) = (&err, target.strip_suffix('/')) else {
+                return Err(err);
+            };
+            match self.target(stripped) {
+                Err(Error::Target { .. }) => Err(err),
+                retry => retry,
+            }
         })?;
         Ok(Expand::with_home(&self.home).target(value)?)
     }
@@ -178,5 +202,88 @@ impl App {
         };
         candidates.sort_unstable();
         candidates
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    use tempfile::TempDir;
+
+    /// Returns an app whose database is defined by the YAML text, and whose
+    /// home directory is a new temporary directory.
+    fn app(yaml: &str) -> (App, TempDir) {
+        let home = TempDir::new().unwrap();
+        let path = home.path().join("jump.yaml");
+        fs::write(&path, yaml).unwrap();
+        let mut db = Database::new();
+        db.read_file(&path).unwrap();
+        let app = App {
+            home: home.path().to_owned(),
+            db,
+            db_paths: vec![path],
+        };
+        (app, home)
+    }
+
+    fn resolve(app: &App, target: &str) -> String {
+        let Ok(Target::String(s)) = app.resolve(target) else {
+            panic!("{target}: expected a string");
+        };
+        s
+    }
+
+    #[test]
+    fn exact_name_beats_prefix() {
+        let (app, _home) = app("c-value: c\nconf-value: conf\n");
+        assert_eq!(resolve(&app, "c"), "c-value");
+    }
+
+    #[test]
+    fn unique_prefix() {
+        let (app, _home) = app("conf-value: conf\ngit-value: git\n");
+        assert_eq!(resolve(&app, "co"), "conf-value");
+    }
+
+    #[test]
+    fn unique_prefix_with_trailing_slash() {
+        let (app, _home) = app("conf-value: conf\ngit-value: git\n");
+        assert_eq!(resolve(&app, "co/"), "conf-value");
+    }
+
+    #[test]
+    fn ambiguous_prefix() {
+        let (app, _home) = app("code-value: code\nconf-value: conf\n");
+        for target in ["co", "co/"] {
+            let Err(Error::Ambiguous { name, candidates }) = app.resolve(target) else {
+                panic!("{target}: expected an ambiguity");
+            };
+            assert_eq!(name, "co");
+            assert_eq!(candidates, ["code", "conf"]);
+        }
+    }
+
+    #[test]
+    fn unknown_target() {
+        let (app, _home) = app("conf-value: conf\n");
+        let Err(Error::Target { name, .. }) = app.resolve("x/") else {
+            panic!("expected a missing target");
+        };
+        assert_eq!(name, "x/");
+    }
+
+    #[test]
+    fn empty_target_is_not_a_prefix() {
+        let (app, _home) = app("conf-value: conf\n");
+        assert!(matches!(app.resolve(""), Err(Error::Target { .. })));
+    }
+
+    #[test]
+    fn complete_suffix_under_prefix() {
+        let (app, home) = app("~/git: git\n");
+        fs::create_dir_all(home.path().join("git/dotfiles")).unwrap();
+        let words = ["gi".to_owned(), "dot".to_owned()];
+        assert_eq!(app.complete(&words), ["dotfiles/"]);
     }
 }

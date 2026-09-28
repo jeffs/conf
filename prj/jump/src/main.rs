@@ -15,7 +15,6 @@
 //! - [ ] Parameters other than a path-separated suffix; e.g.,
 //!   `jump github my-repo#42`
 //! - [ ] Relative date expansion; e.g, yesterday (syntax TBD)
-//! - [ ] Recognize unambiguous prefixes; e.g., `c|co|con|conf` for `conf`
 
 use std::io::Write;
 use std::os::unix::ffi::OsStrExt;

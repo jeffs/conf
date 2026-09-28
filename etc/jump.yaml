@@ -6,6 +6,7 @@
 ~/file: [f, file]
 
 ~/git/play/play: [p, play]
+~/git/unbuggy: [u]
 
 ~/usr/src/rust-kart: rk
 ~/usr/src/claude-buddy: buddy
