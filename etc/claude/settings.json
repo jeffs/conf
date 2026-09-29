@@ -168,7 +168,7 @@
   "remote": {
     "defaultEnvironmentId": "env_016JX63FBxWZpr4ZeQ9ofg4t"
   },
-  "tui": "fullscreen",
+  "tui": "default",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "dark-daltonized",
