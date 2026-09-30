@@ -4,6 +4,7 @@
 ~/conf/prj: prj
 
 ~/file: [f, file]
+~/file/log/%Y/%m/%d: [l, log]
 
 ~/git/play/play: [p, play]
 ~/git/unbuggy: [u]
@@ -12,7 +13,7 @@
 ~/usr/src/claude-buddy: buddy
 
 ~/vault: [v, vault]
-~/vault/log/%Y/%m/%d: [l, log]
+~/vault/log/%Y/%m/%d: vl
 
 # These may be at different paths on different machines. `JUMP_HOME` is defined
 # in `../platform/macos.toml`, which is converted to shell-friendly syntax by
