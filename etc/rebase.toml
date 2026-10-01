@@ -72,20 +72,6 @@ checkout = "custom"
 upstream_ref = "main"
 build = []
 
-# Fork-track: upstream, no custom bookmarks
-
-# [repos.crush]
-# clone = "git@github.com:jeffs/crush.git"
-# upstream = "https://github.com/liljencrantz/crush"
-# upstream_ref = "main"
-# build = ["cargo install --path . --locked"]
-
-# Upstream-only
-
-# [repos.uv]
-# clone = "https://github.com/astral-sh/uv"
-# build = ["cargo install --path crates/uv --locked"]
-
 [repos.sl]
 clone = "git@github.com:jeffs/sl.git"
 upstream = "https://github.com/mtoyoda/sl"
@@ -129,3 +115,8 @@ build = ["cargo install --path . --locked"]
 [repos.claude-buddy]
 clone = "git@github.com:jeffs/claude-buddy.git"
 build = ["cargo install --path . --locked"]
+
+[repos.mdrich]
+clone = "git@github.com:jeffs/mdrich.git"
+build = ["cargo install --path . --locked"]
+
