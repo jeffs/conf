@@ -195,6 +195,7 @@ fn main() {
         "jbc" => Exe::Jj.exec_with(["bookmark", "create"], args),
         "jbd" => Exe::Jj.exec_with(["bookmark", "delete"], args),
         "jbf" => Exe::Jj.exec_with(["bookmark", "forget"], args),
+        "jbl" => Exe::Jj.exec_with(["bookmark", "list"], args),
         "jbm" => Exe::Jj.exec_with(["bookmark", "move"], args),
         "jbs" => Exe::Jj.exec_with(["bookmark", "set"], args),
         "jbt" => Exe::Jj.exec_with(["bookmark", "track"], args),
