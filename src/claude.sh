@@ -11,7 +11,9 @@
 # `/bug`. In the meantime, I've gone back to Claude Code's "default" TUI.
 unset ZELLIJ
 
-# This makes Claude Code start and exit much faster.
+# This makes Claude Code start and exit much faster, but disables features
+# like `/feedback`. More targeted options include `DISABLE_TELEMETRY` and
+# `DO_NOT_TRACK`; see <https://code.claude.com/docs/en/env-vars>.
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 
 exec ~/.local/bin/claude "$@"
