@@ -7,21 +7,20 @@
 ~/file/log/%Y/%m/%d: log
 ~/file/tbd: tbd
 
-~/git/play/play: play
-~/git/unbuggy: unbuggy
-
 ~/usr/src/rust-kart: rk
 ~/usr/src/claude-buddy: buddy
 
-~/vault: vault
+~/vault: [v, vault]
 ~/vault/log/%Y/%m/%d: vl
 
 # These may be at different paths on different machines. `JUMP_HOME` is defined
 # in `../platform/macos.toml`, which is converted to shell-friendly syntax by
 # `../../prj/mkenv`. (`.env` syntax is fine for Bash and Zsh, but JSON is
 # better for Nushell and Xonsh. I `jump` in multiple shells.)
-$JUMP_HOME/git: hg
 $JUMP_HOME/git/data: data
-$JUMP_HOME/git/nest: nest
 $JUMP_HOME/git/nest/top: top
-$JUMP_HOME/git/rust-scripts: [s, script, scripts]
+$JUMP_HOME/git/nest: nest
+$JUMP_HOME/git/play/play: play
+$JUMP_HOME/git/rust-scripts: scripts
+$JUMP_HOME/git/unbuggy: unbuggy
+$JUMP_HOME/git: hg
