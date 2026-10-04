@@ -85,3 +85,15 @@ ENABLE_CLAUDEAI_MCP_SERVERS = false
 # Xonsh is on 3.13, so sticking with it eases interop.
 # That said, `python3 --version` on my MacBook is 3.14.
 # UV_PYTHON = "3.13"
+
+# Don't run Git hooks. This is partial mitigation against issues like how
+# [Frank Wiles got targeted](https://frankwiles.com/posts/i-got-targeted/). The
+# real solution is never to run git in a Git repo copied directly (rather than
+# cloned) from someone else. Note that JJ doesn't run Git hooks.
+#
+# These variables are equivalent to passing git `-c core.hooksPath=/dev/null`:
+# We're telling Git to read a "list" of 1 config flag, and then we're giving it
+# item 0 of that list.
+GIT_CONFIG_COUNT = 1
+GIT_CONFIG_KEY_0 = "core.hooksPath"
+GIT_CONFIG_VALUE_0 = "/dev/null"
