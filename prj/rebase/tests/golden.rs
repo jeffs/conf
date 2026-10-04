@@ -189,7 +189,7 @@ fn rebase_own_repo_is_a_noop() {
     let (sink, outcome) = dry_run(Op::Rebase, &repo);
 
     assert_eq!(outcome, Outcome::Ok);
-    assert!(sink.lines_of(Kind::DryRun).is_empty());
+    assert_eq!(sink.lines_of(Kind::DryRun), [] as [std::string::String; 0]);
     assert_eq!(
         sink.lines_of(Kind::Info),
         ["not a fork-rebase repo — nothing to rebase"]
@@ -204,7 +204,7 @@ fn missing_repo_is_skipped() {
     let (sink, outcome) = dry_run(Op::Update, &repo);
 
     assert_eq!(outcome, Outcome::Skipped("not cloned".into()));
-    assert!(sink.lines_of(Kind::DryRun).is_empty());
+    assert_eq!(sink.lines_of(Kind::DryRun), [] as [std::string::String; 0]);
     assert_eq!(sink.lines_of(Kind::Warn), ["not cloned — skipping"]);
 }
 
@@ -249,7 +249,7 @@ fn clone_existing_repo_is_a_noop() {
     let (sink, outcome) = dry_run(Op::Clone, &repo);
 
     assert_eq!(outcome, Outcome::Ok);
-    assert!(sink.lines_of(Kind::DryRun).is_empty());
+    assert_eq!(sink.lines_of(Kind::DryRun), [] as [std::string::String; 0]);
     assert_eq!(sink.lines_of(Kind::Info), ["already cloned"]);
 }
 

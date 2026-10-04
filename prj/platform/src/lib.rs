@@ -281,9 +281,9 @@ mod tests {
         assert!(p.path_env.contains_key("JUMP_DIRS"));
         assert!(p.path_env.contains_key("CAML_LD_LIBRARY_PATH"));
         assert_eq!(p.package_manager.name, "brew");
-        assert!(!p.package_manager.install.is_empty());
-        assert!(!p.package_manager.upgrade.is_empty());
-        assert!(!p.system_update.command.is_empty());
+        assert_ne!(p.package_manager.install, [] as [std::string::String; 0]);
+        assert_ne!(p.package_manager.upgrade, [] as [std::string::String; 0]);
+        assert_ne!(p.system_update.command, [] as [std::string::String; 0]);
         assert!(!p.env.is_empty());
     }
 
