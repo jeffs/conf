@@ -35,6 +35,10 @@ impl State {
     pub const fn is_done(&self) -> bool {
         matches!(self, Self::Completed | Self::Failed(_))
     }
+
+    pub const fn is_failed(&self) -> bool {
+        matches!(self, Self::Failed(_))
+    }
 }
 
 #[derive(Clone, Debug)]

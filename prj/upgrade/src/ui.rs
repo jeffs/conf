@@ -87,7 +87,8 @@ fn render_task(frame: &mut Frame, area: Rect, task: &Task) {
 
     let mut lines = vec![header];
 
-    let visible_lines = (area.height as usize).saturating_sub(1);
+    let reserved_lines = if task.state.is_failed() { 2 } else { 1 };
+    let visible_lines = (area.height as usize).saturating_sub(reserved_lines);
     let start = task.output.len().saturating_sub(visible_lines);
     for line in task.output.iter().skip(start) {
         lines.push(Line::from(format!("  {line}")));

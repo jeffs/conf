@@ -1,4 +1,5 @@
 mod app;
+mod logfile;
 mod runner;
 mod task;
 mod ui;

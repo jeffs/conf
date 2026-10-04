@@ -5,6 +5,7 @@
 
 ~/file: file
 ~/file/log/%Y/%m/%d: log
+~/file/wri/idea: idea
 ~/file/tbd: tbd
 
 ~/usr/src/rust-kart: rk

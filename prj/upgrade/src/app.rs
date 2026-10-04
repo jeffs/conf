@@ -6,6 +6,7 @@ use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use ratatui::DefaultTerminal;
 use tokio::sync::mpsc;
 
+use crate::logfile;
 use crate::runner;
 use crate::task::{State, Task, tasks};
 
@@ -92,15 +93,32 @@ impl App {
                 if let Some(task) = self.tasks.iter_mut().find(|t| t.id == id) {
                     task.complete(status);
                 }
+                self.save_log_if_failed(&id);
                 self.check_unblock(&id);
             }
             runner::Event::Failed(id, error) => {
                 if let Some(task) = self.tasks.iter_mut().find(|t| t.id == id) {
                     task.fail(error);
                 }
+                self.save_log_if_failed(&id);
                 self.check_unblock(&id);
             }
         }
+    }
+
+    /// Saves a failed task's output to disk and appends the log's path to that output.
+    fn save_log_if_failed(&mut self, id: &str) {
+        let Some(task) = self.tasks.iter_mut().find(|t| t.id == id) else {
+            return;
+        };
+        let State::Failed(error) = &task.state else {
+            return;
+        };
+        let line = match logfile::save_failure(task, error) {
+            Ok(path) => format!("log: {}", path.display()),
+            Err(e) => format!("failed to save log: {e}"),
+        };
+        task.output.push(line);
     }
 
     fn check_unblock(&mut self, completed_id: &str) {
