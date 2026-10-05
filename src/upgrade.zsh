@@ -1,8 +1,12 @@
 #!/usr/bin/env -S zsh -euo pipefail
 #
-# TODO
+# # TODO
 #
-# - [ ] Upgrade apps from installers: Docker, Firefox, Slack, Steam, VPN
+# This script does not yet:
+#
+# - [ ] Upgrade apps from installers: Docker, Firefox, Slack, Steam, VPN, Zoom
+#     + Zoom updates often hits an "Error" that has to be dismissed, but the
+#       update seems to work anyway.
 # - [ ] Update Docker images
 # - [ ] Build `on-file-click.app`
 
