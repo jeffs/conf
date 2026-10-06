@@ -67,11 +67,6 @@ t = ['normal_mode', ':insert-output date +%%H:%%M | tr -d "\n"', 'append_mode', 
 "'" = { 6 = '@‘', 9 = '@’' }
 '"' = { 6 = '@“', 9 = '@”' }
 
-# Apostrophe, em and en dashes, and smart double quotes.
-# a = ['normal_mode', ':insert-output utf ap', 'append_mode', 'collapse_selection']
-# n = ['normal_mode', ':insert-output utf en', 'append_mode', 'collapse_selection']
-# q = ['normal_mode', ':insert-output utf ldq rdq', 'collapse_selection', 'append_mode', 'collapse_selection']
-
 [keys.normal]
 '{' = 'goto_prev_paragraph'
 '}' = 'goto_next_paragraph'
@@ -122,11 +117,6 @@ C-r = ':config-reload'
 [keys.normal.C-f.i]
 d = [":insert-output date -I", 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
 t = [":insert-output date +%%H:%%M", 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
-
-# a = [':insert-output utf ap', 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
-# m = [':insert-output utf em', 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
-# n = [':insert-output utf en', 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
-# q = [':insert-output utf ldq rdq', 'ensure_selections_forward', 'collapse_selection']
 
 # Running a sequence of :set or :toggle commands is currently broken. See:
 # <https://github.com/helix-editor/helix/issues/13187>
