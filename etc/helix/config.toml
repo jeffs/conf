@@ -57,8 +57,20 @@ C-space = 'completion'
 ';' = 'smart_tab'
 
 [keys.insert.C-f.i]
+# Date and time.
 d = ['normal_mode', ':insert-output date -I | tr -d "\n"', 'append_mode', 'collapse_selection']
 t = ['normal_mode', ':insert-output date +%%H:%%M | tr -d "\n"', 'append_mode', 'collapse_selection']
+
+# Emulate Vim digraphs.
+[keys.insert.C-v]
+'-' = { M = '@—', N = '@–' }
+"'" = { 6 = '@‘', 9 = '@’' }
+'"' = { 6 = '@“', 9 = '@”' }
+
+# Apostrophe, em and en dashes, and smart double quotes.
+# a = ['normal_mode', ':insert-output utf ap', 'append_mode', 'collapse_selection']
+# n = ['normal_mode', ':insert-output utf en', 'append_mode', 'collapse_selection']
+# q = ['normal_mode', ':insert-output utf ldq rdq', 'collapse_selection', 'append_mode', 'collapse_selection']
 
 [keys.normal]
 '{' = 'goto_prev_paragraph'
@@ -103,16 +115,18 @@ d = ['save_selection', ":append-output echo ')'", 'jump_backward', ":insert-outp
 f = ':format'
 h = ':toggle lsp.display-inlay-hints'
 n = ':toggle soft-wrap.enable'
-q = ':quit'
 r = ':reload-all'
-w = ':write'
-z = ':write-quit'
-C-c = ':config-reload'
 C-f = 'page_down'
+C-r = ':config-reload'
 
 [keys.normal.C-f.i]
-d = [":insert-output date -I"]
-t = [":insert-output date +%%H:%%M"]
+d = [":insert-output date -I", 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
+t = [":insert-output date +%%H:%%M", 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
+
+# a = [':insert-output utf ap', 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
+# m = [':insert-output utf em', 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
+# n = [':insert-output utf en', 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
+# q = [':insert-output utf ldq rdq', 'ensure_selections_forward', 'collapse_selection']
 
 # Running a sequence of :set or :toggle commands is currently broken. See:
 # <https://github.com/helix-editor/helix/issues/13187>
@@ -126,9 +140,7 @@ c = ':buffer-close'
 d = ['save_selection', ":append-output echo ')'", 'jump_backward', ":insert-output echo 'dbg!('", 'jump_forward', 'jump_backward']
 h = ':toggle lsp.display-inlay-hints'
 n = ':toggle soft-wrap.enable'
-q = ':quit'
-w = ':write'
-z = ':write-quit'
+q = '@ms“' # Surround with double quotation marks.
 C-f = 'page_down'
 
 [keys.select]
