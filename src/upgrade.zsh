@@ -10,6 +10,12 @@
 # - [ ] Update Docker images
 # - [ ] Build `on-file-click.app`
 
+# Don't wait for rebase to fail for lack of keys to access GitHub repos.
+if ! ssh-add -l >/dev/null; then
+    echo "$@" 'Run ssh-add.' >&2
+    exit 1
+fi
+
 # Build with cargo, but run the binaries directly; see rebase.zsh.
 cd ~/conf/prj
 cargo build --quiet --release --package upgrade --package rebase
