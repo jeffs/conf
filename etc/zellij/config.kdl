@@ -68,7 +68,17 @@ keybinds {
         bind "j" { NewPane "down"; SwitchToMode "locked"; }
         bind "l" { NewPane "right"; SwitchToMode "locked"; }
         bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
-   }
+    }
+
+    scroll {
+        bind "Ctrl c" { ScrollToBottom; SwitchToMode "Locked"; }
+        bind "Esc" { ScrollToBottom; SwitchToMode "Locked"; }
+    }
+
+    search {
+        bind "Ctrl c" { ScrollToBottom; SwitchToMode "Locked"; }
+        bind "Esc" { ScrollToBottom; SwitchToMode "Locked"; }
+    }
 }
 
 default_layout "compact-top"
