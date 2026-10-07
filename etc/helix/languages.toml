@@ -162,6 +162,9 @@ check = { command = "clippy", args = ["--all-targets", "--workspace"] }
 # Project-specific lints can be configured in Cargo.toml and clippy.toml.
 # check = { command = "clippy", extraArgs = ["--", "-W", "clippy::pedantic"] }
 
+[language-server.rust-analyzer.config.rust-analyzer.cargo]
+cfgs = ["debug_assertions", "miri", "doc"]
+
 [language-server.rust-analyzer.config.rust-analyzer.diagnostics]
 disabled = [
   "inactive-code",
