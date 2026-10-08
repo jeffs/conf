@@ -9,6 +9,8 @@ default_mode "locked"
 
 // Session resurrection seems broken and, for my purposes, useless.
 session_serialization false
+stacked_pane_list false
+pane_frame_style "full"
 
 mouse_scroll_resize false
 
