@@ -14,8 +14,6 @@ pane_frame_style "full"
 
 mouse_scroll_resize false
 
-scrollback_editor "/Users/jeff/conf/src/edit.zsh"
-
 // Colorful, but still not as bright as the default.
 // Easier to tell which tab is focused than in one-half-dark.
 // <https://zellij.dev/documentation/theme-list.html>
