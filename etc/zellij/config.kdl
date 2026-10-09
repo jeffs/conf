@@ -1,3 +1,20 @@
+// If you're using Terminal.app, and see weird ephemeral crap when you launch
+// Zellij, that's because of a bug in Terminal.app. When Zellij starts, it
+// outputs Device Control String (DCS) escape sequences to set the session
+// name. Terminals that don't recognize DCS are supposed to ignore it, but
+// Terminal.app apparently prints the payload. See also:
+//
+// - [ECMA-48: Control functions for coded character sets][1]
+// - [XTerm Control Sequences][2]
+//
+// [1]: https://ecma-international.org/publications-and-standards/standards/ecma-48/
+// [2]: https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
+//
+// TODO: Generate Zellij configs from shared subsets, but setting (e.g.)
+//  `simplified_ui true` for Terminal.app specifically (or for any environment
+//  where PowerLine or Nerd Fonts aren't installed). Set ZELLIJ_CONFIG_FILE
+//  accordingly in the calling environment.
+
 default_shell "/Users/jeff/.local/bin/xonsh"
 
 // This would let me use Alt+Super+drag to move WezTerm, but I'd lose some
@@ -9,8 +26,8 @@ default_mode "locked"
 
 // Session resurrection seems broken and, for my purposes, useless.
 session_serialization false
+
 stacked_pane_list false
-pane_frame_style "full"
 
 mouse_scroll_resize false
 
