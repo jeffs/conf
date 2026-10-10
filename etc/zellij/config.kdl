@@ -28,7 +28,7 @@ default_mode "locked"
 session_serialization false
 
 stacked_pane_list false
-
+show_startup_tips false
 mouse_scroll_resize false
 
 // Colorful, but still not as bright as the default.
