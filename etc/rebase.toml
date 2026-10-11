@@ -119,6 +119,10 @@ build = ["cargo install --path . --locked"]
 clone = "git@github.com:jeffs/claude-buddy.git"
 build = ["cargo install --path . --locked"]
 
+[repos.fdrg]
+clone = "git@github.com:jeffs/fdrg.git"
+build = ["cargo install --path . --locked"]
+
 [repos.mdrich]
 clone = "git@github.com:jeffs/mdrich.git"
 build = ["cargo install --path . --locked"]
