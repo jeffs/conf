@@ -15,6 +15,7 @@ Backlog, roughly in order of intended implementation:
 - 3-zoxide.md
 - 5-dynamic-claude-settings.md
 - 7-doctor.md
+- 8-zellij-requests.md
 
 ## DONE
 
