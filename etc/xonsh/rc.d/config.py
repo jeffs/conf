@@ -48,7 +48,7 @@ def setup():
     import sys
 
     from xonsh.built_ins import XSH
-    from xonsh.environ import LsColors
+    from xonsh.environ import EnvPath, LsColors
 
     assert XSH.aliases is not None and XSH.env is not None
     aliases, env = XSH.aliases, XSH.env
@@ -87,7 +87,7 @@ def setup():
             env.update(fnm_env)
             os.environ.update(fnm_env)
             fnm_bin = f"{fnm_env['FNM_MULTISHELL_PATH']}/bin"
-            cast(list, env["PATH"]).insert(0, fnm_bin)
+            cast(EnvPath, env["PATH"]).insert(0, fnm_bin)
             os.environ["PATH"] = os.pathsep.join([fnm_bin, os.environ["PATH"]])
 
             if "NVMRC" in os.environ:
@@ -241,6 +241,9 @@ def setup():
 
         env["FUZZY_PATH_COMPLETION"] = False
         env["XONSH_COMPLETER_MODE"] = "prefix"
+        cast(EnvPath, env["BASH_COMPLETIONS"]).append(
+            "/opt/homebrew/etc/bash_completion.d/just"
+        )
 
         # Disabled so I can complete ticket files by slug, rather than number.
         # env["SUBSEQUENCE_PATH_COMPLETION"] = False
