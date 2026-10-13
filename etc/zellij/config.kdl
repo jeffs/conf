@@ -30,6 +30,7 @@ session_serialization false
 stacked_pane_list false
 show_startup_tips false
 mouse_scroll_resize false
+scrollback_editor "/Users/jeff/.cargo/bin/hx"
 
 // Colorful, but still not as bright as the default.
 // Easier to tell which tab is focused than in one-half-dark.
