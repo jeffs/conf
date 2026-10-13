@@ -1,0 +1,6 @@
+inherits = "dark_plus"
+
+[palette]
+dark_gray2 = "#131656"
+dark_gray3 = "#1e2262"
+background = "#131656"
