@@ -3,7 +3,7 @@ use std::path::Path;
 use clap::Subcommand;
 
 use crate::jj::{self, Mode, Remote, Workspace};
-use crate::manifest::{Repo, RepoKind, UpstreamRef};
+use crate::manifest::{Repo, RepoKind};
 use crate::output::{self, Sink};
 
 /// The operations that the CLI can invoke.
@@ -132,7 +132,7 @@ impl Runner<'_> {
     }
 
     fn push(&self, repo: &Repo) -> jj::Result<()> {
-        let RepoKind::ForkRebase { fork, bookmarks } = &repo.kind else {
+        let RepoKind::ForkRebase { bookmarks, .. } = &repo.kind else {
             self.sink.info("not a fork-rebase repo — nothing to push");
             return Ok(());
         };
@@ -140,31 +140,14 @@ impl Runner<'_> {
         for bm in bookmarks {
             ws.push(Remote::Origin, bm)?;
         }
-        if fork.upstream_ref.is_branch() {
-            ws.push(Remote::Origin, &fork.upstream_ref.name)?;
-        }
         Ok(())
     }
 
-    /// Set the fork's local trunk bookmark to upstream and push it to origin.
-    /// Only meaningful for branches; tags (`@git`) can't be managed as
-    /// bookmarks.
-    fn sync_trunk(&self, repo: &Repo, upstream_ref: &UpstreamRef) -> jj::Result<()> {
-        let ws = self.ws(&repo.path);
-        ws.bookmark_set(&upstream_ref.name, &upstream_ref.qualified())?;
-        ws.push(Remote::Origin, &upstream_ref.name)?;
-        Ok(())
-    }
-
-    /// Full update pipeline: fetch → sync trunk → rebase → checkout → install
-    /// → push.
+    /// Full update pipeline: fetch → rebase → checkout → install → push.
     fn update(&self, repo: &Repo) -> jj::Result<()> {
         self.fetch(repo)?;
 
-        if let RepoKind::ForkRebase { fork, .. } = &repo.kind {
-            if fork.upstream_ref.is_branch() {
-                self.sync_trunk(repo, &fork.upstream_ref)?;
-            }
+        if let RepoKind::ForkRebase { .. } = &repo.kind {
             self.rebase(repo)?;
         }
         if let Some(revision) = repo.checkout_target() {
@@ -189,7 +172,10 @@ impl Runner<'_> {
         if let Some(fork) = repo.kind.fork() {
             ws.remote_add(Remote::Upstream, &fork.upstream)?;
         }
-        if let RepoKind::ForkRebase { bookmarks, .. } = &repo.kind {
+        if let RepoKind::ForkRebase { fork, bookmarks } = &repo.kind {
+            // Origin's default branch may be a rebased bookmark, which must
+            // not be immutable; `trunk()` is the upstream ref instead.
+            ws.set_trunk(&fork.upstream_ref.qualified())?;
             // `jj git clone` leaves non-default bookmarks as `name@origin`
             // only; track them so the bare names resolve locally.
             for bm in bookmarks {

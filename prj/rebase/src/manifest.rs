@@ -89,13 +89,6 @@ impl UpstreamRef {
     pub fn qualified(&self) -> String {
         format!("{}@{}", self.name, self.remote)
     }
-
-    /// Whether this ref is a remote branch (can be synced/pushed as a bookmark).
-    /// Tags (`@git`) cannot.
-    #[must_use]
-    pub fn is_branch(&self) -> bool {
-        self.remote != "git"
-    }
 }
 
 /// A fork's relationship to its upstream: the remote URL plus the ref the

@@ -83,10 +83,19 @@ impl<'a> Workspace<'a> {
         }
     }
 
-    pub fn bookmark_set(&self, bookmark: &str, revision: &str) -> Result {
+    /// Point this repo's `trunk()` alias at `revision`, overriding the
+    /// remote default branch that `jj git clone` records.
+    pub fn set_trunk(&self, revision: &str) -> Result {
         self.run(
-            &format!("bookmark set {bookmark}"),
-            &["jj", "bookmark", "set", bookmark, "-r", revision],
+            &format!("set trunk() to {revision}"),
+            &[
+                "jj",
+                "config",
+                "set",
+                "--repo",
+                "revset-aliases.\"trunk()\"",
+                revision,
+            ],
         )
     }
 

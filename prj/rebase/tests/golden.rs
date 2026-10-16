@@ -102,20 +102,17 @@ fn update_fork_rebase_runs_full_pipeline() {
         [
             "jj git fetch --remote upstream",
             "jj git fetch --remote origin",
-            "jj bookmark set main -r main@upstream",
-            "jj git push --remote origin --bookmark main",
             "jj rebase -b custom -d main@upstream --skip-emptied",
             CONFLICT_CHECK,
             "jj new custom",
             "sh -c cargo install --path .",
             "jj git push --remote origin --bookmark custom",
-            "jj git push --remote origin --bookmark main",
         ]
     );
 }
 
 #[test]
-fn update_tag_upstream_skips_trunk_sync_and_push() {
+fn update_tag_upstream_rebases_onto_tag() {
     let root = TempDir::new().unwrap();
     let repo = load_repo(&root, FORK_REBASE_TAG);
     fs::create_dir(&repo.path).unwrap();
@@ -225,17 +222,15 @@ fn clone_missing_repo_previews_full_pipeline() {
         [
             clone_cmd.as_str(),
             "jj git remote add upstream https://example.com/up/app",
+            "jj config set --repo revset-aliases.\"trunk()\" main@upstream",
             "jj bookmark track custom@origin",
             "jj git fetch --remote upstream",
             "jj git fetch --remote origin",
-            "jj bookmark set main -r main@upstream",
-            "jj git push --remote origin --bookmark main",
             "jj rebase -b custom -d main@upstream --skip-emptied",
             CONFLICT_CHECK,
             "jj new custom",
             "sh -c cargo install --path .",
             "jj git push --remote origin --bookmark custom",
-            "jj git push --remote origin --bookmark main",
         ]
     );
 }
