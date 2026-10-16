@@ -1,5 +1,8 @@
 # Apple droppings
+#
+# DerivedData is the conventional name for `xcodebuild` output.
 .DS_Store
+DerivedData
 
 # Editor droppings
 .idea/
