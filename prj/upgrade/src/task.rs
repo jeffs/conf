@@ -48,6 +48,7 @@ pub enum Command {
         args: &'static [&'static str],
     },
     CargoCrates,
+    Rustup,
 }
 
 #[derive(Clone, Debug)]
@@ -93,10 +94,7 @@ pub fn tasks() -> Vec<Task> {
             id: "rustup",
             label: "rustup update",
             section: Section::PackageManagers,
-            command: Command::Shell {
-                program: "rustup",
-                args: &["update"],
-            },
+            command: Command::Rustup,
             state: State::Pending,
             output: Vec::new(),
             depends_on: None,
