@@ -31,3 +31,4 @@
 
 # Obsidian (data)bases.
 --map-syntax "*.base:YAML"
+--map-syntax "[Jj]ustfile:make"
