@@ -9,5 +9,4 @@ else
   pipx upgrade xonsh
 fi
 
-# TODO: In Xonsh:
-xpip install gnureadline pygments prompt-toolkit
+xpip install gnureadline pygments prompt-toolkit ruamel.yaml

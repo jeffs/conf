@@ -1,3 +1,17 @@
+def load(path: str):
+    """Reads an object from a JSON or YAML 1.2 file."""
+    import json
+    from ruamel.yaml import YAML
+
+    with open(path) as stream:
+        if path.endswith(".json"):
+            return json.load(stream)
+        elif path.endswith(".yaml") or path.endswith(".yml"):
+            return YAML().load(stream)
+        else:
+            raise Exception("unrecognized file type")
+
+
 def main():
     from pathlib import Path
     from typing import cast
@@ -24,3 +38,5 @@ def main():
 
 
 main()
+
+del main
