@@ -1,14 +1,15 @@
 [[language]]
 name = "bash"
 file-types = [
-  "sh",
   "bash",
+  "sh",
   "xsh", # Syntax highlight Xonsh scripts.
   "zsh",
-  { glob = "zprofile" },
-  { glob = "zshrc" },
   { glob = ".zprofile" },
   { glob = ".zsh{env,login,rc}" },
+  { glob = "config" }, # e.g., ../bat/config
+  { glob = "zprofile" },
+  { glob = "zshrc" },
 ]
 rulers = [81]
 
