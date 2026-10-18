@@ -44,3 +44,8 @@ cargo install --path ~/conf/prj/jump
 
 # Symlink `~/conf/etc` items, mostly into `~/.config`.
 ~/conf/src/install-dotfiles.zsh
+
+if [ $(uname) == 'Darwin' ]; then
+    # drag any window from anywhere with Control+Command.
+    defaults write -g NSWindowShouldDragOnGesture -bool true
+fi
