@@ -99,8 +99,7 @@ separate(" ",
 '''
 
 [ui]
-pager = "delta"
-diff-formatter = ":git"
+diff-formatter = "difft"
 
 # Meant to show whatever I'm actively working on: every active branch tip, plus
 # my own unmerged commits behind those tips, with long stacks elided per-branch

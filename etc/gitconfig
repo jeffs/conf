@@ -19,7 +19,6 @@
 [core]
 	excludesfile   = ~/conf/etc/gitexcludes
 	attributesfile = ~/conf/etc/gitattributes
-	pager = delta
 	# Disable hooks. Nasty hookses, we hates them.
 	hooksPath = /dev/null
 [diff]
@@ -46,12 +45,6 @@
 	name  = Jeff Schwab
 	email = jeff@unbuggy.com
 
-
-[delta]
-	navigate = true
-	dark = true
-[interactive]
-	diffFilter = delta --color-only
 
 # Munge URLs automatically to save typing.
 #
