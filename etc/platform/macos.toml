@@ -62,7 +62,7 @@ command = ["softwareupdate", "--list"]
 # Values starting with ~/ or exactly ~ are expanded against $HOME.
 # Everything else is a literal string.
 [env]
-LESS = "-FRX -j5"
+LESS = "-FRX -j5 --mouse"
 MANPAGER = "col -b | bat -pl man"
 HOMEBREW_NO_ENV_HINTS = true
 GRIT_TRUNKS = "dev,main,master,trunk"
