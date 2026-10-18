@@ -12,6 +12,12 @@ The result of this ticket should be a script to check for problems like this, an
 - Check for modifications to dotfiles.
   + Docker just crapped in my zprofile.
   + It's the same thing they previous overwrote my zshrc with.
+- Check for `~/.config/git/ignore`, which Claude Code apparently creates.
+  ```sh
+   $ cat ~/.config/git/ignore
+   **/.claude/settings.local.json
+  ```
+  + Git ignores it anyway, since I set a global `gitexcludes` file.
 
 A lot of this isn't conf-specific. For instance, Markdown checks would be useful in `~/file/tbd`.
 

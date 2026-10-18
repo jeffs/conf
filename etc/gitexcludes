@@ -81,7 +81,7 @@ var/
 .sourcegraph/
 .ai/
 
-# `ln -s . @` in Next.js projects so I can use `gF` to open CSS file imports.
-# Note that I can the LS already supports `gd` on ordinary (non-CSS) imports
-# already works correctly, and recognizes `@` as the project root.
+# I `ln -s . @` in Next.js projects so I can `gF` in Helix to open CSS file
+# imports. The LS already supports `gd` on ordinary (non-CSS) imports, and
+# recognizes `@` as the project root.
 @
