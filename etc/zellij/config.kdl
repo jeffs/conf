@@ -43,18 +43,9 @@ theme "blade-runner"
 
 keybinds {
     shared_among "normal" "locked" {
-        // Tab navigation. See also M-h/l.
-        bind "Alt H" { GoToPreviousTab; }
-        bind "Alt L" { GoToNextTab; }
-
-        // C-g C-t n
-        bind "Alt t" { NewTab; }
-        
-        // C-g M-[/]
-        // bind "Alt [" { PreviousSwapLayout; }
-        // bind "Alt ]" { NextSwapLayout; }
-
-        // Pane navigation.
+        // Tab navigation.
+        bind "Alt q" { GoToPreviousTab; }
+        bind "Alt w" { GoToNextTab; }
         bind "Alt 1" { GoToTab 1; }
         bind "Alt 2" { GoToTab 2; }
         bind "Alt 3" { GoToTab 3; }
@@ -65,6 +56,15 @@ keybinds {
         bind "Alt 8" { GoToTab 8; }
         bind "Alt 9" { GoToTab 9; }
         bind "Alt 0" { GoToTab 10; }
+
+        // Equivalent to C-g C-t n.
+        bind "Alt t" { NewTab; }
+        
+        // C-g M-[/]
+        // bind "Alt [" { PreviousSwapLayout; }
+        // bind "Alt ]" { NextSwapLayout; }
+
+        // Pane navigation.
         bind "Alt h" { MoveFocus "left"; }
         bind "Alt j" { MoveFocus "down"; }
         bind "Alt k" { MoveFocus "up"; }
@@ -72,7 +72,7 @@ keybinds {
         bind "Alt n" { FocusNextPane; }
         bind "Alt p" { FocusPreviousPane; }
 
-        // Resize (stack/unstack).
+        // Resize (or stack/unstack) panes.
         bind "Alt =" { Resize "Increase"; }
         bind "Alt -" { Resize "Decrease"; }
 
@@ -81,7 +81,7 @@ keybinds {
         bind "Alt Z" { ToggleFocusFullscreen; TogglePaneFrames; }
     }
 
-    // Quick actions from normal mode (Ctrl+g then key) that return to locked
+    // Quick actions from normal mode (Ctrl+g then key) that return to locked.
     normal {
         // Send literal Ctrl+g to application. (Ctrl+g is ASCII 7.)
         bind "g" { Write 7; SwitchToMode "locked"; }
