@@ -32,6 +32,10 @@ show_startup_tips false
 mouse_scroll_resize false
 scrollback_editor "/Users/jeff/.cargo/bin/hx"
 
+// This option is not supported upstrream, but is in my fork
+// (https://github.com/jeffs/zellij).
+tab_navigation_wraps false
+
 // Colorful, but still not as bright as the default.
 // Easier to tell which tab is focused than in one-half-dark.
 // <https://zellij.dev/documentation/theme-list.html>
@@ -40,8 +44,8 @@ theme "blade-runner"
 keybinds {
     shared_among "normal" "locked" {
         // Tab navigation. See also M-h/l.
-        bind "Alt ," { GoToPreviousTab; }
-        bind "Alt ." { GoToNextTab; }
+        bind "Alt H" { GoToPreviousTab; }
+        bind "Alt L" { GoToNextTab; }
 
         // C-g C-t n
         bind "Alt t" { NewTab; }
@@ -49,9 +53,8 @@ keybinds {
         // C-g M-[/]
         // bind "Alt [" { PreviousSwapLayout; }
         // bind "Alt ]" { NextSwapLayout; }
-        bind "Alt h" { MoveFocusOrTab "left"; }
 
-        // Pane navigation. Left/right also traverses tabs.
+        // Pane navigation.
         bind "Alt 1" { GoToTab 1; }
         bind "Alt 2" { GoToTab 2; }
         bind "Alt 3" { GoToTab 3; }
@@ -62,10 +65,10 @@ keybinds {
         bind "Alt 8" { GoToTab 8; }
         bind "Alt 9" { GoToTab 9; }
         bind "Alt 0" { GoToTab 10; }
-        bind "Alt h" { MoveFocusOrTab "left"; }
+        bind "Alt h" { MoveFocus "left"; }
         bind "Alt j" { MoveFocus "down"; }
         bind "Alt k" { MoveFocus "up"; }
-        bind "Alt l" { MoveFocusOrTab "right"; }
+        bind "Alt l" { MoveFocus "right"; }
         bind "Alt n" { FocusNextPane; }
         bind "Alt p" { FocusPreviousPane; }
 
