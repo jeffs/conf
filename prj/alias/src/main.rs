@@ -45,7 +45,7 @@ fn t_depth(depth: u8) -> &'static [&'static str] {
 /// Executable target file
 #[derive(Clone, Copy)]
 enum Exe {
-    /// Animated ASCII aquarium
+    /// Animated ASCII aquarium.
     Asciiquarium,
     /// Cat with wings
     Bat,
@@ -71,6 +71,8 @@ enum Exe {
     /// Jujutsu
     Jj,
     /// Jujutsu Git HEAD and pull request sync
+    ///
+    /// See [jj-sync](../../jj-sync).
     JjSync,
 }
 
@@ -163,6 +165,8 @@ fn main() {
         // functionality would probably be better served by tar-like "keys" than
         // by POSIX/GNU-style "options" (even though the latter are dominant in
         // the modern world).
+        //
+        // TODO: jfa = jj file annotate; jfal for a template filtering by line.
         "jb" => Exe::Jj.exec_with(["bookmark"], args),
         "jba" => Exe::Jj.exec_with(["bookmark", "advance"], args),
         "jba-" => Exe::Jj.exec_with(["bookmark", "advance", "--to=@-"], args),
@@ -189,9 +193,6 @@ fn main() {
         "jgi" => Exe::Jj.exec_with(["git", "init"], args),
         "jgp" => Exe::Jj.exec_with(["git", "push"], args),
         "jgpad" => Exe::Jj.exec_with(["git", "push", "--all", "--deleted"], args),
-        // The sync spawns the fetch itself, rather than following one, so that
-        // the GitHub query it also makes overlaps the fetch's round trip.
-        // Arguments for the fetch go after `--`, as `jj-sync` explains.
         "jgs" => Exe::JjSync.exec_with(["--fetch"], args),
         "jl" => Exe::Jj.exec_with(["log"], args),
         "jlr" => Exe::Jj.exec_with(["log", "--revisions"], args),

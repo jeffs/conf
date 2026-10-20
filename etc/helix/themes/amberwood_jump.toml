@@ -1,3 +1,7 @@
 inherits = "amberwood"
 
 "ui.virtual.jump-label" = { fg = "red", modifiers = ["bold"] }
+hint = "#8a968e"
+
+[palette]
+comment = "#a8a7b4"

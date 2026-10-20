@@ -1,10 +1,11 @@
+# theme = "amberwood_jump"
 # theme = "focus_nova"
+theme = "tokyonight"
 # theme = 'aurara'
 # theme = 'ayu_dark'
 # theme = 'base16_default_dark'
 # theme = 'jeffs_base16_terminal'
 # theme = 'term16_dark'
-theme = "amberwood_jump"
 
 # `gw` shortcuts are unreadable.
 # theme = "amberwood"
@@ -93,6 +94,9 @@ right = ':buffer-next'
 # <https://docs.helix-editor.com/command-line.html?highlight=expand#expansions>
 #
 # Print the current line's git blame information to the statusline.
+#
+# TODO: Provide JJ equivalents. `jj file annotate` sadly has no equivalent of
+#  `-L`; you're supposed to pass a template instead, filtering on `line_number`.
 space.B = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
 space.L = ":sh git log %{buffer_name}"
 

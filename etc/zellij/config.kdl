@@ -78,7 +78,7 @@ keybinds {
 
         // Zoom.
         bind "Alt z" { ToggleFocusFullscreen; }
-        bind "Alt Z" { ToggleFocusFullscreen; TogglePaneFrames; }
+        bind "Alt Z" { TogglePaneFrames; }
     }
 
     // Quick actions from normal mode (Ctrl+g then key) that return to locked.
