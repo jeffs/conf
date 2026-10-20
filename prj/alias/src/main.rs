@@ -42,21 +42,6 @@ fn t_depth(depth: u8) -> &'static [&'static str] {
     }
 }
 
-/// First whitespace-delimited token of the pasteboard, if any. Text copied
-/// from Slack often carries trailing commentary after a link; only the first
-/// token is meaningful.
-fn pasteboard_token() -> Option<ffi::OsString> {
-    let stdout = Command::new("/usr/bin/pbpaste")
-        .output()
-        .expect("pbpaste")
-        .stdout;
-    String::from_utf8(stdout)
-        .expect("pasteboard text should be UTF-8")
-        .split_whitespace()
-        .next()
-        .map(ffi::OsString::from)
-}
-
 /// Executable target file
 #[derive(Clone, Copy)]
 enum Exe {
@@ -79,8 +64,6 @@ enum Exe {
     /// [Respect gitignore.](https://github.com/junegunn/fzf#respecting-gitignore)
     /// This can't be done with flags alone; compose fzf with fd-find.
     Fzf,
-    /// GitHub CLI
-    Gh,
     /// Markdown reader written in Go
     Glow,
     /// Hexadecimal output of file contents
@@ -107,19 +90,6 @@ impl Exe {
             .exec()
     }
 
-    fn exec_with_env(
-        self,
-        (key, value): (impl AsRef<ffi::OsStr>, impl AsRef<ffi::OsStr>),
-        inserted_args: impl IntoIterator<Item = impl AsRef<ffi::OsStr>>,
-        args: impl IntoIterator<Item = impl AsRef<ffi::OsStr>>,
-    ) -> io::Error {
-        Command::new(self.path())
-            .env(key, value)
-            .args(inserted_args)
-            .args(args)
-            .exec()
-    }
-
     fn path(self) -> PathBuf {
         match self {
             Exe::Asciiquarium => cargo_bin().join("asciiquarium"),
@@ -129,7 +99,6 @@ impl Exe {
             Exe::Evcxr => cargo_bin().join("evcxr"),
             Exe::Eza => cargo_bin().join("eza"),
             Exe::Fzf => "/opt/homebrew/bin/fzf".into(),
-            Exe::Gh => "/opt/homebrew/bin/gh".into(),
             Exe::Glow => "/opt/homebrew/bin/glow".into(),
             Exe::Hexdump => "/usr/bin/hexdump".into(),
             Exe::Jj => cargo_bin().join("jj"),
@@ -246,15 +215,6 @@ fn main() {
         "t8" => Exe::Eza.exec_with(t_depth(8), args),
         "t9" => Exe::Eza.exec_with(t_depth(9), args),
         "tree" => Exe::Eza.exec_with(&t_args[1..], args),
-
-        // Ignores every arg after the first, pulls from the pasteboard when
-        // given no args at all. GH_FORCE_TTY keeps color and markdown
-        // rendering when output is piped, e.g. to a pager.
-        "unfurl" => Exe::Gh.exec_with_env(
-            ("GH_FORCE_TTY", tput_cols().to_string()),
-            ["pr", "view"],
-            args.next().or_else(pasteboard_token),
-        ),
 
         _ => {
             eprintln!("error: {name}: bad alias");
