@@ -88,6 +88,14 @@ checkout = "custom"
 upstream_ref = "master"
 build = ["cargo install --path . --locked"]
 
+[repos.crux]
+clone = "git@github.com:jeffs/crux.git"
+upstream = "https://github.com/redbadger/crux"
+bookmarks = ["custom"]
+checkout = "custom"
+upstream_ref = "master"
+build = ["cargo check --workspace --locked"]
+
 # De novo
 
 [repos.rust-kart]
