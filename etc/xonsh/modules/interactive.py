@@ -88,7 +88,7 @@ def alias_f(args):
         case [out, _, 0] if out.startswith("http:") or out.startswith("https:"):
             return 0 if webbrowser.open(out) else 1
         case [out, _, 0]:
-            mcls(Path(out.rstrip()))
+            os.chdir(out.rstrip())
         case other:
             return other
 
