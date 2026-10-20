@@ -73,6 +73,11 @@ enum Exe {
     /// A modern `ls` replacement
     Eza,
     /// Fuzzy finder
+    ///
+    /// # TODO
+    ///
+    /// [Respect gitignore.](https://github.com/junegunn/fzf#respecting-gitignore)
+    /// This can't be done with flags alone; compose fzf with fd-find.
     Fzf,
     /// GitHub CLI
     Gh,
