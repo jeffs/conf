@@ -64,6 +64,9 @@ node_modules
 # https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 var/
 
+# Trunk build output.
+**/dist/
+
 # AI agents and editors
 .*-mcp
 *.mcp.json

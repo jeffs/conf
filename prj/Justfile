@@ -1,0 +1,9 @@
+build:
+    cargo build --release
+
+check:
+    cargo clippy --all-targets --workspace
+
+test:
+    cargo nextest run
+    cargo test --doc
