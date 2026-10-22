@@ -76,6 +76,7 @@ def alias_ec(args):
 
 
 def alias_f(args):
+    """Wraps the `jump` command."""
     args = tuple(args)
 
     # Jump doesn't yet support date arithmetic, so do it here instead.
@@ -86,8 +87,15 @@ def alias_f(args):
 
     match capture_text([path_jump], args):
         case [out, _, 0] if out.startswith("http:") or out.startswith("https:"):
-            return 0 if webbrowser.open(out) else 1
+            return 0 if webbrowser.open(out.rstrip()) else 1
+        case [out, _, 0] if len(args) == 1:
+            # The user specified only a target name, and `jump` respected it;
+            # so, create the output if it doesn't exit. This is especially
+            # useful for daily log directories.
+            mc(out.rstrip())
         case [out, _, 0]:
+            # The user specified both the target name and a relative path. It's
+            # easy to fat-finger the path, so don't create it automatically.
             os.chdir(out.rstrip())
         case other:
             return other
