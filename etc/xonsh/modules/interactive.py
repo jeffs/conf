@@ -3,6 +3,7 @@ from typing import cast
 import datetime as dt
 import os
 import subprocess
+import sys
 import tempfile
 import webbrowser
 
@@ -85,20 +86,28 @@ def alias_f(args):
         target = Path.home() / "file/log" / yesterday.strftime("%Y/%m/%d")
         return mcls(target)
 
-    match capture_text([path_jump], args):
-        case [out, _, 0] if out.startswith("http:") or out.startswith("https:"):
-            return 0 if webbrowser.open(out.rstrip()) else 1
-        case [out, _, 0] if len(args) == 1:
-            # The user specified only a target name, and `jump` respected it;
-            # so, create the output if it doesn't exit. This is especially
-            # useful for daily log directories.
-            mc(out.rstrip())
-        case [out, _, 0]:
-            # The user specified both the target name and a relative path. It's
-            # easy to fat-finger the path, so don't create it automatically.
+    [out, err, status] = (got := capture_text([path_jump], args))
+    if status != 0 or not out:
+        return got
+
+    if err:
+        print("warning:", err, file=sys.stderr)
+
+    if out.startswith("http:") or out.startswith("https:"):
+        return 0 if webbrowser.open(out.rstrip()) else 1
+
+    if len(args) == 1:
+        # The user specified only a target name, and `jump` respected it;
+        # so, create the output if it doesn't exit. This is especially
+        # useful for daily log directories.
+        mc(out.rstrip())
+    else:
+        # The user specified both the target name and a relative path. It's
+        # easy to fat-finger the path, so don't create it automatically.
+        try:
             os.chdir(out.rstrip())
-        case other:
-            return other
+        except FileNotFoundError as e:
+            return [None, e, 1]
 
 
 def curr_branch():
