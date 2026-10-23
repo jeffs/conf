@@ -29,4 +29,5 @@
 
 # Obsidian (data)bases.
 --map-syntax "*.base:YAML"
+--map-syntax "*.just:make"
 --map-syntax "[Jj]ustfile:make"
