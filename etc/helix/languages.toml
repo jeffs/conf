@@ -158,10 +158,8 @@ language-servers = ["vscode-html-language-server", "emmet-ls"]
 command = "move-analyzer"
 
 [language-server.rust-analyzer.config.rust-analyzer]
-check = { command = "clippy", args = ["--workspace"] }
-
 # Project-specific lints can be configured in Cargo.toml and clippy.toml.
-# check = { command = "clippy", extraArgs = ["--", "-W", "clippy::pedantic"] }
+check = { command = "clippy" }
 
 [language-server.rust-analyzer.config.rust-analyzer.cargo]
 # cfgs = ["debug_assertions", "miri", "doc"]
