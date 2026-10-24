@@ -10,6 +10,7 @@ theme = "tokyonight"
 # `gw` shortcuts are unreadable.
 # theme = "amberwood"
 
+editor.default-yank-register = "+"
 editor.mouse-yank-register = "+"
 editor.true-color = true
 editor.text-width = 80
