@@ -2,19 +2,24 @@
 
 use std::{os::unix::process::CommandExt, process::Command};
 
-/// Returns true if the executable name is "jbctp" (meaning we should push the
-// new bookmark), and false if the name is "jbct" (indicating that we should
-// not).
+/// TODO: Support advancing bookmarks, as with `jj bookmark advance`.
+enum Task {
+    /// We should push the new bookmark.
+    Track,
+    /// We should not push the new bookmark.
+    TrackAndPush,
+}
+
+/// Parses the name of this executable (from `argv[0]`).
 ///
 /// # Errors
 ///
-/// Will return [`None`] if the executable cannot be determined, or is
-// unrecognized.
-fn parse_exe() -> Option<bool> {
+/// Returns [`None`] if the executable cannot be determined, or is unrecognized.
+fn parse_exe() -> Option<Task> {
     let exe = std::env::current_exe().ok()?;
     match exe.as_path().file_name()?.to_str()? {
-        "jbctp" => Some(true),
-        "jbct" => Some(false),
+        "jbctp" => Some(Task::TrackAndPush),
+        "jbct" => Some(Task::Track),
         _ => None,
     }
 }
@@ -41,7 +46,7 @@ fn main() {
         .args(["bookmark", "track"])
         .arg(&bookmark));
 
-    if push {
+    if let Task::TrackAndPush = push {
         let error = Command::new("jj")
             .args(["git", "push", "--bookmark"])
             .arg(bookmark)
