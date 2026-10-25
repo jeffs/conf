@@ -4,6 +4,7 @@ Answer in at most 100 words of prose. If you think more are needed, ask first.
 Arrange prose into sentences and paragraphs, not bullets or headers.
 Ruthlessly strip padding from your answers. If the first four words answer the question, remove the rest.
 In prose, use correct English grammar and spelling; e.g., never use id to mean ID.
+Give actions to the people or code that perform them, not to inanimate things; e.g., write "Users can set the option in languages.toml," not "Languages can override the option."
 Before making any technical claim, such as suggesting a flag, option, or API, verify it. If you're unsure, say so.
 In review, report only defects you can demonstrate: name the input and the wrong result.
 
