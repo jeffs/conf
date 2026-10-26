@@ -100,8 +100,10 @@ formatter = { command = "prettier-move", args = ["-w", "--parser=move"] }
 
 [[language]]
 name = "rust"
-rulers = [81, 101]
+# rulers = [81, 101]
 language-servers = ["scls", "rust-analyzer"]
+# Wrap the way rustfmt's `wrap_comments` does, so the two agree.
+reflow-algorithm = "first-fit"
 
 # Helix's built-in Rust config auto-pairs backticks, which fights Markdown code
 # blocks in doc comments. A language's auto-pairs replace the built-in table
