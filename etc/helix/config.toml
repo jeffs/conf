@@ -1,10 +1,10 @@
 # theme = "amberwood_jump"
 # theme = "focus_nova"
-theme = "tokyonight"
+# theme = "tokyonight"
 # theme = 'aurara'
 # theme = 'ayu_dark'
 # theme = 'base16_default_dark'
-# theme = 'jeffs_base16_terminal'
+theme = 'jeffs_base16_terminal'
 # theme = 'term16_dark'
 
 # `gw` shortcuts are unreadable.
@@ -122,6 +122,7 @@ h = ':toggle lsp.display-inlay-hints'
 n = ':toggle soft-wrap.enable'
 r = ':reload-all'
 C-f = 'page_down'
+C-l = ':lsp-restart'
 C-r = ':config-reload'
 
 [keys.normal.C-f.i]
