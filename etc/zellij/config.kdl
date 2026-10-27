@@ -59,10 +59,6 @@ keybinds {
 
         // Equivalent to C-g C-t n.
         bind "Alt t" { NewTab; }
-        
-        // C-g M-[/]
-        // bind "Alt [" { PreviousSwapLayout; }
-        // bind "Alt ]" { NextSwapLayout; }
 
         // Pane navigation.
         bind "Alt h" { MoveFocus "left"; }
@@ -84,11 +80,15 @@ keybinds {
     // Quick actions from normal mode (Ctrl+g then key) that return to locked.
     normal {
         // Send literal Ctrl+g to application. (Ctrl+g is ASCII 7.)
+        bind "q" { MoveTab "Left"; }
+        bind "w" { MoveTab "Right"; }
         bind "g" { Write 7; SwitchToMode "locked"; }
         bind "f" { ToggleFloatingPanes; SwitchToMode "locked"; }
         bind "j" { NewPane "down"; SwitchToMode "locked"; }
         bind "l" { NewPane "right"; SwitchToMode "locked"; }
         bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
+        bind "[" { PreviousSwapLayout; }
+        bind "]" { NextSwapLayout; }
     }
 
     scroll {
