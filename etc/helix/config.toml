@@ -17,7 +17,7 @@ editor.text-width = 80
 
 # [Recommended settings](https://docs.helix-editor.com/editor.html):
 # Show warnings and errors on the cursorline inline.
-editor.end-of-line-diagnostics = "hint"
+editor.end-of-line-diagnostics = "info"
 editor.inline-diagnostics.cursor-line = "warning"
 
 # Don't auto-insert closing ``` ` ```. It plays hell with Markdown code blocks,
@@ -115,19 +115,20 @@ space.V = ':insert-output mdrich --paste'
 c = ':buffer-close'
 # For Rust: Wrap the current selection in `dbg!()`.
 #
+# The macro version works, but isn't a single action for undo purposes.
+#
 # TODO: Language-specific input bindings.
-d = ['save_selection', ":append-output echo ')'", 'jump_backward', ":insert-output echo 'dbg!('", 'jump_forward', 'jump_backward']
+# TODO: Use my own Rust code instead of sed(1).
+# d = '@ms(idbg!<esc>)'
+d = ":pipe sed '1s/^/dbg!(/;$s/$/)/'"
+
 f = ':format'
-h = ':toggle lsp.display-inlay-hints'
+h = ':toggle lsp.dis(p)lay-inlay-hints'
 n = ':toggle soft-wrap.enable'
 r = ':reload-all'
 C-f = 'page_down'
 C-l = ':lsp-restart'
 C-r = ':config-reload'
-
-[keys.normal.C-f.i]
-d = [":insert-output date -I", 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
-t = [":insert-output date +%%H:%%M", 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
 
 # Running a sequence of :set or :toggle commands is currently broken. See:
 # <https://github.com/helix-editor/helix/issues/13187>
@@ -136,9 +137,16 @@ t = [":insert-output date +%%H:%%M", 'ensure_selections_forward', 'collapse_sele
 # https://github.com/helix-editor/helix/pull/14629 # @khutchens
 e = [":toggle end-of-line-diagnostics hint disable", ":toggle inline-diagnostics.cursor-line warning disable"]
 
+[keys.normal.C-f.i]
+d = [":insert-output date -I", 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
+t = [":insert-output date +%%H:%%M", 'ensure_selections_forward', 'collapse_selection', 'move_char_right']
+
 [keys.select.C-f]
 c = ':buffer-close'
-d = ['save_selection', ":append-output echo ')'", 'jump_backward', ":insert-output echo 'dbg!('", 'jump_forward', 'jump_backward']
+
+# See comment on `keys.normal.C-f.d`.
+d = ":pipe sed '1s/^/dbg!(/;$s/$/)/'"
+
 h = ':toggle lsp.display-inlay-hints'
 n = ':toggle soft-wrap.enable'
 q = '@ms“' # Surround with double quotation marks.
