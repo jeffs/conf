@@ -164,8 +164,7 @@ command = "move-analyzer"
 check = { command = "clippy" }
 
 [language-server.rust-analyzer.config.rust-analyzer.cargo]
-# cfgs = ["debug_assertions", "miri", "doc"]
-# targetDir = true
+cfgs = ["debug_assertions", "doc"]
 
 [language-server.rust-analyzer.config.rust-analyzer.diagnostics]
 disabled = [
