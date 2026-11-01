@@ -38,11 +38,7 @@ local function if_readable(path)
   return path
 end
 
--- Launch Zellij, which will start Nushell (configured in Zellij's config).
--- Each WezTerm tab/window gets its own Zellij session.
---
--- Zellij looks for config in `~/.config/zellij`, which is symlinked to
--- `~/conf/etc/zellij` by `~/conf/src/install-dotfiles.zsh`.
+-- Launch Zellij. Each WezTerm tab/window gets its own Zellij session.
 config.default_prog = {
   if_readable(wezterm.home_dir .. '/.cargo/bin/zellij')
     or if_readable('/opt/homebrew/bin/zellij')
@@ -92,8 +88,8 @@ config.audible_bell = 'Disabled'
 
 -- Hide the tab bar, as I mostly use Zellij for tabs/panes.
 -- Toggle using CMD+i.
-config.enable_tab_bar = false
--- config.hide_tab_bar_if_only_one_tab = true
+-- config.enable_tab_bar = false
+config.hide_tab_bar_if_only_one_tab = true
 wezterm.on('toggle-tab-bar', function(window)
   local overrides = window:get_config_overrides() or {}
   overrides.enable_tab_bar =  not overrides.enable_tab_bar
@@ -127,9 +123,14 @@ config.keys = {
     mods = 'CMD', key = 't',
     action = wezterm.action.SendKey { mods = 'ALT', key = 't' },
   },
+  {
+    mods = 'CMD', key = 'T',
+    action = wezterm.action.SpawnTab 'CurrentPaneDomain',
+  },
 
-  -- Nushell accepts Alt+Enter to enter multiline commands, so I use Cmd+Enter
-  -- instead (matching the iTerm2 default).
+  -- Use Cmd+Enter (instead of Alt+Enter) to toggle full-screen mode.
+  --
+  -- Cmd+Enter matches iTerm2. Nushell wants Alt+Enter for multiline commands.
   {
     mods = 'ALT', key = 'Enter',
     action = wezterm.action.DisableDefaultAssignment,
