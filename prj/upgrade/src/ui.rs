@@ -91,7 +91,7 @@ fn render_task(frame: &mut Frame, area: Rect, task: &Task) {
     let visible_lines = (area.height as usize).saturating_sub(reserved_lines);
     let start = task.output.len().saturating_sub(visible_lines);
     for line in task.output.iter().skip(start) {
-        lines.push(Line::from(format!("  {line}")));
+        lines.push(Line::from(format!("  {}", expand_tabs(line))));
     }
 
     if let State::Failed(ref msg) = task.state {
@@ -125,4 +125,35 @@ fn render_status_bar(frame: &mut Frame, area: Rect, tasks: &[Task]) {
     let block = Block::default().borders(Borders::TOP);
     let paragraph = Paragraph::new(status).block(block);
     frame.render_widget(paragraph, area);
+}
+
+/// Replaces each tab with spaces up to the next multiple of 8 columns, because
+/// ratatui passes tabs to the terminal, which then misplaces later text.
+fn expand_tabs(line: &str) -> String {
+    const TAB_WIDTH: usize = 8;
+    let mut expanded = String::with_capacity(line.len());
+    let mut column = 0;
+    for c in line.chars() {
+        if c == '\t' {
+            let spaces = TAB_WIDTH - column % TAB_WIDTH;
+            expanded.extend(std::iter::repeat_n(' ', spaces));
+            column += spaces;
+        } else {
+            expanded.push(c);
+            column += 1;
+        }
+    }
+    expanded
+}
+
+#[cfg(test)]
+mod tests {
+    use super::expand_tabs;
+
+    #[test]
+    fn expands_tabs_to_tab_stops() {
+        assert_eq!(expand_tabs("\tTitle: macOS"), "        Title: macOS");
+        assert_eq!(expand_tabs("ab\tc"), "ab      c");
+        assert_eq!(expand_tabs("no tabs"), "no tabs");
+    }
 }
