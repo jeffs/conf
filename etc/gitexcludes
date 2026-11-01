@@ -1,7 +1,9 @@
 # Apple droppings
 #
-# DerivedData is the conventional name for `xcodebuild` output.
+# - SwiftPM creates .build
+# - xcodebuild creates DerivedData (under ~/Library by default)
 .DS_Store
+.build
 DerivedData
 
 # Editor droppings
