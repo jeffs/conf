@@ -30,6 +30,9 @@ session_serialization false
 stacked_pane_list false
 show_startup_tips false
 mouse_scroll_resize false
+scroll_mode_sync false
+mouse_hover_effects false
+mouse_hover_tips false
 scrollback_editor "/Users/jeff/.cargo/bin/hx"
 
 // This option is not supported upstrream, but is in my fork
