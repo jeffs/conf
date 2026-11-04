@@ -163,10 +163,15 @@ impl Runner<'_> {
             self.sink.info("already cloned");
             return Ok(());
         }
+        self.clone_fresh(repo)?;
+        self.update(repo)
+    }
 
+    /// Clone the repo, which must be absent, and configure its remotes,
+    /// `trunk()`, and bookmark tracking.
+    fn clone_fresh(&self, repo: &Repo) -> jj::Result<()> {
         // The workspace doesn't exist yet; clone from its parent directory.
-        let parent = repo.path.parent().unwrap_or(Path::new("."));
-        self.ws(parent).clone(&repo.clone_url, &repo.path)?;
+        self.ws(parent_dir(repo)).clone(&repo.clone_url, &repo.path)?;
 
         let ws = self.ws(&repo.path);
         if let Some(fork) = repo.kind.fork() {
@@ -182,9 +187,13 @@ impl Runner<'_> {
                 ws.bookmark_track(bm, Remote::Origin)?;
             }
         }
-
-        self.update(repo)
+        Ok(())
     }
+}
+
+/// The directory containing the repo's workspace.
+fn parent_dir(repo: &Repo) -> &Path {
+    repo.path.parent().unwrap_or(Path::new("."))
 }
 
 /// Run an operation across all repos sequentially, printing to stderr.
