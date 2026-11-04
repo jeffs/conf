@@ -2,6 +2,7 @@ use std::path::Path;
 
 use clap::Subcommand;
 
+use crate::github::Slug;
 use crate::jj::{self, Mode, Remote, Workspace};
 use crate::manifest::{Repo, RepoKind};
 use crate::output::{self, Sink};
@@ -23,6 +24,8 @@ pub enum Op {
     Update,
     /// Clone repos that don't exist locally
     Clone,
+    /// Create missing GitHub forks and fork bookmarks, then clone
+    Fork,
 }
 
 /// Result of running an operation on one repo.
@@ -44,7 +47,7 @@ impl Runner<'_> {
     /// Run an operation on a single repo, reporting progress to the sink.
     #[must_use]
     pub fn run_one(&self, op: Op, repo: &Repo) -> Outcome {
-        if !matches!(op, Op::Clone) && !repo.path.exists() {
+        if !matches!(op, Op::Clone | Op::Fork) && !repo.path.exists() {
             self.sink.warn("not cloned — skipping");
             return Outcome::Skipped("not cloned".into());
         }
@@ -56,6 +59,7 @@ impl Runner<'_> {
             Op::Push => self.push(repo),
             Op::Update => self.update(repo),
             Op::Clone => self.clone(repo),
+            Op::Fork => self.fork(repo),
         };
         match result {
             Ok(()) => Outcome::Ok,
@@ -171,7 +175,8 @@ impl Runner<'_> {
     /// `trunk()`, and bookmark tracking.
     fn clone_fresh(&self, repo: &Repo) -> jj::Result<()> {
         // The workspace doesn't exist yet; clone from its parent directory.
-        self.ws(parent_dir(repo)).clone(&repo.clone_url, &repo.path)?;
+        self.ws(parent_dir(repo))
+            .clone(&repo.clone_url, &repo.path)?;
 
         let ws = self.ws(&repo.path);
         if let Some(fork) = repo.kind.fork() {
@@ -188,6 +193,46 @@ impl Runner<'_> {
             }
         }
         Ok(())
+    }
+
+    /// Create the repo's GitHub fork and fork bookmarks if absent, then
+    /// clone it if absent.  Pushes each new bookmark, and makes the first
+    /// listed bookmark the fork's default branch if it is new.
+    fn fork(&self, repo: &Repo) -> jj::Result<()> {
+        let Some(fork) = repo.kind.fork() else {
+            self.sink.info("not a fork — nothing to fork");
+            return self.clone(repo);
+        };
+        let slug = Slug::from_url(&repo.clone_url)
+            .ok_or_else(|| jj::Error("clone URL is not a GitHub repo".into()))?;
+        let gh = self.ws(parent_dir(repo));
+        if gh.gh_repo_exists(&slug)? {
+            self.sink.info(&format!("{slug} exists"));
+        } else {
+            gh.ensure_gh_user(&slug.owner)?;
+            gh.gh_fork(&fork.upstream, &slug.name)?;
+        }
+
+        let fresh = !repo.path.exists();
+        if fresh {
+            self.clone_fresh(repo)?;
+        }
+        if let RepoKind::ForkRebase { fork, bookmarks } = &repo.kind {
+            let ws = self.ws(&repo.path);
+            ws.fetch(Some(Remote::Upstream))?;
+            let base = fork.upstream_ref.qualified();
+            for (index, bm) in bookmarks.iter().enumerate() {
+                if ws.has_bookmark(bm)? {
+                    continue;
+                }
+                ws.bookmark_create(bm, &base)?;
+                ws.push(Remote::Origin, bm)?;
+                if index == 0 {
+                    gh.gh_set_default_branch(&slug, bm)?;
+                }
+            }
+        }
+        if fresh { self.update(repo) } else { Ok(()) }
     }
 }
 

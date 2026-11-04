@@ -264,3 +264,70 @@ fn manifest_rejects_bookmarks_without_upstream() {
         "invalid manifest: app: `bookmarks` requires `upstream`"
     );
 }
+
+const GITHUB_FORK_REBASE: &str = r#"
+clone = "git@github.com:me/app.git"
+upstream = "https://github.com/up/app"
+bookmarks = ["custom", "fix"]
+checkout = "custom"
+upstream_ref = "main"
+build = []
+"#;
+
+#[test]
+fn fork_missing_repo_previews_fork_and_bookmarks() {
+    let root = TempDir::new().unwrap();
+    let repo = load_repo(&root, GITHUB_FORK_REBASE);
+
+    let (sink, outcome) = dry_run(Op::Fork, &repo);
+
+    assert_eq!(outcome, Outcome::Ok);
+    let clone_cmd = format!(
+        "jj git clone --colocate git@github.com:me/app.git {}",
+        repo.path.display()
+    );
+    assert_eq!(
+        sink.lines_of(Kind::DryRun),
+        [
+            "gh repo view me/app --json name",
+            "gh api user --jq .login",
+            "gh repo fork https://github.com/up/app --clone=false --default-branch-only --fork-name app",
+            clone_cmd.as_str(),
+            "jj git remote add upstream https://github.com/up/app",
+            "jj config set --repo revset-aliases.\"trunk()\" main@upstream",
+            "jj bookmark track custom@origin",
+            "jj bookmark track fix@origin",
+            "jj git fetch --remote upstream",
+            "jj bookmark list -T name ++ \"\\n\" exact:custom",
+            "jj bookmark create custom -r main@upstream",
+            "jj git push --remote origin --bookmark custom",
+            "gh repo edit me/app --default-branch custom",
+            "jj bookmark list -T name ++ \"\\n\" exact:fix",
+            "jj bookmark create fix -r main@upstream",
+            "jj git push --remote origin --bookmark fix",
+            "jj git fetch --remote upstream",
+            "jj git fetch --remote origin",
+            "jj rebase -b custom -d main@upstream --skip-emptied",
+            CONFLICT_CHECK,
+            "jj rebase -b fix -d main@upstream --skip-emptied",
+            "jj log -r fix --no-graph -T if(conflict, \"CONFLICT\\n\")",
+            "jj new custom",
+            "jj git push --remote origin --bookmark custom",
+            "jj git push --remote origin --bookmark fix",
+        ]
+    );
+}
+
+#[test]
+fn fork_rejects_non_github_clone_url() {
+    let root = TempDir::new().unwrap();
+    let repo = load_repo(&root, FORK_REBASE);
+
+    let (sink, outcome) = dry_run(Op::Fork, &repo);
+
+    assert_eq!(
+        outcome,
+        Outcome::Failed("clone URL is not a GitHub repo".into())
+    );
+    assert_eq!(sink.lines_of(Kind::DryRun), [] as [std::string::String; 0]);
+}

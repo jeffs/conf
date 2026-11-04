@@ -1,4 +1,4 @@
-//! Thin wrapper around `jj` (and shell) subprocesses.
+//! Thin wrapper around `jj` (and `gh` and shell) subprocesses.
 //!
 //! Every command method returns [`Result`]: `Ok` with captured output, or an
 //! [`Error`] carrying a short failure reason (detail has already gone to the
@@ -11,6 +11,7 @@ use std::path::Path;
 use std::process::{Command, Stdio};
 use std::thread;
 
+use crate::github::Slug;
 use crate::output::{Kind, Sink};
 
 /// Whether commands actually execute or are only printed.
@@ -166,6 +167,92 @@ impl<'a> Workspace<'a> {
         self.run(
             &format!("track {qualified}"),
             &["jj", "bookmark", "track", &qualified],
+        )
+    }
+
+    /// Whether a local bookmark named exactly `bookmark` exists.  In dry-run
+    /// mode, prints the query and reports the bookmark absent.
+    pub fn has_bookmark(&self, bookmark: &str) -> Result<bool> {
+        let pattern = format!("exact:{bookmark}");
+        let cmd = ["jj", "bookmark", "list", "-T", "name ++ \"\\n\"", &pattern];
+        if self.mode == Mode::DryRun {
+            self.sink.line(Kind::DryRun, cmd.join(" "));
+            return Ok(false);
+        }
+        let out = self.run_quiet(&format!("look up {bookmark}"), &cmd)?;
+        Ok(!out.stdout.trim().is_empty())
+    }
+
+    pub fn bookmark_create(&self, bookmark: &str, revision: &str) -> Result {
+        self.run(
+            &format!("create {bookmark}"),
+            &["jj", "bookmark", "create", bookmark, "-r", revision],
+        )
+    }
+
+    /// Fail unless `gh` is logged in as `owner`, the account that
+    /// `gh repo fork` creates forks in.
+    pub fn ensure_gh_user(&self, owner: &str) -> Result<()> {
+        let cmd = ["gh", "api", "user", "--jq", ".login"];
+        if self.mode == Mode::DryRun {
+            self.sink.line(Kind::DryRun, cmd.join(" "));
+            return Ok(());
+        }
+        let out = self.run_quiet("gh login check", &cmd)?;
+        let login = out.stdout.trim();
+        if login != owner {
+            return Err(Error(format!("gh is logged in as {login}, not {owner}")));
+        }
+        Ok(())
+    }
+
+    /// Whether `gh` can see `repo`.  In dry-run mode, prints the query and
+    /// reports the repo absent.
+    pub fn gh_repo_exists(&self, repo: &Slug) -> Result<bool> {
+        let repo = repo.to_string();
+        let cmd = ["gh", "repo", "view", &repo, "--json", "name"];
+        if self.mode == Mode::DryRun {
+            self.sink.line(Kind::DryRun, cmd.join(" "));
+            return Ok(false);
+        }
+        match Command::new(cmd[0])
+            .args(&cmd[1..])
+            .current_dir(self.cwd)
+            .output()
+        {
+            Ok(out) => Ok(out.status.success()),
+            Err(e) => {
+                self.sink
+                    .error(&format!("failed to run `{}`: {e}", cmd.join(" ")));
+                Err(Error::new("gh repo view"))
+            }
+        }
+    }
+
+    /// Fork `upstream` on GitHub as `name`, keeping only its default branch.
+    /// If the account already has a fork of `upstream`, `gh` renames it to
+    /// `name`.
+    pub fn gh_fork(&self, upstream: &str, name: &str) -> Result {
+        self.run(
+            "gh repo fork",
+            &[
+                "gh",
+                "repo",
+                "fork",
+                upstream,
+                "--clone=false",
+                "--default-branch-only",
+                "--fork-name",
+                name,
+            ],
+        )
+    }
+
+    pub fn gh_set_default_branch(&self, repo: &Slug, bookmark: &str) -> Result {
+        let repo = repo.to_string();
+        self.run(
+            &format!("set default branch to {bookmark}"),
+            &["gh", "repo", "edit", &repo, "--default-branch", bookmark],
         )
     }
 
