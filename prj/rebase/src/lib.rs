@@ -1,3 +1,4 @@
+pub mod github;
 pub mod jj;
 pub mod manifest;
 pub mod ops;
