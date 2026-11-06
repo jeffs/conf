@@ -4,6 +4,8 @@ use std::ops::Deref;
 use std::path::{Path, PathBuf};
 use std::{fmt, fs};
 
+use crate::github::Slug;
+
 /// Raw TOML representation of the manifest.
 #[derive(Deserialize)]
 pub struct Manifest {
@@ -138,6 +140,15 @@ pub struct Repo {
 }
 
 impl Repo {
+    /// Whether this repo is a fork of the GitHub repo `upstream`.
+    #[must_use]
+    pub fn is_fork_of(&self, upstream: &Slug) -> bool {
+        self.kind
+            .fork()
+            .and_then(|fork| Slug::from_url(&fork.upstream))
+            .is_some_and(|slug| slug == *upstream)
+    }
+
     /// Where to move the working copy after an update: the explicit
     /// `checkout` revset if given, else a per-kind default.
     #[must_use]

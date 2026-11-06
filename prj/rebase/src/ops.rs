@@ -25,6 +25,7 @@ pub enum Op {
     /// Clone repos that don't exist locally
     Clone,
     /// Create missing GitHub forks and fork bookmarks, then clone
+    #[command(skip)]
     Fork,
 }
 

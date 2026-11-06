@@ -4,6 +4,7 @@
 use std::fs;
 use std::sync::Mutex;
 
+use rebase::github::Slug;
 use rebase::jj::Mode;
 use rebase::manifest::{self, Repo};
 use rebase::ops::{Op, Outcome, Runner};
@@ -330,4 +331,15 @@ fn fork_rejects_non_github_clone_url() {
         Outcome::Failed("clone URL is not a GitHub repo".into())
     );
     assert_eq!(sink.lines_of(Kind::DryRun), [] as [std::string::String; 0]);
+}
+
+#[test]
+fn fork_matches_upstream_across_url_forms() {
+    let root = TempDir::new().unwrap();
+    let repo = load_repo(&root, GITHUB_FORK_REBASE);
+
+    let slug = |url| Slug::from_url(url).unwrap();
+    assert!(repo.is_fork_of(&slug("git@github.com:up/app.git")));
+    assert!(repo.is_fork_of(&slug("https://github.com/up/app/")));
+    assert!(!repo.is_fork_of(&slug("https://github.com/me/app")));
 }

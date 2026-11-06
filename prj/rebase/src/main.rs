@@ -4,7 +4,7 @@ use std::process;
 use clap::Parser;
 use rebase::jj::Mode;
 use rebase::ops::{self, Op};
-use rebase::{Cli, manifest, tui};
+use rebase::{Cli, Command, manifest, tui};
 
 fn main() {
     let cli = Cli::parse();
@@ -35,7 +35,21 @@ fn main() {
         filtered
     };
 
-    let op = cli.command.unwrap_or(Op::Update);
+    let (op, repos) = match cli.command {
+        None => (Op::Update, repos),
+        Some(Command::Op(op)) => (op, repos),
+        Some(Command::Fork { upstream }) => {
+            let forks: Vec<_> = repos
+                .into_iter()
+                .filter(|r| r.is_fork_of(&upstream))
+                .collect();
+            if forks.is_empty() {
+                eprintln!("error: no manifest repo forks {upstream}");
+                process::exit(1);
+            }
+            (Op::Fork, forks)
+        }
+    };
     let mode = if cli.dry_run {
         Mode::DryRun
     } else {

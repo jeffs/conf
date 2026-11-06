@@ -5,8 +5,9 @@ pub mod ops;
 pub mod output;
 pub mod tui;
 
-use clap::Parser;
+use clap::{Parser, Subcommand};
 
+use crate::github::Slug;
 use crate::ops::Op;
 
 #[derive(Parser)]
@@ -33,5 +34,23 @@ pub struct Cli {
     pub plain: bool,
 
     #[command(subcommand)]
-    pub command: Option<Op>,
+    pub command: Option<Command>,
+}
+
+/// The subcommands that the CLI accepts.
+#[derive(Subcommand)]
+pub enum Command {
+    /// Create the missing GitHub fork of a manifest repo and its fork
+    /// bookmarks, then clone it
+    Fork {
+        /// GitHub URL of the upstream repo, as in the manifest's `upstream`
+        #[arg(value_parser = parse_github_url)]
+        upstream: Slug,
+    },
+    #[command(flatten)]
+    Op(Op),
+}
+
+fn parse_github_url(url: &str) -> Result<Slug, String> {
+    Slug::from_url(url).ok_or_else(|| format!("not a GitHub repo URL: {url}"))
 }
