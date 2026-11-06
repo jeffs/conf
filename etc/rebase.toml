@@ -96,6 +96,13 @@ checkout = "custom"
 upstream_ref = "master"
 build = ["cargo check --workspace --locked"]
 
+[repos.rust-analyzer]
+clone = "git@github.com:rust-lang/rust-analyzer"
+upstream = "https://github.com/rust-lang/rust-analyzer"
+bookmarks = ["custom"]
+upstream_ref = "master"
+build = ["cargo check --workspace --locked"]
+
 # De novo
 
 [repos.rust-kart]
