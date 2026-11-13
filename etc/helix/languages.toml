@@ -76,9 +76,12 @@ UseTitleCase = false
 command = "marksman"
 args = ["server"]
 
+[language-server.mdls-shim]
+command = "/Users/jeff/git/mdls-shim/bin/mdls-shim.js"
+
 [[language]]
 name = "markdown"
-language-servers = ["marksman"]
+language-servers = ["mdls-shim"]
 soft-wrap.wrap-indicator = '  '
 
 # Harper is extremely opinionated.
