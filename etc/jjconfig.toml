@@ -126,3 +126,6 @@ diff-editor = ":builtin"
 # any other remote still fetches tags.
 [remotes.origin]
 fetch-tags = "~*"
+
+[merge-tools.difft]
+diff-args = ["--color=always", "--width=$width", "--override=[Jj]ustfile:make", "$left", "$right"]

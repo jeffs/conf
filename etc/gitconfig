@@ -22,12 +22,12 @@
 	# Disable hooks. Nasty hookses, we hates them.
 	hooksPath = /dev/null
 [diff]
-	external = difft
+	external = difft --override='[Jj]ustfile:make'
 	tool = difftastic
 [difftool]
 	prompt = false
 [difftool "difftastic"]
-	cmd = difft --display=side-by-side $LOCAL $REMOTE
+	cmd = difft --override='[Jj]ustfile:make' --display=side-by-side $LOCAL $REMOTE
 [grep]
 	extendRegexp = true
 [init]
