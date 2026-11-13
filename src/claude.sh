@@ -14,6 +14,10 @@ unset ZELLIJ
 # This makes Claude Code start and exit much faster, but disables features
 # like `/feedback`. More targeted options include `DISABLE_TELEMETRY` and
 # `DO_NOT_TRACK`; see <https://code.claude.com/docs/en/env-vars>.
-export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+#
+# `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` disables `/remote-control`. 🤦
+# export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+export DISABLE_TELEMETRY=1
+export DO_NOT_TRACK=1
 
 exec ~/.local/bin/claude "$@"
