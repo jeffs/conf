@@ -48,6 +48,10 @@ impl Runner<'_> {
     /// Run an operation on a single repo, reporting progress to the sink.
     #[must_use]
     pub fn run_one(&self, op: Op, repo: &Repo) -> Outcome {
+        if let Some(reason) = &repo.skip {
+            self.sink.warn(&format!("{reason} — skipping"));
+            return Outcome::Skipped(reason.clone());
+        }
         if !matches!(op, Op::Clone | Op::Fork) && !repo.path.exists() {
             self.sink.warn("not cloned — skipping");
             return Outcome::Skipped("not cloned".into());

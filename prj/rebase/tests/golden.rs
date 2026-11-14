@@ -207,6 +207,21 @@ fn missing_repo_is_skipped() {
 }
 
 #[test]
+fn skipped_repo_is_skipped_even_when_cloned() {
+    let root = TempDir::new().unwrap();
+    let repo = load_repo(&root, &format!("{FORK_REBASE}skip = \"broken upstream\"\n"));
+    fs::create_dir_all(&repo.path).unwrap();
+
+    for op in [Op::Update, Op::Clone, Op::Fork] {
+        let (sink, outcome) = dry_run(op, &repo);
+
+        assert_eq!(outcome, Outcome::Skipped("broken upstream".into()));
+        assert_eq!(sink.lines_of(Kind::DryRun), [] as [std::string::String; 0]);
+        assert_eq!(sink.lines_of(Kind::Warn), ["broken upstream — skipping"]);
+    }
+}
+
+#[test]
 fn clone_missing_repo_previews_full_pipeline() {
     let root = TempDir::new().unwrap();
     let repo = load_repo(&root, FORK_REBASE);

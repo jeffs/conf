@@ -41,6 +41,7 @@ upstream_ref = "release-0.45@upstream"
 build = ["cargo install --path . --locked"]
 
 [repos.nushell]
+skip = "not in daily use; slow build"
 clone = "git@github.com:jeffs/nushell.git"
 upstream = "https://github.com/nushell/nushell"
 bookmarks = ["custom"]

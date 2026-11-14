@@ -27,6 +27,8 @@ pub struct RawRepo {
     pub path: Option<String>,
     /// Revset to position the working copy on after `update`.
     pub checkout: Option<String>,
+    /// Why every operation leaves this repo alone, if it should.
+    pub skip: Option<String>,
 }
 
 /// A local jj bookmark name.
@@ -137,6 +139,8 @@ pub struct Repo {
     pub post_build: Vec<String>,
     /// Revset to position the working copy on after `update`.
     pub checkout: Option<String>,
+    /// Why every operation leaves this repo alone, if it should.
+    pub skip: Option<String>,
 }
 
 impl Repo {
@@ -280,6 +284,7 @@ pub fn load(path: &Path) -> Result<Vec<Repo>, ManifestError> {
             build: raw.build,
             post_build: raw.post_build,
             checkout: raw.checkout,
+            skip: raw.skip,
         });
     }
 
