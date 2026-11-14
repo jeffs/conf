@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/bin/sh
 #
 # Useful for debugging the language server integration:
 # <https://github.com/helix-editor/helix/discussions/7203#discussioncomment-7819383>
@@ -7,6 +7,8 @@
 #   :log-open
 #
 #   tail -f ~/.cache/helix/helix.log
+
+set -eu
 
 # Install the Debugger Adapter Protocol implementation for macOS.
 xcrun -f lldb-dap
@@ -24,14 +26,15 @@ cargo install --locked --git https://github.com/Feel-ix-343/markdown-oxide.git m
 cargo install --locked --git https://github.com/estin/simple-completion-language-server.git
 
 # Clone or update the Helix fork.
-let helix_dir = $"($env.HOME)/usr/src/helix"
-if ($helix_dir | path exists) {
-    print "Updating Helix fork..."
-    git -C $helix_dir pull --ff-only
-} else {
-    print "Cloning Helix fork..."
-    mkdir ($helix_dir | path dirname)
-    git clone git@github.com:jeffs/helix.git $helix_dir
-}
+helix_dir="$HOME/usr/src/helix"
+if [ -e "$helix_dir" ]; then
+    echo "Updating Helix fork..."
+    jj -R "$helix_dir" git fetch --remote origin
+    jj -R "$helix_dir" new custom
+else
+    echo "Cloning Helix fork..."
+    mkdir -p "$(dirname "$helix_dir")"
+    jj git clone git@github.com:jeffs/helix.git "$helix_dir"
+fi
 
-cargo install --path $"($helix_dir)/helix-term"
+cargo install --locked --path "$helix_dir/helix-term"
