@@ -22,6 +22,7 @@ mkdir -p ~/.claude
 
 ln -s ~/conf/etc/claude/settings.json ~/.claude/settings.json
 ln -s ~/conf/etc/claude/skills ~/.claude/skills
+ln -s ~/conf/etc/clang-format ~/.clang-format
 ln -s ~/conf/etc/gitconfig ~/.gitconfig
 ln -s ~/conf/etc/jjconfig.toml ~/.config/jj/config.toml
 ln -s ~/conf/etc/mdt ~/.config
