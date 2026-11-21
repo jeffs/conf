@@ -50,6 +50,7 @@ upstream_ref = "main"
 build = ["cargo install --path . --locked"]
 
 [repos.reedline]
+skip = "not in daily use "
 clone = "git@github.com:jeffs/reedline.git"
 upstream = "https://github.com/nushell/reedline"
 bookmarks = ["custom"]
